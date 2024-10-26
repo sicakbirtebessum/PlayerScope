@@ -1,0 +1,699 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="StUploadedCharacters" xml:space="preserve">
+    <value>Uploaded Characters Count:</value>
+  </data>
+  <data name="StCharacterName" xml:space="preserve">
+    <value>Character Name:</value>
+  </data>
+  <data name="StRoleDescriptionNonVerified" xml:space="preserve">
+    <value>Ouch! Only \"members\" can send information and receive from the server.</value>
+  </data>
+  <data name="StRole" xml:space="preserve">
+    <value>Role: </value>
+  </data>
+  <data name="StRoleNotVerified" xml:space="preserve">
+    <value>Not Verified</value>
+  </data>
+  <data name="StRoleMember" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="StRoleOwner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="StRoleMod" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="StRoleVip" xml:space="preserve">
+    <value>VIP</value>
+  </data>
+  <data name="StPermissions" xml:space="preserve">
+    <value>-   Permissions:</value>
+  </data>
+  <data name="StRoleAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="StSendAndReceiveData" xml:space="preserve">
+    <value>(Send &amp; Receive Data)</value>
+  </data>
+  <data name="StAuthorizeDescription" xml:space="preserve">
+    <value>As you are a verified user, you are authorized to send information and receive from the server.</value>
+  </data>
+  <data name="StShowMyIds" xml:space="preserve">
+    <value>Show my ids</value>
+  </data>
+  <data name="StClickToCopyAccountId" xml:space="preserve">
+    <value>Click to copy Account Id</value>
+  </data>
+  <data name="StClickToCopyContentId" xml:space="preserve">
+    <value>Click to copy Content Id</value>
+  </data>
+  <data name="StMyContributions" xml:space="preserve">
+    <value>My contributions ♥</value>
+  </data>
+  <data name="StUploadedCharactersHint" xml:space="preserve">
+    <value>The total count of characters you sent to the server
+who were not previously in the database.</value>
+  </data>
+  <data name="StUploadedCharacterInfoHint" xml:space="preserve">
+    <value>The count of character info changes you sent to the server
+who are already in the database but have different names or worlds</value>
+  </data>
+  <data name="StUploadedRetainersHint" xml:space="preserve">
+    <value>The total count of retainers you sent to the server
+who were not previously in the database.</value>
+  </data>
+  <data name="StUploadedRetainers" xml:space="preserve">
+    <value>Uploaded Retainers Count:</value>
+  </data>
+  <data name="StUploadedRetainerInfoHint" xml:space="preserve">
+    <value>The total count of retainer info changes (name or world) you sent to the server.</value>
+  </data>
+  <data name="StFetchedCharactersHint" xml:space="preserve">
+    <value>The total count of characters whose profile details you have viewed.</value>
+  </data>
+  <data name="StFetchedCharacter" xml:space="preserve">
+    <value>Fetched Character Info Count:</value>
+  </data>
+  <data name="StSearchedNamesHint" xml:space="preserve">
+    <value>The total number of character and retainer search count.</value>
+  </data>
+  <data name="StSearchedNames" xml:space="preserve">
+    <value>Total number of searched Character &amp; Retainer names:</value>
+  </data>
+  <data name="StRefreshProfileInfo" xml:space="preserve">
+    <value>Refresh Profile Info</value>
+  </data>
+  <data name="StRefreshProfileInfoHint" xml:space="preserve">
+    <value>Request profile data from the server</value>
+  </data>
+  <data name="StHomeWorld" xml:space="preserve">
+    <value>Home World:</value>
+  </data>
+  <data name="StLoginWithDiscord" xml:space="preserve">
+    <value>Login with Discord</value>
+  </data>
+  <data name="StErrorLoginWithACharacter" xml:space="preserve">
+    <value>You are not logged in.
+Please login with a character to continue.</value>
+  </data>
+  <data name="StServerDatabaseStats" xml:space="preserve">
+    <value>Server Database Stats</value>
+  </data>
+  <data name="StRefreshServerStats" xml:space="preserve">
+    <value>Refresh Server Stats</value>
+  </data>
+  <data name="StCharacterCount" xml:space="preserve">
+    <value>Character Count:</value>
+  </data>
+  <data name="StPrivateCharacters" xml:space="preserve">
+    <value>private characters</value>
+  </data>
+  <data name="StPrivateRetainers" xml:space="preserve">
+    <value>private retainers</value>
+  </data>
+  <data name="StRetainerCount" xml:space="preserve">
+    <value>Retainer Count:</value>
+  </data>
+  <data name="StUserCount" xml:space="preserve">
+    <value>User Count:</value>
+  </data>
+  <data name="StLastUpdatedOn" xml:space="preserve">
+    <value>Last Updated on:</value>
+  </data>
+  <data name="SyncCharacterAndRetainerFromServer" xml:space="preserve">
+    <value>Sync Character and Retainer info from Server</value>
+  </data>
+  <data name="ToolsYear" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="ToolsYears" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="ToolsAboutFromNow" xml:space="preserve">
+    <value>about {0} {1} from now</value>
+  </data>
+  <data name="ToolsAboutSecondsFromNow" xml:space="preserve">
+    <value>about {0} seconds from now</value>
+  </data>
+  <data name="ToolsJustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="ToolsMinutes" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="ToolsMinute" xml:space="preserve">
+    <value>minute</value>
+  </data>
+  <data name="ToolsHour" xml:space="preserve">
+    <value>hour</value>
+  </data>
+  <data name="ToolsHours" xml:space="preserve">
+    <value>hours</value>
+  </data>
+  <data name="ToolsDay" xml:space="preserve">
+    <value>day</value>
+  </data>
+  <data name="ToolsDays" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="ToolsMonth" xml:space="preserve">
+    <value>month</value>
+  </data>
+  <data name="ToolsMonths" xml:space="preserve">
+    <value>months</value>
+  </data>
+  <data name="ToolsTimeSinceAgo" xml:space="preserve">
+    <value>{0} {1} ago</value>
+  </data>
+  <data name="ToolsTimeSinceMinutesAgo" xml:space="preserve">
+    <value>{0} {1} {2} minutes ago</value>
+  </data>
+  <data name="ToolsSecond" xml:space="preserve">
+    <value>second</value>
+  </data>
+  <data name="ToolsSeconds" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="ToolsTimeSinceSecondsAgo" xml:space="preserve">
+    <value>{0} {1} {2} seconds ago</value>
+  </data>
+  <data name="StCanSyncAgainTime" xml:space="preserve">
+    <value>Can resynchronize in: </value>
+  </data>
+  <data name="StStopFetching" xml:space="preserve">
+    <value>Stop Fetching</value>
+  </data>
+  <data name="StLoadDetails" xml:space="preserve">
+    <value>Load Details</value>
+  </data>
+  <data name="StConfigurePrivacyOfChars" xml:space="preserve">
+    <value>You can configure the privacy settings of your characters in this tab.</value>
+  </data>
+  <data name="StATotalOfCharsFound" xml:space="preserve">
+    <value>A total of {0} characters of yours were found.</value>
+  </data>
+  <data name="StUploadedCharacterInfo" xml:space="preserve">
+    <value>Uploaded Character Info Count:</value>
+  </data>
+  <data name="StUploadedRetainerInfo" xml:space="preserve">
+    <value>Uploaded Retainer Info Count:</value>
+  </data>
+  <data name="StNameNotFound" xml:space="preserve">
+    <value>[NAME NOT FOUND]</value>
+  </data>
+  <data name="StTotalVisitCount" xml:space="preserve">
+    <value>Total Visit Count:</value>
+  </data>
+  <data name="StSomeoneVisitedYourProfile" xml:space="preserve">
+    <value>Your character's profile was last visited on:</value>
+  </data>
+  <data name="StPrivacyHideFullProfile" xml:space="preserve">
+    <value>Hide Full Profile</value>
+  </data>
+  <data name="StPrivacyHideFullProfileTooltip" xml:space="preserve">
+    <value>Other players will NOT be able to see your profile.
+However, if they have seen you before, they can find you by searching in the Local PC section.</value>
+  </data>
+  <data name="StPrivacyHideLocationHistory" xml:space="preserve">
+    <value>Hide Location History</value>
+  </data>
+  <data name="StPrivacyHideLocationHistoryTooltip" xml:space="preserve">
+    <value>Other players will NOT be able to see your location history.</value>
+  </data>
+  <data name="StPrivacyHideCustomizationHistory" xml:space="preserve">
+    <value>Hide Customization History</value>
+  </data>
+  <data name="StPrivacyDontAppearInSearchResults" xml:space="preserve">
+    <value>Dont Appear in Search Results</value>
+  </data>
+  <data name="StPrivacyHideAltCharacters" xml:space="preserve">
+    <value>Hide Alt Characters</value>
+  </data>
+  <data name="StPrivacyHideRetainers" xml:space="preserve">
+    <value>Hide Retainers</value>
+  </data>
+  <data name="StPrivacyHideRetainersTooltip" xml:space="preserve">
+    <value>None of your retainers will be visible to other players and will NOT appear in search results.</value>
+  </data>
+  <data name="StPrivacyHideAltCharactersTooltip" xml:space="preserve">
+    <value>None of your alt characters will be visible to other players in the detailed player window.</value>
+  </data>
+  <data name="StPrivacyDontAppearInSearchResultsTooltip" xml:space="preserve">
+    <value>Your name will NOT appear in search results.</value>
+  </data>
+  <data name="StPrivacyHideCustomizationHistoryTooltip" xml:space="preserve">
+    <value>Other players will NOT be able to see your customization history.</value>
+  </data>
+  <data name="StSaveConfig" xml:space="preserve">
+    <value>Save Config</value>
+  </data>
+  <data name="StSaveConfigTooltip" xml:space="preserve">
+    <value>Save your configuration to server.</value>
+  </data>
+  <data name="StFetchingCharacters" xml:space="preserve">
+    <value>Fetching Characters...</value>
+  </data>
+  <data name="StFetchingRetainers" xml:space="preserve">
+    <value>Fetching Retainers...</value>
+  </data>
+  <data name="StErrorStoppedFetching" xml:space="preserve">
+    <value>Error: Stopped fetching.</value>
+  </data>
+  <data name="StErrorUnableToFetchCharacters" xml:space="preserve">
+    <value>Error: Unable to fetch Characters.</value>
+  </data>
+  <data name="StErrorUnableToFetchRetainers" xml:space="preserve">
+    <value>Error: Unable to fetch Retainers.</value>
+  </data>
+  <data name="StFetchingComplete" xml:space="preserve">
+    <value>Fetching Complete.</value>
+  </data>
+  <data name="StCharacters" xml:space="preserve">
+    <value>Characters</value>
+  </data>
+  <data name="StRetainers" xml:space="preserve">
+    <value>Retainers</value>
+  </data>
+  <data name="StServerIp" xml:space="preserve">
+    <value>Server Ip</value>
+  </data>
+  <data name="StConnect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="StCheckServerStatus" xml:space="preserve">
+    <value>Check Server Status</value>
+  </data>
+  <data name="StCheckingStatus" xml:space="preserve">
+    <value>Checking Status...</value>
+  </data>
+  <data name="StServerStatus" xml:space="preserve">
+    <value>Server Status:</value>
+  </data>
+  <data name="StOnline" xml:space="preserve">
+    <value>ONLINE</value>
+  </data>
+  <data name="StTabUserInfo" xml:space="preserve">
+    <value>User Info</value>
+  </data>
+  <data name="StTabServerStatsAndSync" xml:space="preserve">
+    <value>Server Stats &amp; Sync</value>
+  </data>
+  <data name="StTabMyCharactersAndPrivacy" xml:space="preserve">
+    <value>My Characters &amp; Privacy</value>
+  </data>
+  <data name="MnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="MnNameComboBox" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="MnAccountCount" xml:space="preserve">
+    <value>AccCount</value>
+  </data>
+  <data name="MnRetainerCount" xml:space="preserve">
+    <value>RetainerCount</value>
+  </data>
+  <data name="MnRetainers" xml:space="preserve">
+    <value>Retainers</value>
+  </data>
+  <data name="MnContentId" xml:space="preserve">
+    <value>Content Id</value>
+  </data>
+  <data name="MnAccountId" xml:space="preserve">
+    <value>Account Id</value>
+  </data>
+  <data name="MnWorld" xml:space="preserve">
+    <value>World</value>
+  </data>
+  <data name="MnAddedAt" xml:space="preserve">
+    <value>Added at</value>
+  </data>
+  <data name="MnOwnerContentId" xml:space="preserve">
+    <value>OwnerContentId</value>
+  </data>
+  <data name="MnTotalRetainers" xml:space="preserve">
+    <value>Total Retainers</value>
+  </data>
+  <data name="MnTotalCharacters" xml:space="preserve">
+    <value>Total Characters</value>
+  </data>
+  <data name="MnTabLocalStats" xml:space="preserve">
+    <value>Local Stats</value>
+  </data>
+  <data name="MnTabSearchCharacterAndRetainer" xml:space="preserve">
+    <value>Search Characters &amp; Retainers</value>
+  </data>
+  <data name="MnTabMyFavorites" xml:space="preserve">
+    <value>My Favorites</value>
+  </data>
+  <data name="MnServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="MnLocalPC" xml:space="preserve">
+    <value>Local PC</value>
+  </data>
+  <data name="MnCharacter" xml:space="preserve">
+    <value>Character</value>
+  </data>
+  <data name="MnByName" xml:space="preserve">
+    <value>By Name</value>
+  </data>
+  <data name="MnById" xml:space="preserve">
+    <value>By Id</value>
+  </data>
+  <data name="MnSource" xml:space="preserve">
+    <value>Source </value>
+  </data>
+  <data name="MnId" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="MnTextInputEnterHere" xml:space="preserve">
+    <value>Enter {0}'s {1} here</value>
+  </data>
+  <data name="MnSearching" xml:space="preserve">
+    <value>Searching...</value>
+  </data>
+  <data name="MnSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="MnErrorBadSearchQuery" xml:space="preserve">
+    <value>Error: Bad search query</value>
+  </data>
+  <data name="MnErrorYouAreNotConnected" xml:space="preserve">
+    <value>Error: You are not connected to server.</value>
+  </data>
+  <data name="MnOpenSettingsMenutoconnect" xml:space="preserve">
+    <value>Open Settings Menu to connect to Server</value>
+  </data>
+  <data name="MnYouAreConnected" xml:space="preserve">
+    <value>You are connected. You can sync from the server.</value>
+  </data>
+  <data name="MnOpenSettingsMenu" xml:space="preserve">
+    <value>Open Settings Menu</value>
+  </data>
+  <data name="MnOpenMainMenu" xml:space="preserve">
+    <value>Open Main Menu</value>
+  </data>
+  <data name="MnRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="TitleMainMenu" xml:space="preserve">
+    <value>PlayerScope Main Menu</value>
+  </data>
+  <data name="TitleDetailsMenu" xml:space="preserve">
+    <value>PlayerScope Details Menu</value>
+  </data>
+  <data name="TitleSettingsMenu" xml:space="preserve">
+    <value>PlayerScope Server Settings</value>
+  </data>
+  <data name="StLanguage" xml:space="preserve">
+    <value>Lang:</value>
+  </data>
+  <data name="ApiTotalFound" xml:space="preserve">
+    <value>Total Found:</value>
+  </data>
+  <data name="ApiError" xml:space="preserve">
+    <value>Error:</value>
+  </data>
+  <data name="ApiProfileRefreshed" xml:space="preserve">
+    <value>Profile refreshed.</value>
+  </data>
+  <data name="ApiStatsRefreshed" xml:space="preserve">
+    <value>Stats refreshed.</value>
+  </data>
+  <data name="ApiServiceUnavailable" xml:space="preserve">
+    <value>Service Unavailable</value>
+  </data>
+  <data name="DtRetainerName" xml:space="preserve">
+    <value>Retainer Name</value>
+  </data>
+  <data name="DtOwnerName" xml:space="preserve">
+    <value>Owner Name</value>
+  </data>
+  <data name="StCancelLogin" xml:space="preserve">
+    <value>X Cancel</value>
+  </data>
+  <data name="AgCrowsourcedDescription" xml:space="preserve">
+    <value>• This plugin operates on a crowdsourced model, meaning it relies on contributions from the player community to function and improve. Every player using the plugin contributes data, which helps build a more comprehensive and accurate dataset for everyone.</value>
+  </data>
+  <data name="AgServerBasedFeatures" xml:space="preserve">
+    <value>Server-Based Features:</value>
+  </data>
+  <data name="AgFeature1" xml:space="preserve">
+    <value>Automatic Alt Account Detection: The plugin automatically detects and links alt accounts of uploaded characters.</value>
+  </data>
+  <data name="AgFeature2" xml:space="preserve">
+    <value>Character Name and HomeWorld History: Keeps a record of all the names a character has previously used and the world transfers they have made.</value>
+  </data>
+  <data name="AgFeature3" xml:space="preserve">
+    <value>Retainer History &amp; Marketboard UI: Records all changes made to a character's retainers, links the retainer with its owner and displays the owner's name when browsing the market board.</value>
+  </data>
+  <data name="AgFeature4" xml:space="preserve">
+    <value>Location History: Records the last known location of a character and keeps a history of the maps they’ve visited.</value>
+  </data>
+  <data name="AgFeature5" xml:space="preserve">
+    <value>Customization History: Records all changes to a character's customizations.</value>
+  </data>
+  <data name="AgFeature6" xml:space="preserve">
+    <value>It also shows the date when all this information was added to the server.</value>
+  </data>
+  <data name="AgAgreementTitle" xml:space="preserve">
+    <value>Plugin Consent - Upon connecting to the server, you consent to the following conditions:</value>
+  </data>
+  <data name="AgAgreement1" xml:space="preserve">
+    <value>The information of characters nearby, characters on the player search window and the retainers you browse on the marketboard will be uploaded to the server.</value>
+  </data>
+  <data name="AgAgreement2" xml:space="preserve">
+    <value>This information may include a wide range of details, such as character IDs, character customizations, character locations and retainer informations.</value>
+  </data>
+  <data name="AgAgreement3" xml:space="preserve">
+    <value>Just as you can see the data uploaded by other users, the data you upload will also be visible to other users.</value>
+  </data>
+  <data name="AgAgreement4" xml:space="preserve">
+    <value>However, you can change the visibility of your characters in the privacy settings under the My 'Characters &amp; Privacy' tab, allowing you to hide the details of your characters from other users.</value>
+  </data>
+  <data name="AgDoYouAccept" xml:space="preserve">
+    <value>Do you accept the terms of the plugin?</value>
+  </data>
+  <data name="AgIAgreeCheckBox" xml:space="preserve">
+    <value>I agree that the information of characters around me, the characters on the player search menu
+and the retainers I see while browsing the marketboard will be uploaded to the server.</value>
+  </data>
+  <data name="DtZoneName" xml:space="preserve">
+    <value>Zone Name</value>
+  </data>
+  <data name="DtCharacterName" xml:space="preserve">
+    <value>Character Name</value>
+  </data>
+  <data name="DtLastSeen" xml:space="preserve">
+    <value>Last Seen</value>
+  </data>
+  <data name="DtFirstSeen" xml:space="preserve">
+    <value>First Seen</value>
+  </data>
+  <data name="DtDuration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="DtRaceInfo" xml:space="preserve">
+    <value>Gender - Race</value>
+  </data>
+  <data name="DtHeight" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="DtMuscleMass" xml:space="preserve">
+    <value>MuscleMass</value>
+  </data>
+  <data name="DtBustSize" xml:space="preserve">
+    <value>BustSize</value>
+  </data>
+  <data name="DtAddToFavorites" xml:space="preserve">
+    <value>Add to Favorites</value>
+  </data>
+  <data name="DtRemoveFromFavorites" xml:space="preserve">
+    <value>Remove from Favorites</value>
+  </data>
+  <data name="DtShowTheDateDetail" xml:space="preserve">
+    <value>Show the date in detail</value>
+  </data>
+  <data name="DtRefreshProfile" xml:space="preserve">
+    <value>Refresh Profile</value>
+  </data>
+  <data name="DtLoading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="DtFetchDetailedCharacterInfo" xml:space="preserve">
+    <value>Fetch Detailed Character Info From Server</value>
+  </data>
+  <data name="DtCharactersOfThePlayer" xml:space="preserve">
+    <value>Characters of the player:</value>
+  </data>
+  <data name="DtRetainersOfThePlayer" xml:space="preserve">
+    <value>All retainers of the player:</value>
+  </data>
+  <data name="DtPlayerInfo" xml:space="preserve">
+    <value>Player Info</value>
+  </data>
+  <data name="DtLocationHistory" xml:space="preserve">
+    <value>Location History</value>
+  </data>
+  <data name="DtCustomizationHistory" xml:space="preserve">
+    <value>Customization History</value>
+  </data>
+  <data name="DtShowingResultsFor" xml:space="preserve">
+    <value>Showing results for:</value>
+  </data>
+  <data name="DtCharacterLastSeenIn" xml:space="preserve">
+    <value>Character last seen in:</value>
+  </data>
+  <data name="DtNameHistory" xml:space="preserve">
+    <value>Name History:</value>
+  </data>
+  <data name="DtHomeworldHistory" xml:space="preserve">
+    <value>HomeWorld History:</value>
+  </data>
+  <data name="DtAltCharacters" xml:space="preserve">
+    <value>Alt Characters:</value>
+  </data>
+  <data name="DtShowRetainers" xml:space="preserve">
+    <value>Show Retainers</value>
+  </data>
+  <data name="DtRetainerInfo" xml:space="preserve">
+    <value>Info-&gt;</value>
+  </data>
+  <data name="DtLocationHistoryResultsAreDisplayed" xml:space="preserve">
+    <value>A total of {0} location history results are displayed.</value>
+  </data>
+  <data name="DtMapButton" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="MnFilterMatchAnyPartOfName" xml:space="preserve">
+    <value>Match Any Part of Name</value>
+  </data>
+  <data name="MnPlayerIdentifiedAsBot" xml:space="preserve">
+    <value>This player is identified as a bot.</value>
+  </data>
+  <data name="MnHomeWorldColumn" xml:space="preserve">
+    <value>Home World</value>
+  </data>
+  <data name="CmOpenUI" xml:space="preserve">
+    <value>Open UI</value>
+  </data>
+</root>

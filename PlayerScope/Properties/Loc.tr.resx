@@ -1,0 +1,699 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="StUploadedCharacters" xml:space="preserve">
+    <value>Aktarilan Oyuncu Sayisi:</value>
+  </data>
+  <data name="StCharacterName" xml:space="preserve">
+    <value>Karakter Adi:</value>
+  </data>
+  <data name="StRoleDescriptionNonVerified" xml:space="preserve">
+    <value>Tüh! Yalnizca \"dogrulanmis\" kullanicilar sunucuya bilgi gönderebilir ve sunucudan alabilir.</value>
+  </data>
+  <data name="StRole" xml:space="preserve">
+    <value>Rol: </value>
+  </data>
+  <data name="StRoleNotVerified" xml:space="preserve">
+    <value>Onayli Degil</value>
+  </data>
+  <data name="StRoleMember" xml:space="preserve">
+    <value>Üye</value>
+  </data>
+  <data name="StRoleOwner" xml:space="preserve">
+    <value>Kurucu</value>
+  </data>
+  <data name="StRoleMod" xml:space="preserve">
+    <value>Moderatör</value>
+  </data>
+  <data name="StRoleVip" xml:space="preserve">
+    <value>VIP</value>
+  </data>
+  <data name="StPermissions" xml:space="preserve">
+    <value>-   Izinler:</value>
+  </data>
+  <data name="StRoleAdmin" xml:space="preserve">
+    <value>Yönetici</value>
+  </data>
+  <data name="StSendAndReceiveData" xml:space="preserve">
+    <value>(Veri Gönder ve Al)</value>
+  </data>
+  <data name="StAuthorizeDescription" xml:space="preserve">
+    <value>Dogrulanmis bir kullanici oldugun icin sunucuya veri gönderme ve sunucudan veri alma yetkin var.</value>
+  </data>
+  <data name="StShowMyIds" xml:space="preserve">
+    <value>Idlerimi göster</value>
+  </data>
+  <data name="StClickToCopyAccountId" xml:space="preserve">
+    <value>Kopyalamak için tikla</value>
+  </data>
+  <data name="StClickToCopyContentId" xml:space="preserve">
+    <value>Kopyalamak için tikla</value>
+  </data>
+  <data name="StMyContributions" xml:space="preserve">
+    <value>Katkilarim  ♥</value>
+  </data>
+  <data name="StUploadedCharactersHint" xml:space="preserve">
+    <value>Daha önce veritabaninda bulunmayan ve sunucuya
+gönderdigin karakterlerin toplam sayisi.</value>
+  </data>
+  <data name="StUploadedCharacterInfoHint" xml:space="preserve">
+    <value>Veritabaninda halihazirda bulunan ancak farkli isimlere veya
+dünyalara sahip olan karakterlerin bilgi degisikliklerini sunucuya gönderdigin toplam sayi.</value>
+  </data>
+  <data name="StUploadedRetainersHint" xml:space="preserve">
+    <value>Daha önce veritabaninda bulunmayan ve sunucuya
+gönderdigin retainerlarin toplam sayisi.</value>
+  </data>
+  <data name="StUploadedRetainers" xml:space="preserve">
+    <value>Aktarilan Retainer Sayisi:</value>
+  </data>
+  <data name="StUploadedRetainerInfoHint" xml:space="preserve">
+    <value>Sunucuya gönderdigin retainer bilgi degisikliklerinin (isim veya dünya) toplam sayisi.</value>
+  </data>
+  <data name="StFetchedCharactersHint" xml:space="preserve">
+    <value>Profil bilgilerini görüntüledigin karakterlerin toplam sayisi.</value>
+  </data>
+  <data name="StFetchedCharacter" xml:space="preserve">
+    <value>Getirilen Karakter Bilgisi Sayisi:</value>
+  </data>
+  <data name="StSearchedNamesHint" xml:space="preserve">
+    <value>Karakter ve retainer arama sayisinin toplami.</value>
+  </data>
+  <data name="StSearchedNames" xml:space="preserve">
+    <value>Aratilan Karakter ve Retainer isimlerinin toplam sayisi:</value>
+  </data>
+  <data name="StRefreshProfileInfo" xml:space="preserve">
+    <value>Profil Bilgilerini Yenile</value>
+  </data>
+  <data name="StRefreshProfileInfoHint" xml:space="preserve">
+    <value>Sunucudan profil verilerini getir</value>
+  </data>
+  <data name="StHomeWorld" xml:space="preserve">
+    <value>Anadünya:</value>
+  </data>
+  <data name="StLoginWithDiscord" xml:space="preserve">
+    <value>Discord ile Giris Yap</value>
+  </data>
+  <data name="StErrorLoginWithACharacter" xml:space="preserve">
+    <value>Henüz giris yapmadin.
+Devam etmek için lütfen bir karakterle giris yap.</value>
+  </data>
+  <data name="StServerDatabaseStats" xml:space="preserve">
+    <value>Sunucu Veritabani Istatistikleri</value>
+  </data>
+  <data name="StRefreshServerStats" xml:space="preserve">
+    <value>Sunucu Istatistiklerini Yenile</value>
+  </data>
+  <data name="StCharacterCount" xml:space="preserve">
+    <value>Karakter Sayisi:</value>
+  </data>
+  <data name="StPrivateCharacters" xml:space="preserve">
+    <value>gizli karakter</value>
+  </data>
+  <data name="StPrivateRetainers" xml:space="preserve">
+    <value>gizli retainer</value>
+  </data>
+  <data name="StRetainerCount" xml:space="preserve">
+    <value>Retainer Sayisi:</value>
+  </data>
+  <data name="StUserCount" xml:space="preserve">
+    <value>Kullanici Sayisi:</value>
+  </data>
+  <data name="StLastUpdatedOn" xml:space="preserve">
+    <value>Son güncelleme:</value>
+  </data>
+  <data name="SyncCharacterAndRetainerFromServer" xml:space="preserve">
+    <value>Karakter ve Retainer bilgilerini sunucudan senkronize et</value>
+  </data>
+  <data name="ToolsYear" xml:space="preserve">
+    <value>yil</value>
+  </data>
+  <data name="ToolsYears" xml:space="preserve">
+    <value>yil</value>
+  </data>
+  <data name="ToolsAboutFromNow" xml:space="preserve">
+    <value>yaklasik {0} {1} icinde</value>
+  </data>
+  <data name="ToolsAboutSecondsFromNow" xml:space="preserve">
+    <value>yaklasik {0} saniye icinde</value>
+  </data>
+  <data name="ToolsJustNow" xml:space="preserve">
+    <value>az önce</value>
+  </data>
+  <data name="ToolsMinutes" xml:space="preserve">
+    <value>dakika</value>
+  </data>
+  <data name="ToolsMinute" xml:space="preserve">
+    <value>dakika</value>
+  </data>
+  <data name="ToolsHour" xml:space="preserve">
+    <value>saat</value>
+  </data>
+  <data name="ToolsHours" xml:space="preserve">
+    <value>saat</value>
+  </data>
+  <data name="ToolsDay" xml:space="preserve">
+    <value>gün</value>
+  </data>
+  <data name="ToolsDays" xml:space="preserve">
+    <value>gün</value>
+  </data>
+  <data name="ToolsMonth" xml:space="preserve">
+    <value>ay</value>
+  </data>
+  <data name="ToolsMonths" xml:space="preserve">
+    <value>ay</value>
+  </data>
+  <data name="ToolsTimeSinceAgo" xml:space="preserve">
+    <value>{0} {1} önce</value>
+  </data>
+  <data name="ToolsTimeSinceMinutesAgo" xml:space="preserve">
+    <value>{0} {1} {2} dakika önce</value>
+  </data>
+  <data name="ToolsSecond" xml:space="preserve">
+    <value>saniye</value>
+  </data>
+  <data name="ToolsSeconds" xml:space="preserve">
+    <value>saniye</value>
+  </data>
+  <data name="ToolsTimeSinceSecondsAgo" xml:space="preserve">
+    <value>{0} {1} {2} saniye önce</value>
+  </data>
+  <data name="StCanSyncAgainTime" xml:space="preserve">
+    <value>Yeniden senkronize et: </value>
+  </data>
+  <data name="StStopFetching" xml:space="preserve">
+    <value>Veri Çekmeyi Durdur</value>
+  </data>
+  <data name="StLoadDetails" xml:space="preserve">
+    <value>Detaylari Aç</value>
+  </data>
+  <data name="StConfigurePrivacyOfChars" xml:space="preserve">
+    <value>Bu sekmede karakterlerinin gizlilik ayarlarini degistirebilirsin.</value>
+  </data>
+  <data name="StATotalOfCharsFound" xml:space="preserve">
+    <value>Sana ait olan toplamda {0} karakter bulundu.</value>
+  </data>
+  <data name="StUploadedCharacterInfo" xml:space="preserve">
+    <value>Aktarilan Oyuncu Bilgisi Sayisi:</value>
+  </data>
+  <data name="StUploadedRetainerInfo" xml:space="preserve">
+    <value>Aktarilan Retainer Bilgisi Sayisi:</value>
+  </data>
+  <data name="StNameNotFound" xml:space="preserve">
+    <value>[ISIM BULUNAMADI]</value>
+  </data>
+  <data name="StTotalVisitCount" xml:space="preserve">
+    <value>Toplam Görüntülenme Sayisi:</value>
+  </data>
+  <data name="StSomeoneVisitedYourProfile" xml:space="preserve">
+    <value>Karakterinin profili en son su tarihte görüntülendi:</value>
+  </data>
+  <data name="StPrivacyHideFullProfile" xml:space="preserve">
+    <value>Tamamen Gizle</value>
+  </data>
+  <data name="StPrivacyHideFullProfileTooltip" xml:space="preserve">
+    <value>Diger oyuncular profilini GÖREMEYECEK.
+Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni bulabilirler.</value>
+  </data>
+  <data name="StPrivacyHideLocationHistory" xml:space="preserve">
+    <value>Konum Geçmisini Gizle</value>
+  </data>
+  <data name="StPrivacyHideLocationHistoryTooltip" xml:space="preserve">
+    <value>Diger oyuncular konum geçmisini GÖREMEYECEK.</value>
+  </data>
+  <data name="StPrivacyHideCustomizationHistory" xml:space="preserve">
+    <value>Özellestirme Geçmisini Gizle</value>
+  </data>
+  <data name="StPrivacyDontAppearInSearchResults" xml:space="preserve">
+    <value>Arama Sonuçlarinda Gösterme</value>
+  </data>
+  <data name="StPrivacyHideAltCharacters" xml:space="preserve">
+    <value>Yan Karakterleri Gizle</value>
+  </data>
+  <data name="StPrivacyHideRetainers" xml:space="preserve">
+    <value>Retainerlari Gizle</value>
+  </data>
+  <data name="StPrivacyHideRetainersTooltip" xml:space="preserve">
+    <value>Retainerlarin diger oyunculara görünmeyecek ve arama sonuçlarinda yer almayacak.</value>
+  </data>
+  <data name="StPrivacyHideAltCharactersTooltip" xml:space="preserve">
+    <value>Yan karakterlerin detayli oyuncu penceresinde diger oyunculara görünmeyecek.</value>
+  </data>
+  <data name="StPrivacyDontAppearInSearchResultsTooltip" xml:space="preserve">
+    <value>Ismin arama sonuçlarinda GÖRÜNMEYECEK.</value>
+  </data>
+  <data name="StPrivacyHideCustomizationHistoryTooltip" xml:space="preserve">
+    <value>Diger oyuncular özellestirme geçmisini GÖREMEYECEK.</value>
+  </data>
+  <data name="StSaveConfig" xml:space="preserve">
+    <value>Ayarlari Kaydet</value>
+  </data>
+  <data name="StSaveConfigTooltip" xml:space="preserve">
+    <value>Ayarlari sunucuya kaydet.</value>
+  </data>
+  <data name="StFetchingCharacters" xml:space="preserve">
+    <value>Karakterler getiriliyor...</value>
+  </data>
+  <data name="StFetchingRetainers" xml:space="preserve">
+    <value>Retainerlar getiriliyor...</value>
+  </data>
+  <data name="StErrorStoppedFetching" xml:space="preserve">
+    <value>Hata: Veri çekme durduruldu.</value>
+  </data>
+  <data name="StErrorUnableToFetchCharacters" xml:space="preserve">
+    <value>Hata: Karakterler çekilemiyor.</value>
+  </data>
+  <data name="StErrorUnableToFetchRetainers" xml:space="preserve">
+    <value>Hata: Retainerlar çekilemiyor.</value>
+  </data>
+  <data name="StFetchingComplete" xml:space="preserve">
+    <value>Veri Alma Tamamlandi.</value>
+  </data>
+  <data name="StCharacters" xml:space="preserve">
+    <value>Karakterler</value>
+  </data>
+  <data name="StRetainers" xml:space="preserve">
+    <value>Retainerlar:</value>
+  </data>
+  <data name="StServerIp" xml:space="preserve">
+    <value>Sunucu Adresi</value>
+  </data>
+  <data name="StConnect" xml:space="preserve">
+    <value>Baglan</value>
+  </data>
+  <data name="StCheckServerStatus" xml:space="preserve">
+    <value>Sunucuyu Kontrol Et</value>
+  </data>
+  <data name="StCheckingStatus" xml:space="preserve">
+    <value>Kontrol Ediliyor...</value>
+  </data>
+  <data name="StServerStatus" xml:space="preserve">
+    <value>Sunucu Durumu:</value>
+  </data>
+  <data name="StOnline" xml:space="preserve">
+    <value>ÇEVRIMIÇI</value>
+  </data>
+  <data name="StTabUserInfo" xml:space="preserve">
+    <value>Kullanici Bilgisi</value>
+  </data>
+  <data name="StTabServerStatsAndSync" xml:space="preserve">
+    <value>Sunucu Istatistikleri ve Senkronizasyon</value>
+  </data>
+  <data name="StTabMyCharactersAndPrivacy" xml:space="preserve">
+    <value>Karakterlerim ve Gizlilik</value>
+  </data>
+  <data name="MnName" xml:space="preserve">
+    <value>Isim</value>
+  </data>
+  <data name="MnNameComboBox" xml:space="preserve">
+    <value>Ismi</value>
+  </data>
+  <data name="MnAccountCount" xml:space="preserve">
+    <value>HspSayisi</value>
+  </data>
+  <data name="MnRetainerCount" xml:space="preserve">
+    <value>RetainerSayisi</value>
+  </data>
+  <data name="MnRetainers" xml:space="preserve">
+    <value>Retainerlar</value>
+  </data>
+  <data name="MnContentId" xml:space="preserve">
+    <value>Content Id</value>
+  </data>
+  <data name="MnAccountId" xml:space="preserve">
+    <value>Account Id</value>
+  </data>
+  <data name="MnWorld" xml:space="preserve">
+    <value>Dünya</value>
+  </data>
+  <data name="MnAddedAt" xml:space="preserve">
+    <value>Eklendi</value>
+  </data>
+  <data name="MnOwnerContentId" xml:space="preserve">
+    <value>SahipContentId</value>
+  </data>
+  <data name="MnTotalRetainers" xml:space="preserve">
+    <value>Toplam Retainer</value>
+  </data>
+  <data name="MnTotalCharacters" xml:space="preserve">
+    <value>Toplam Karakter</value>
+  </data>
+  <data name="MnTabLocalStats" xml:space="preserve">
+    <value>Yerel Istatistikler</value>
+  </data>
+  <data name="MnTabSearchCharacterAndRetainer" xml:space="preserve">
+    <value>Karakter veya Retainer Ara</value>
+  </data>
+  <data name="MnTabMyFavorites" xml:space="preserve">
+    <value>Favorilerim</value>
+  </data>
+  <data name="MnServer" xml:space="preserve">
+    <value>Sunucu</value>
+  </data>
+  <data name="MnLocalPC" xml:space="preserve">
+    <value>Yerel PC</value>
+  </data>
+  <data name="MnCharacter" xml:space="preserve">
+    <value>Karakter</value>
+  </data>
+  <data name="MnByName" xml:space="preserve">
+    <value>Isim ile</value>
+  </data>
+  <data name="MnById" xml:space="preserve">
+    <value>Id ile</value>
+  </data>
+  <data name="MnSource" xml:space="preserve">
+    <value>Kaynak </value>
+  </data>
+  <data name="MnId" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="MnTextInputEnterHere" xml:space="preserve">
+    <value>{0}in {1}ni gir</value>
+  </data>
+  <data name="MnSearching" xml:space="preserve">
+    <value>Araniyor...</value>
+  </data>
+  <data name="MnSearch" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="MnErrorBadSearchQuery" xml:space="preserve">
+    <value>Hata: Geçersiz arama sorgusu</value>
+  </data>
+  <data name="MnErrorYouAreNotConnected" xml:space="preserve">
+    <value>Hata: Sunucuya bagli degilsin.</value>
+  </data>
+  <data name="MnOpenSettingsMenutoconnect" xml:space="preserve">
+    <value>Sunucuya baglanmak için Ayarlar Menüsünü aç</value>
+  </data>
+  <data name="MnYouAreConnected" xml:space="preserve">
+    <value>Sunucuya baglisin. Sunucudan senkronize edebilirsin.</value>
+  </data>
+  <data name="MnOpenSettingsMenu" xml:space="preserve">
+    <value>Ayarlar Menüsünü Aç</value>
+  </data>
+  <data name="MnOpenMainMenu" xml:space="preserve">
+    <value>Ana Menüyü Aç</value>
+  </data>
+  <data name="MnRemove" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="TitleMainMenu" xml:space="preserve">
+    <value>PlayerScope Ana Menü</value>
+  </data>
+  <data name="TitleDetailsMenu" xml:space="preserve">
+    <value>PlayerScope Detay Menüsü</value>
+  </data>
+  <data name="TitleSettingsMenu" xml:space="preserve">
+    <value>PlayerScope Sunucu Ayarlari</value>
+  </data>
+  <data name="StLanguage" xml:space="preserve">
+    <value>Dil:</value>
+  </data>
+  <data name="ApiTotalFound" xml:space="preserve">
+    <value>Toplam Sonuç:</value>
+  </data>
+  <data name="ApiError" xml:space="preserve">
+    <value>Hata:</value>
+  </data>
+  <data name="ApiProfileRefreshed" xml:space="preserve">
+    <value>Profil yenilendi.</value>
+  </data>
+  <data name="ApiStatsRefreshed" xml:space="preserve">
+    <value>Istatistikler yenilendi.</value>
+  </data>
+  <data name="ApiServiceUnavailable" xml:space="preserve">
+    <value>Hizmet Kullanilamiyor</value>
+  </data>
+  <data name="DtRetainerName" xml:space="preserve">
+    <value>Retainer Adi</value>
+  </data>
+  <data name="DtOwnerName" xml:space="preserve">
+    <value>Sahibin Adi</value>
+  </data>
+  <data name="StCancelLogin" xml:space="preserve">
+    <value>X Iptal Et</value>
+  </data>
+  <data name="AgCrowsourcedDescription" xml:space="preserve">
+    <value>• Bu plugin, topluluk katkili bir modelde çalismaktadir; bu da oyuncu toplulugunun katkilarina dayanarak islevini sürdürüp gelistigi anlamina gelir. Plugini kullanan her oyuncu veri katkisinda bulunur ve bu da herkes için daha kapsamli ve dogru bir veri seti olusturulmasina yardimci olur.</value>
+  </data>
+  <data name="AgServerBasedFeatures" xml:space="preserve">
+    <value>Sunucu Tabanli Özellikler:</value>
+  </data>
+  <data name="AgFeature1" xml:space="preserve">
+    <value>Otomatik Alt Hesap Algilama: Plugin, aktarilan karakterlerin alt hesaplarini otomatik olarak algilar ve birbirine baglar.</value>
+  </data>
+  <data name="AgFeature2" xml:space="preserve">
+    <value>Karakter Isim ve Anadünya Geçmisi: Bir karakterin daha önce kullandigi tüm isimler ve yaptigi dünya transferlerinin kaydini tutar.</value>
+  </data>
+  <data name="AgFeature3" xml:space="preserve">
+    <value>Retainer Geçmisi ve Marketboard Arayüzü: Bir karakterin retainerlarina yapilan tüm degisiklikleri kaydeder, retainer'i sahibiyle eslestirir ve marketboard'da gezindiginizde sahibinin ismini gösterir.</value>
+  </data>
+  <data name="AgFeature4" xml:space="preserve">
+    <value>Konum Geçmisi: Bir karakterin en son bilinen konumunu kaydeder ve ziyaret ettigi haritalarin geçmisini tutar.</value>
+  </data>
+  <data name="AgFeature5" xml:space="preserve">
+    <value>Özellestirme Geçmisi: Bir karakterin özellestirmelerindeki tüm degisiklikleri kaydeder.</value>
+  </data>
+  <data name="AgFeature6" xml:space="preserve">
+    <value>Ayrica, bu bilgilerin sunucuya eklendigi tarihi de gösterir.</value>
+  </data>
+  <data name="AgAgreementTitle" xml:space="preserve">
+    <value>Plugin Riza Metni - Sunucuya baglandiginizda, asagidaki kosullari kabul etmis olursunuz:</value>
+  </data>
+  <data name="AgAgreement1" xml:space="preserve">
+    <value>Yakininizdaki karakterler, oyuncu arama penceresindeki karakterler ve marketboard'da incelediginiz retainer'larin bilgileri sunucuya yüklenecektir.</value>
+  </data>
+  <data name="AgAgreement2" xml:space="preserve">
+    <value>Bu bilgiler, karakter Idleri, karakter özellestirmeleri, karakter konumlari ve retainer bilgileri gibi çesitli ayrintilari içerebilir.</value>
+  </data>
+  <data name="AgAgreement3" xml:space="preserve">
+    <value>Diger kullanicilar tarafindan yüklenen verileri görebildiginiz gibi, siz tarafindan yüklenen veriler de diger kullanicilar tarafindan görülebilecektir.</value>
+  </data>
+  <data name="AgAgreement4" xml:space="preserve">
+    <value>Ancak, 'Karakterlerim ve Gizlilik' sekmesindeki gizlilik ayarlarindan karakterlerinizin görünürlügünü degistirebilir ve karakterlerinizin detaylarini diger kullanicilardan gizleyebilirsiniz.</value>
+  </data>
+  <data name="AgDoYouAccept" xml:space="preserve">
+    <value>Plugin'in kosullarini kabul ediyor musunuz?</value>
+  </data>
+  <data name="AgIAgreeCheckBox" xml:space="preserve">
+    <value>Etrafimdaki karakterlerin, oyuncu arama menüsündeki karakterlerin ve marketboard'a göz atarken
+gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</value>
+  </data>
+  <data name="DtZoneName" xml:space="preserve">
+    <value>Bölge Adi</value>
+  </data>
+  <data name="DtCharacterName" xml:space="preserve">
+    <value>Karakter Adi</value>
+  </data>
+  <data name="DtLastSeen" xml:space="preserve">
+    <value>Son Görülme</value>
+  </data>
+  <data name="DtFirstSeen" xml:space="preserve">
+    <value>Ilk Görülme</value>
+  </data>
+  <data name="DtDuration" xml:space="preserve">
+    <value>Toplam Süre</value>
+  </data>
+  <data name="DtRaceInfo" xml:space="preserve">
+    <value>Cinsiyet - Irk</value>
+  </data>
+  <data name="DtHeight" xml:space="preserve">
+    <value>Boy</value>
+  </data>
+  <data name="DtMuscleMass" xml:space="preserve">
+    <value>KasKütlesi</value>
+  </data>
+  <data name="DtBustSize" xml:space="preserve">
+    <value>GögüsÖlçüsü</value>
+  </data>
+  <data name="DtAddToFavorites" xml:space="preserve">
+    <value>Favorilere Ekle</value>
+  </data>
+  <data name="DtRemoveFromFavorites" xml:space="preserve">
+    <value>Favorilerden Kaldir</value>
+  </data>
+  <data name="DtShowTheDateDetail" xml:space="preserve">
+    <value>Tarihi ayrintili göster</value>
+  </data>
+  <data name="DtRefreshProfile" xml:space="preserve">
+    <value>Profili Yenile</value>
+  </data>
+  <data name="DtLoading" xml:space="preserve">
+    <value>Yükleniyor...</value>
+  </data>
+  <data name="DtFetchDetailedCharacterInfo" xml:space="preserve">
+    <value>Sunucudan Ayrintili Oyuncu Bilgilerini Getir</value>
+  </data>
+  <data name="DtCharactersOfThePlayer" xml:space="preserve">
+    <value>Oyuncunun Karakterleri:</value>
+  </data>
+  <data name="DtRetainersOfThePlayer" xml:space="preserve">
+    <value>Oyuncunun tüm retainerlari:</value>
+  </data>
+  <data name="DtPlayerInfo" xml:space="preserve">
+    <value>Oyuncu Bilgisi</value>
+  </data>
+  <data name="DtLocationHistory" xml:space="preserve">
+    <value>Konum Geçmisi</value>
+  </data>
+  <data name="DtCustomizationHistory" xml:space="preserve">
+    <value>Özellestirme Geçmisi</value>
+  </data>
+  <data name="DtShowingResultsFor" xml:space="preserve">
+    <value>Sonuçlari gösterilen Id:</value>
+  </data>
+  <data name="DtCharacterLastSeenIn" xml:space="preserve">
+    <value>Karakter en son surada görüldü:</value>
+  </data>
+  <data name="DtNameHistory" xml:space="preserve">
+    <value>Isim Geçmisi</value>
+  </data>
+  <data name="DtHomeworldHistory" xml:space="preserve">
+    <value>Anadünya Geçmisi:</value>
+  </data>
+  <data name="DtAltCharacters" xml:space="preserve">
+    <value>Yan Karakterler:</value>
+  </data>
+  <data name="DtShowRetainers" xml:space="preserve">
+    <value>Retainerlari Göster</value>
+  </data>
+  <data name="DtRetainerInfo" xml:space="preserve">
+    <value>Bilgi-&gt;</value>
+  </data>
+  <data name="DtLocationHistoryResultsAreDisplayed" xml:space="preserve">
+    <value>Toplamda {0} konum geçmisi sonucu görüntüleniyor.</value>
+  </data>
+  <data name="DtMapButton" xml:space="preserve">
+    <value>Harita</value>
+  </data>
+  <data name="MnFilterMatchAnyPartOfName" xml:space="preserve">
+    <value>Isimde Herhangi Bir Kismi Eslestir</value>
+  </data>
+  <data name="MnPlayerIdentifiedAsBot" xml:space="preserve">
+    <value>Bu oyuncu bir bot olarak tanimlandi.</value>
+  </data>
+  <data name="MnHomeWorldColumn" xml:space="preserve">
+    <value>Anadünya</value>
+  </data>
+  <data name="CmOpenUI" xml:space="preserve">
+    <value>Arayüzü Göster</value>
+  </data>
+</root>
