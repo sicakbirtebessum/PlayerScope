@@ -279,40 +279,6 @@ namespace PlayerScope.API
             }
         }
         //---Users---//
-        //public async Task<(User? User, string Message)> LoginTest(UserRegister register)
-        //{
-        //    string Message = string.Empty;
-        //    try
-        //    {
-        //        var request = new RestRequest($"users/register").AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
-        //        request.AddJsonBody(register);
-        //        var response = await _restClient.ExecutePostAsync(request).ConfigureAwait(false);
-
-        //        if (response.IsSuccessful)
-        //        {
-        //            var _JsonResponse = JsonConvert.DeserializeObject<User>(response.Content!);
-        //            if (_JsonResponse != null)
-        //            {
-        //                Message = "Signed up successfully.";
-        //                return (_JsonResponse, Message);
-        //            }
-        //        }
-        //        else if (!string.IsNullOrWhiteSpace(response.Content))
-        //            Message = $"{Loc.ApiError} {response.Content}";
-        //        else if (response.StatusCode == 0)
-        //            Message = $"{Loc.ApiError} {Loc.ApiServiceUnavailable}";
-        //        else
-        //            Message = $"{Loc.ApiError} {response.StatusCode.ToString()}";
-
-        //        return (null, Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Message = $"{Loc.ApiError} {ex.Message}";
-        //        return (null, Message);
-        //    }
-        //}
-
         private static readonly HttpClient _httpClient = new HttpClient();
         public bool IsLoggingIn = false;
         public async Task<(User? User, string Message)> DiscordAuth(UserRegister register)
@@ -324,16 +290,15 @@ namespace PlayerScope.API
                 string output = JsonConvert.SerializeObject(register);
                 byte[] bytes = Encoding.UTF8.GetBytes(output);
                 string data = System.Convert.ToBase64String(bytes);
-                string url = Config.BaseUrl.Replace("api/v1/", "Auth/DiscordAuth?") + data;
+                string url = Config.BaseUrl.Replace("v1/", "Auth/DiscordAuth?") + data;
 
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = url,
                     UseShellExecute = true,
                 });
-                
-                var response = await _httpClient.GetAsync($"http://localhost:5001/waitforlogin?data={data}", HttpCompletionOption.ResponseHeadersRead);
-                PersistenceContext._logger.LogCritical("get");
+
+                var response = await _httpClient.GetAsync($"{Config.BaseUrl.Replace("v1/", "")}waitforlogin?data={data}", HttpCompletionOption.ResponseHeadersRead);
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 using (var reader = new StreamReader(stream))
                 {
@@ -341,14 +306,11 @@ namespace PlayerScope.API
                     {
                         var line = await reader.ReadLineAsync();
                         if (line == null) break;
-                        PersistenceContext._logger.LogCritical("get1");
                         if (line.StartsWith("data:"))
                         {
-                            PersistenceContext._logger.LogCritical("get2");
                             var message = line.Substring("data:".Length).Trim();
                             if (message.Contains("Login successful"))
                             {
-                                PersistenceContext._logger.LogCritical("get3");
                                 IsLoggingIn = false;
                                 SettingsWindow.Instance.RefreshUserProfileInfo();
                                 break;

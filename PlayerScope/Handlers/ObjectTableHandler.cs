@@ -107,8 +107,6 @@ internal sealed class ObjectTableHandler : IDisposable
                     },
                     CreatedAt = Tools.UnixTime,
                 });
-
-                _logger.LogError($"{PersistenceContext.AnamnesisFound} - {bc->NameString}-  Cord: " + obj.GetMapCoordinates() + "   -   Second: " + obj.GetMapCoordinates().ToString() + "   -   Third: " + obj.GetMapCoordinates().AsVector128().AsUInt64() + " 4th: X" + obj.GetMapCoordinates().X + " Y:" + obj.GetMapCoordinates().Y + " Z:" + obj.GetMapCoordinates().Z);
             }
         }
 
