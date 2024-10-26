@@ -124,13 +124,19 @@
     <value>Karakter Adi:</value>
   </data>
   <data name="StRoleDescriptionNonVerified" xml:space="preserve">
-    <value>Tüh! Yalnizca \"dogrulanmis\" kullanicilar sunucuya bilgi gönderebilir ve sunucudan alabilir.</value>
+    <value>Tüh! Yalnizca "onayli kullanicilar" sunucuya bilgi gönderebilir ve sunucudan alabilir.</value>
   </data>
   <data name="StRole" xml:space="preserve">
     <value>Rol: </value>
   </data>
-  <data name="StRoleNotVerified" xml:space="preserve">
-    <value>Onayli Degil</value>
+  <data name="StRoleGuest" xml:space="preserve">
+    <value>Misafir</value>
+  </data>
+  <data name="StRoleVerifiedMember" xml:space="preserve">
+    <value>Onayli Üye</value>
+  </data>
+  <data name="StRoleBanned" xml:space="preserve">
+    <value>Yasakli</value>
   </data>
   <data name="StRoleMember" xml:space="preserve">
     <value>Üye</value>

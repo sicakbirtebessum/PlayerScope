@@ -1315,11 +1315,29 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   Ouch! Only \&quot;members\&quot; can send information and receive from the server. benzeri yerelleştirilmiş bir dize arar.
+        ///   Banned benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StRoleBanned {
+            get {
+                return ResourceManager.GetString("StRoleBanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ouch! Only &quot;verified members&quot; can send information and receive from the server. benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StRoleDescriptionNonVerified {
             get {
                 return ResourceManager.GetString("StRoleDescriptionNonVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Guest benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StRoleGuest {
+            get {
+                return ResourceManager.GetString("StRoleGuest", resourceCulture);
             }
         }
         
@@ -1342,20 +1360,20 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   Not Verified benzeri yerelleştirilmiş bir dize arar.
-        /// </summary>
-        internal static string StRoleNotVerified {
-            get {
-                return ResourceManager.GetString("StRoleNotVerified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Owner benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StRoleOwner {
             get {
                 return ResourceManager.GetString("StRoleOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Verified Member benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StRoleVerifiedMember {
+            get {
+                return ResourceManager.GetString("StRoleVerifiedMember", resourceCulture);
             }
         }
         

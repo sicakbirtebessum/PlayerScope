@@ -82,8 +82,10 @@ namespace PlayerScope.API.Models
         }
         public enum Roles
         {
-            NotVerified = 0,
+            Banned = -1,
+            Guest = 0,
             Member = 1,
+            Verified_Member = 2,
             Vip = 5,
             Moderator = 8,
             Admin = 9,

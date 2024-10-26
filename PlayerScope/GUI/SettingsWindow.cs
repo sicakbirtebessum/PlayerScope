@@ -247,10 +247,14 @@ namespace PlayerScope.GUI
             //var value = enumValue.GetType().GetMember(enumValue.ToString()).First()?.GetCustomAttribute<DisplayAttribute>()?.Name;
             switch (enumValue)
             {
-                case Roles.NotVerified:
-                    return Loc.StRoleNotVerified;
+                case Roles.Banned:
+                    return Loc.StRoleBanned;
+                case Roles.Guest:
+                    return Loc.StRoleGuest;
                 case Roles.Member:
                     return Loc.StRoleMember;
+                case Roles.Verified_Member:
+                    return Loc.StRoleVerifiedMember;
                 case Roles.Vip:
                     return Loc.StRoleVip;
                 case Roles.Moderator:

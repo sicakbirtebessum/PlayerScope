@@ -124,13 +124,19 @@
     <value>Character Name:</value>
   </data>
   <data name="StRoleDescriptionNonVerified" xml:space="preserve">
-    <value>Ouch! Only \"members\" can send information and receive from the server.</value>
+    <value>Ouch! Only "verified members" can send information and receive from the server.</value>
   </data>
   <data name="StRole" xml:space="preserve">
     <value>Role: </value>
   </data>
-  <data name="StRoleNotVerified" xml:space="preserve">
-    <value>Not Verified</value>
+  <data name="StRoleGuest" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="StRoleVerifiedMember" xml:space="preserve">
+    <value>Verified Member</value>
+  </data>
+  <data name="StRoleBanned" xml:space="preserve">
+    <value>Banned</value>
   </data>
   <data name="StRoleMember" xml:space="preserve">
     <value>Member</value>
