@@ -702,4 +702,16 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   <data name="CmOpenUI" xml:space="preserve">
     <value>Open UI</value>
   </data>
+  <data name="StDidntTheBrowserOpen" xml:space="preserve">
+    <value>Didn't the browser open?</value>
+  </data>
+  <data name="StCopyTheLink" xml:space="preserve">
+    <value>Copy the link</value>
+  </data>
+  <data name="StPasteItInBrowser" xml:space="preserve">
+    <value>and paste it into your browser.</value>
+  </data>
+  <data name="StLinkCopied" xml:space="preserve">
+    <value>Link copied.</value>
+  </data>
 </root>

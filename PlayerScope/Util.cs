@@ -93,6 +93,24 @@ namespace PlayerScope
 #pragma warning restore
             }
         }
+
+        public static bool ButtonCopy(string buttonText, string copyText)
+        {
+            ImGui.Button(buttonText);
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+            }
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+            {
+#pragma warning disable
+                ImGui.SetClipboardText(copyText);
+                return true;
+#pragma warning restore
+            }
+            return false;
+        }
+
         public static void CompletionProgressBar(int progress, int total, int height = 20, bool parseColors = true)
         {
             ImGui.BeginGroup();

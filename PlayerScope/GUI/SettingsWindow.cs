@@ -49,6 +49,7 @@ using static Lumina.Data.Parsing.Layer.LayerCommon;
 using static PlayerScope.API.Models.User;
 using static PlayerScope.Configuration;
 using static PlayerScope.GUI.MainWindow;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PlayerScope.GUI
 {
@@ -426,26 +427,6 @@ namespace PlayerScope.GUI
                     //ImGui.SetNextItemWidth(200);
                     using (ImRaii.Disabled(bIsNetworkProcessing || _client._ServerStatus != "ONLINE"))
                     {
-                        //using (ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.ParsedBlue))
-                        //    if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.FileContract, Loc.StLoginWithDiscord, ImGuiColors.ParsedBlue, null, ImGuiColors.TankBlue))
-                        //    {
-                        //        _ = Task.Run(() =>
-                        //        {
-                        //            bIsNetworkProcessing = true;
-                        //            var request = _client.DiscordAuth(new UserRegister
-                        //            {
-                        //                GameAccountId = _accountId,
-                        //                UserLocalContentId = _contentId,
-                        //                Name = _playerName,
-                        //                ClientId = Config.Key,
-                        //                Version = Util.clientVer
-                        //            }).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                        //            LastRegistrationWindowMessage = request.Message;
-                        //            bIsNetworkProcessing = false;
-                        //        });
-                        //    }
-
                         using (ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.ParsedBlue))
                             if (ImGui.Button(Loc.StLoginWithDiscord, new Vector2(200, 40)))
                         {
@@ -475,7 +456,24 @@ namespace PlayerScope.GUI
                             {
                                 _client.IsLoggingIn = false;
                             }
+
+                        ImGui.NewLine();
+
+                        Util.TextWrapped(Loc.StDidntTheBrowserOpen);
+
+                        ImGui.SameLine();
+                        if (Util.ButtonCopy(Loc.StCopyTheLink, _client.authUrl))
+                        {
+                            isAuthLinkCopied = true;
+                        }
+                        ImGui.SameLine();
+
+                        Util.TextWrapped(Loc.StPasteItInBrowser);
+
+                        if (isAuthLinkCopied)
+                            Util.ColoredTextWrapped(ImGuiColors.ParsedGold, Loc.StLinkCopied);
                     }
+
                     Util.ColoredErrorTextWrapped(LastRegistrationWindowMessage);
                 }
                 else
@@ -484,7 +482,7 @@ namespace PlayerScope.GUI
                 }
             }
         }
-
+        bool isAuthLinkCopied;
         bool IsRefreshStatsRequestSent = false;
         public string _LastServerStatsMessage = string.Empty;
         private int _LastServerStatsRefreshTime = 0;

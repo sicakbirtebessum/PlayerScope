@@ -962,6 +962,24 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Copy the link benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StCopyTheLink {
+            get {
+                return ResourceManager.GetString("StCopyTheLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Didn&apos;t the browser open? benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StDidntTheBrowserOpen {
+            get {
+                return ResourceManager.GetString("StDidntTheBrowserOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   You are not logged in.
         ///Please login with a character to continue. benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
@@ -1071,6 +1089,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Link copied. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StLinkCopied {
+            get {
+                return ResourceManager.GetString("StLinkCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Load Details benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StLoadDetails {
@@ -1112,6 +1139,15 @@ namespace PlayerScope.Properties {
         internal static string StOnline {
             get {
                 return ResourceManager.GetString("StOnline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   and paste it into your browser. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StPasteItInBrowser {
+            get {
+                return ResourceManager.GetString("StPasteItInBrowser", resourceCulture);
             }
         }
         

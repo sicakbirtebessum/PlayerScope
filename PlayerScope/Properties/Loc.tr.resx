@@ -702,4 +702,16 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="CmOpenUI" xml:space="preserve">
     <value>Arayüzü Göster</value>
   </data>
+  <data name="StDidntTheBrowserOpen" xml:space="preserve">
+    <value>Tarayicin açilmadi mi?</value>
+  </data>
+  <data name="StCopyTheLink" xml:space="preserve">
+    <value>Linki kopyala</value>
+  </data>
+  <data name="StPasteItInBrowser" xml:space="preserve">
+    <value>ve tarayici adres çubuguna yapistir.</value>
+  </data>
+  <data name="StLinkCopied" xml:space="preserve">
+    <value>Link kopyalandi.</value>
+  </data>
 </root>

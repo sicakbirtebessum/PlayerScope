@@ -281,6 +281,7 @@ namespace PlayerScope.API
         //---Users---//
         private static readonly HttpClient _httpClient = new HttpClient();
         public bool IsLoggingIn = false;
+        public string authUrl = string.Empty;
         public async Task<(User? User, string Message)> DiscordAuth(UserRegister register)
         {
             IsLoggingIn = true;
@@ -290,11 +291,11 @@ namespace PlayerScope.API
                 string output = JsonConvert.SerializeObject(register);
                 byte[] bytes = Encoding.UTF8.GetBytes(output);
                 string data = System.Convert.ToBase64String(bytes);
-                string url = Config.BaseUrl.Replace("v1/", "Auth/DiscordAuth?") + data;
+                authUrl = Config.BaseUrl.Replace("v1/", "Auth/DiscordAuth?") + data;
 
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = url,
+                    FileName = authUrl,
                     UseShellExecute = true,
                 });
 

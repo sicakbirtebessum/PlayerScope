@@ -130,7 +130,6 @@ internal sealed unsafe class GameHooks : IDisposable
                         CurrentWorldId = (ushort)PersistenceContext.GetCurrentWorld(),
                         CreatedAt = Tools.UnixTime,
                     });
-                    _logger.LogError($"{mapping.ContentId} {mapping.PlayerName} AId:{mapping.AccountId} WId:{mapping.WorldId} W:{(ushort)PersistenceContext.GetCurrentWorld()}");
                 }
                 else
                 {
