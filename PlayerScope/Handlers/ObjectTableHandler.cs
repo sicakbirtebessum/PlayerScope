@@ -58,7 +58,11 @@ internal sealed class ObjectTableHandler : IDisposable
 
         _lastUpdate = now;
 
+        if (Process.GetProcessesByName("Anamnesis").Length != 0)
+            PersistenceContext.AnamnesisFound = true;
+
         List<PlayerMapping> playerMappings = new();
+        List<PostPlayerRequest> playerRequests = new();
         foreach (var obj in _objectTable)
         {
             if (obj.ObjectKind == ObjectKind.Player)
@@ -77,10 +81,7 @@ internal sealed class ObjectTableHandler : IDisposable
 
                 var Customization = bc->DrawData.CustomizeData;
 
-                if (Process.GetProcessesByName("Anamnesis").Length != 0)
-                    PersistenceContext.AnamnesisFound = true;
-
-                PersistenceContext.AddPlayerUploadData(bc->ContentId, new PostPlayerRequest
+                playerRequests.Add(new PostPlayerRequest
                 {
                     LocalContentId = bc->ContentId,
                     Name = bc->NameString,
@@ -113,8 +114,12 @@ internal sealed class ObjectTableHandler : IDisposable
         if (playerMappings.Count > 0)
             Task.Run(() => _persistenceContext.HandleContentIdMappingAsync(playerMappings));
 
+        if (playerRequests.Count > 0)
+            PersistenceContext.AddPlayerUploadData(playerRequests);
+
         _logger.LogTrace("ObjectTable handling for {Count} players took {TimeMs}", playerMappings.Count, TimeSpan.FromMilliseconds(Environment.TickCount64 - now));
     }
+
     public void Dispose()
     {
         _framework.Update -= FrameworkUpdate;

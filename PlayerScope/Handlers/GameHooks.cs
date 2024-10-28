@@ -71,16 +71,18 @@ internal sealed unsafe class GameHooks : IDisposable
                     mapping.PlayerName);
                 if (mapping.PlayerName.IsValidCharacterName(true))
                 {
-                    PersistenceContext.AddPlayerUploadData(contentId, new PostPlayerRequest
+                    var playerRequest = new PostPlayerRequest
                     {
                         LocalContentId = contentId,
                         Name = mapping.PlayerName,
                         AccountId = (int?)mapping.AccountId,
                         HomeWorldId = null,
-                        CurrentWorldId = (ushort)PersistenceContext.GetCurrentWorld(),
+                        CurrentWorldId = (ushort?)PersistenceContext.GetCurrentWorld(),
                         CreatedAt = Tools.UnixTime,
-                    });
+                    };
+
                     Task.Run(() => _persistenceContext.HandleContentIdMappingAsync(new List<PlayerMapping> { mapping }));
+                    PersistenceContext.AddPlayerUploadData(new List<PostPlayerRequest> { playerRequest });
                 }
             }
             else
@@ -103,11 +105,12 @@ internal sealed unsafe class GameHooks : IDisposable
         {
             var result = Marshal.PtrToStructure<SocialListResultPage>(dataPtr);
             List<PlayerMapping> mappings = new();
+            List<PostPlayerRequest> playerRequests = new();
             foreach (SocialListPlayer player in result.PlayerSpan)
             {
                 if (player.ContentId == 0)
                     continue;
-
+                
                 ushort? homeWorldId = player.HomeWorldID != 0 && player.HomeWorldID != 65535 ? player.HomeWorldID : null;
 
                 var mapping = new PlayerMapping
@@ -121,13 +124,13 @@ internal sealed unsafe class GameHooks : IDisposable
                 if (!string.IsNullOrEmpty(mapping.PlayerName))
                 {
                     mappings.Add(mapping);
-                    PersistenceContext.AddPlayerUploadData(mapping.ContentId, new PostPlayerRequest
+                    playerRequests.Add(new PostPlayerRequest
                     {
                         LocalContentId = mapping.ContentId,
                         Name = mapping.PlayerName,
                         AccountId = (int?)mapping.AccountId,
                         HomeWorldId = mapping.WorldId,
-                        CurrentWorldId = (ushort)PersistenceContext.GetCurrentWorld(),
+                        CurrentWorldId = (ushort?)PersistenceContext.GetCurrentWorld(),
                         CreatedAt = Tools.UnixTime,
                     });
                 }
@@ -139,6 +142,9 @@ internal sealed unsafe class GameHooks : IDisposable
 
             if (mappings.Count > 0)
                 Task.Run(() => _persistenceContext.HandleContentIdMappingAsync(mappings));
+            
+            if (playerRequests.Count > 0)
+                PersistenceContext.AddPlayerUploadData(playerRequests);
         }
         catch (Exception e)
         {

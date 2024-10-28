@@ -167,6 +167,7 @@ public sealed class PlayerScopePlugin : IDalamudPlugin
     {
         _serviceProvider?.Dispose();
         Handlers.ContextMenu.Disable();
+        PersistenceContext.StopUploads();
         // ensure we're not keeping the file open longer than the plugin is loaded
         using (SqliteConnection sqliteConnection = new(_sqliteConnectionString))
             SqliteConnection.ClearPool(sqliteConnection);

@@ -77,9 +77,9 @@ internal sealed class PersistenceContext
 
         Territories = PlayerScopePlugin._dataManager.GetExcelSheet<TerritoryType>().ToList();
 
-        _ = PostPlayerAndRetainerData();
+        _cancellationTokenSource = new CancellationTokenSource();
+        _ = PostPlayerAndRetainerData(_cancellationTokenSource.Token);
     }
-
     public static void ReloadCache()
     {
         using (IServiceScope scope = _serviceProvider.CreateScope())
@@ -160,170 +160,254 @@ internal sealed class PersistenceContext
         }
     }
 
-    public static void AddRetainerUploadData(ulong CId, PostRetainerRequest request)
-    {
-        _ = _UploadRetainers.TryGetValue(CId, out var _GetUploadRetainer);
-        _ = _UploadedRetainersCache.TryGetValue(CId, out var _GetUploadedCacheRetainer); //Check if uploaded before
-
-        if (_GetUploadedCacheRetainer != null)
-        {
-            bool removed = false;
-            if (Tools.UnixTime - _GetUploadedCacheRetainer.CreatedAt > 215) //3.30minutes
-            {
-                _UploadedRetainersCache.TryRemove(CId, out _);
-                removed = true;
-            }
-
-            if (!removed)
-            {
-                bool changed = false;
-                if (request.Name != _GetUploadedCacheRetainer.Name) changed = true;
-                else if (request.WorldId != _GetUploadedCacheRetainer.WorldId) changed = true;
-
-                if (!changed)
-                    return;
-
-                _UploadRetainers[CId] = request;
-                _UploadedRetainersCache[CId] = request;
-            }
-            else
-            {
-                _UploadRetainers[CId] = request;
-                _UploadedRetainersCache[CId] = request;
-            }
-        }
-        else if (_GetUploadRetainer != null)
-        {
-            bool changed = false;
-            if (request.Name != _GetUploadRetainer.Name) changed = true;
-            else if (request.WorldId != _GetUploadRetainer.WorldId) changed = true;
-
-            if (!changed)
-                return;
-
-            _UploadRetainers[CId] = request;
-        }
-        else if (_GetUploadRetainer == null && _GetUploadedCacheRetainer == null)
-        {
-            _UploadRetainers[CId] = request;
-        }
-    }
-    public static void AddPlayerUploadData(ulong CId, PostPlayerRequest request)
-    {
-        _ = _UploadPlayers.TryGetValue(CId, out var UploadPlayer);
-        _ = _UploadedPlayersCache.TryGetValue(CId, out var UploadedCachePlayer); //Check if uploaded before
-        if (UploadedCachePlayer != null)
-        {
-            bool removed = false;
-            if (Tools.UnixTime - UploadedCachePlayer.CreatedAt > 215) //3.30minutes
-            {
-                _UploadedRetainersCache.TryRemove(CId, out _);
-                removed = true;
-            }
-            if (!removed)
-            {
-                bool changed = false;
-                if (request.Name != UploadedCachePlayer.Name) changed = true;
-                else if (request.AccountId != null && UploadedCachePlayer.AccountId == null) changed = true;
-                else if (request.TerritoryId != null && UploadedCachePlayer.TerritoryId == null) changed = true;
-                else if (request.HomeWorldId != null && UploadedCachePlayer.HomeWorldId == null) changed = true;
-                else if (request.CurrentWorldId != null && UploadedCachePlayer.CurrentWorldId == null) changed = true;
-                if (!changed)
-                    return;
-
-                _UploadPlayers[CId] = request;
-                _UploadedPlayersCache[CId] = request;
-            }
-            else
-            {
-                _UploadPlayers[CId] = request;
-                _UploadedPlayersCache[CId] = request;
-            }
-        }
-        else if (UploadPlayer != null) 
-        {
-            bool changed = false;
-            if (request.Name != UploadPlayer.Name) changed = true;
-            else if (request.AccountId != null && UploadPlayer.AccountId == null) changed = true;
-            else if (request.TerritoryId != null && UploadPlayer.TerritoryId == null) changed = true;
-            else if (request.HomeWorldId != null && UploadPlayer.HomeWorldId == null) changed = true;
-            else if (request.CurrentWorldId != null && UploadPlayer.CurrentWorldId == null) changed = true;
-            if (!changed)
-                return;
-
-            _UploadPlayers[CId] = request;
-        }
-        else if (UploadPlayer == null && UploadedCachePlayer == null) 
-        {
-            _UploadPlayers[CId] = request;
-        }
-    }
+    private const int CacheExpirationTimeInSeconds = 215; // 3.30 minutes
     public static bool AnamnesisFound;
-    public static async Task PostPlayerAndRetainerData()
+
+    private static bool HasDataChanged<T>(T request, T cachedRequest) where T : class
     {
-        int takeCount = 200;
-        var timer = new PeriodicTimer(TimeSpan.FromSeconds(20));
+        switch (request)
+        {
+            case PostPlayerRequest playerRequest when cachedRequest is PostPlayerRequest cachedPlayer:
+                return playerRequest.Name != cachedPlayer.Name ||
+                       (playerRequest.AccountId.HasValue && !cachedPlayer.AccountId.HasValue) ||
+                       playerRequest.TerritoryId != cachedPlayer.TerritoryId ||
+                       playerRequest.HomeWorldId != cachedPlayer.HomeWorldId ||
+                       playerRequest.CurrentWorldId != cachedPlayer.CurrentWorldId;
+
+            case PostRetainerRequest retainerRequest when cachedRequest is PostRetainerRequest cachedRetainer:
+                return retainerRequest.Name != cachedRetainer.Name ||
+                       retainerRequest.WorldId != cachedRetainer.WorldId;
+
+            default:
+                throw new InvalidOperationException("Unsupported type for data change check");
+        }
+    }
+
+    private static void UpdateCacheIfNeeded<T>(
+        ulong id,
+        T request,
+        ConcurrentDictionary<ulong, T> uploadList,
+        ConcurrentDictionary<ulong, T> cache
+    ) where T : class
+    {
+        if (cache.TryGetValue(id, out var cachedRequest))
+        {
+            if (Tools.UnixTime - GetCreatedAt(cachedRequest) > CacheExpirationTimeInSeconds)
+            {
+                cache.TryRemove(id, out _);
+            }
+            else if (!HasDataChanged(request, cachedRequest))
+            {
+                return;
+            }
+        }
+        uploadList[id] = request;
+        cache[id] = request;
+    }
+    private static int GetCreatedAt<T>(T request)
+    {
+        return request switch
+        {
+            PostPlayerRequest player => player.CreatedAt,
+            PostRetainerRequest retainer => retainer.CreatedAt,
+            _ => throw new InvalidOperationException("Unsupported type")
+        };
+    }
+
+    public static void AddPlayerUploadData(IEnumerable<PostPlayerRequest> requests)
+    {
+        foreach (var request in requests)
+        {
+            UpdateCacheIfNeeded(request.LocalContentId, request, _UploadPlayers, _UploadedPlayersCache);
+        }
+    }
+
+    public static void AddRetainerUploadData(IEnumerable<PostRetainerRequest> requests)
+    {
+        foreach (var request in requests)
+        {
+            UpdateCacheIfNeeded(request.LocalContentId, request, _UploadRetainers, _UploadedRetainersCache);
+        }
+    }
+
+    public static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+    public static async Task PostPlayerAndRetainerData(CancellationToken cancellationToken)
+    {
         try
         {
-            while (await timer.WaitForNextTickAsync().ConfigureAwait(false))
+            while (!cancellationToken.IsCancellationRequested)
             {
-            post:
-
-                if (!PersistenceContext._UploadPlayers.IsEmpty)
+                while (!_UploadPlayers.IsEmpty)
                 {
-                    if (Process.GetProcessesByName("Anamnesis").Length != 0)
-                        AnamnesisFound = true;
-
-                    var TakeUploadPlayers = PersistenceContext._UploadPlayers.Take(takeCount).Select(p =>
-                    new PostPlayerRequest
-                    {
-                        Name = p.Value.Name,
-                        LocalContentId = p.Key,
-                        AccountId = p.Value.AccountId,
-                        HomeWorldId = p.Value.HomeWorldId,
-                        CurrentWorldId = p.Value.CurrentWorldId,
-                        Customization = AnamnesisFound ? null : p.Value.Customization,
-                        PlayerPos = p.Value.PlayerPos,
-                        TerritoryId = p.Value.TerritoryId,
-                        CreatedAt = p.Value.CreatedAt,
-                    }).ToList();
-
-                    var request = ApiClient.Instance.PostPlayers(TakeUploadPlayers).ConfigureAwait(false).GetAwaiter().GetResult();
-                    foreach (var uploadedPlayer in TakeUploadPlayers)
-                    {
-                        _UploadPlayers.Remove(uploadedPlayer.LocalContentId, out _);
-                        _UploadedPlayersCache[uploadedPlayer.LocalContentId] = uploadedPlayer;
-                    }
-                    Thread.Sleep(3000);
-                    goto post;
+                    await ProcessPlayerUploadBatch(cancellationToken).ConfigureAwait(false);
                 }
-                if (!_UploadRetainers.IsEmpty)
+                while (!_UploadRetainers.IsEmpty)
                 {
-                    var TakeUploadRetainers = PersistenceContext._UploadRetainers.Take(takeCount).Select(p =>
-                    new PostRetainerRequest
-                    {
-                        LocalContentId = p.Value.LocalContentId,
-                        Name = p.Value.Name,
-                        OwnerLocalContentId = p.Value.OwnerLocalContentId,
-                        WorldId = p.Value.WorldId,
-                        CreatedAt = p.Value.CreatedAt,
-                    }).ToList();
-
-                    var request = ApiClient.Instance.PostRetainers(TakeUploadRetainers).ConfigureAwait(false).GetAwaiter().GetResult();
-                    foreach (var uploadedRetainer in TakeUploadRetainers)
-                    {
-                        _UploadRetainers.Remove(uploadedRetainer.LocalContentId, out _);
-                        _UploadedRetainersCache[uploadedRetainer.LocalContentId] = uploadedRetainer;
-                    }
-                    Thread.Sleep(3000);
-                    goto post;
+                    await ProcessRetainerUploadBatch(cancellationToken).ConfigureAwait(false);
                 }
+
+                await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken).ConfigureAwait(false);
             }
+        }
+        catch (OperationCanceledException)
+        {
+            // İptal durumunu loglayın, ama hatalı bir durum olarak kaydetmeyin
+            _logger.LogInformation("PostPlayerAndRetainerData was canceled.");
         }
         catch (Exception e)
         {
             _logger.LogWarning("Could not post " + e.Message);
         }
+    }
+    public static void StopUploads()
+    {
+        if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+        {
+            _cancellationTokenSource.Cancel();
+            _logger.LogInformation("Upload tasks have been canceled.");
+        }
+    }
+    private static async Task ProcessPlayerUploadBatch(CancellationToken cancellationToken,
+    int batchSize = 200,
+    int maxRetries = 3)
+    {
+        if (_UploadPlayers.IsEmpty) return;
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        var itemsToUpload = _UploadPlayers.Take(batchSize).Select(kvp => kvp.Value).ToList();
+        //_logger.LogInformation($"Uploading {itemsToUpload.Count} Player items. TotalCount: {_UploadPlayers.Count}");
+
+        int retryCount = 0;
+        bool uploadSuccess = false;
+
+        while (!_cancellationTokenSource.IsCancellationRequested && !_UploadPlayers.IsEmpty && !uploadSuccess && retryCount < maxRetries)
+        {
+            if (await ApiClient.Instance.PostPlayers(itemsToUpload).ConfigureAwait(false))
+            {
+                foreach (var item in itemsToUpload)
+                {
+                    var key = GetKey(item);
+                    _UploadPlayers.TryRemove(key, out _);
+                    _UploadedPlayersCache[key] = item;
+                }
+                //_logger.LogInformation("Player upload successful, items added to cache.");
+                uploadSuccess = true;
+            }
+            else
+            {
+                retryCount++;
+                _logger.LogWarning($"Player upload attempt {retryCount} failed. Retrying...");
+
+                try
+                {
+                    await Task.Delay(1500 * retryCount, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    _logger.LogInformation("Upload process canceled during delay.");
+                    return;
+                }
+            }
+        }
+
+        if (!uploadSuccess)
+        {
+            _logger.LogError("Player upload failed after multiple attempts, items could not be uploaded.");
+        }
+
+        //_logger.LogInformation("ProcessPlayerUploadBatch completed.");
+
+        if (!_UploadPlayers.IsEmpty)
+        {
+            //_logger.LogInformation("Waiting before next Player upload attempt as there are still items in the list.");
+            try
+            {
+                await Task.Delay(1000, cancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+                //_logger.LogInformation("Upload process canceled during final delay.");
+                return;
+            }
+        }
+    }
+
+    private static async Task ProcessRetainerUploadBatch(CancellationToken cancellationToken,
+    int batchSize = 200,
+    int maxRetries = 3
+)
+    {
+        if (_UploadRetainers.IsEmpty) return;
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        var itemsToUpload = _UploadRetainers.Take(batchSize).Select(kvp => kvp.Value).ToList();
+        //_logger.LogInformation($"Uploading {itemsToUpload.Count} Retainer items. TotalCount: {_UploadRetainers.Count}");
+
+        int retryCount = 0;
+        bool uploadSuccess = false;
+
+        while (!cancellationToken.IsCancellationRequested && !_UploadRetainers.IsEmpty && !uploadSuccess && retryCount < maxRetries)
+        {
+            if (await ApiClient.Instance.PostRetainers(itemsToUpload).ConfigureAwait(false))
+            {
+                foreach (var item in itemsToUpload)
+                {
+                    var key = GetKey(item);
+                    _UploadRetainers.TryRemove(key, out _);
+                    _UploadedRetainersCache[key] = item;
+                }
+                //_logger.LogInformation("Retainer upload successful, items added to cache.");
+                uploadSuccess = true;
+            }
+            else
+            {
+                retryCount++;
+                _logger.LogWarning($"Retainer upload attempt {retryCount} failed. Retrying...");
+
+                try
+                {
+                    await Task.Delay(1500 * retryCount, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    _logger.LogInformation("Upload process canceled during delay.");
+                    return;
+                }
+            }
+        }
+
+        if (!uploadSuccess)
+        {
+            _logger.LogError("Retainer upload failed after multiple attempts, items could not be uploaded.");
+        }
+
+        //_logger.LogInformation("ProcessRetainerUploadBatch completed.");
+
+        if (!_UploadRetainers.IsEmpty)
+        {
+            //_logger.LogInformation("Waiting before next Retainer upload attempt as there are still items in the list.");
+            try
+            {
+                await Task.Delay(1000, cancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+                //_logger.LogInformation("Upload process canceled during final delay.");
+                return;
+            }
+        }
+    }
+
+    private static ulong GetKey<T>(T request)
+    {
+        return request switch
+        {
+            PostPlayerRequest player => player.LocalContentId,
+            PostRetainerRequest retainer => retainer.LocalContentId,
+            _ => throw new InvalidOperationException("Unsupported type")
+        };
     }
 
     public static uint? GetCurrentWorld()

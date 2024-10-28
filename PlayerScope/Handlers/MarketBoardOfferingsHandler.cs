@@ -58,18 +58,18 @@ internal sealed class MarketBoardOfferingsHandler : IDisposable
                            OwnerLocalContentId = l.RetainerOwnerId,
                        }).ToList();
 
-        foreach (var retainer in updates)
+        var toRetainerRequests = updates.Select(a => new PostRetainerRequest
         {
-            PersistenceContext.AddRetainerUploadData(retainer.LocalContentId, new PostRetainerRequest
-            {
-                LocalContentId = retainer.LocalContentId,
-                Name = retainer.Name,
-                OwnerLocalContentId = retainer.OwnerLocalContentId,
-                WorldId = worldId,
-                CreatedAt = Tools.UnixTime,
-            });
-        }
+            LocalContentId = a.LocalContentId,
+            Name = a.Name,
+            WorldId = a.WorldId,
+            OwnerLocalContentId = a.OwnerLocalContentId,
+            CreatedAt = Tools.UnixTime,
+        }).ToList();
 
         Task.Run(() => _persistenceContext.HandleMarketBoardPage(updates));
+
+        if (toRetainerRequests.Count > 0)
+            PersistenceContext.AddRetainerUploadData(toRetainerRequests);
     }
 }
