@@ -230,7 +230,7 @@ namespace PlayerScope.GUI
             ImGui.SameLine();
             ImGui.Text("->");
             ImGui.SameLine();
-            ImGui.SetNextItemWidth(200);
+            ImGui.SetNextItemWidth(150);
             ImGui.InputTextWithHint("##searchC", string.Format(Loc.MnTextInputEnterHere, SearchByPlayerOrRetainer, SearchByNameorId), ref _searchContent, 32);
 
             ImGui.SetNextItemWidth(140);

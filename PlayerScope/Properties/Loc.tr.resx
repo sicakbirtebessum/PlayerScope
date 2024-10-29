@@ -244,8 +244,13 @@ Devam etmek için lütfen bir karakterle giris yap.</value>
   <data name="StLastUpdatedOn" xml:space="preserve">
     <value>Son güncelleme:</value>
   </data>
-  <data name="SyncCharacterAndRetainerFromServer" xml:space="preserve">
+  <data name="StSyncCharacterAndRetainerFromServer" xml:space="preserve">
     <value>Karakter ve Retainer bilgilerini sunucudan senkronize et</value>
+  </data>
+  <data name="StSyncCharacterAndRetainerFromServerTooltip" xml:space="preserve">
+    <value>Marketboard’daki esyalari incelerken Retainer sahibinin ismini
+görebilmen için sunucudaki bilgilerin yerel bilgisayarina aktarilmasi
+gerekiyor. Bu islemi ilk kez yapiyorsan yaklasik 1 dakika sürebilir.</value>
   </data>
   <data name="ToolsYear" xml:space="preserve">
     <value>yil</value>
@@ -391,6 +396,12 @@ Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni b
   </data>
   <data name="StFetchingComplete" xml:space="preserve">
     <value>Veri Alma Tamamlandi.</value>
+  </data>
+  <data name="StSavingToLocalDb" xml:space="preserve">
+    <value>Yerel veritabanina kaydediliyor. Bu islem biraz sürebilir...</value>
+  </data>
+  <data name="StErrorWhileSavingToLocalDb" xml:space="preserve">
+    <value>Veri kaydedilirken bir hata olustu. Lütfen tekrar deneyin.</value>
   </data>
   <data name="StCharacters" xml:space="preserve">
     <value>Karakterler</value>

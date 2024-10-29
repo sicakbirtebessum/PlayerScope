@@ -561,11 +561,12 @@ namespace PlayerScope.GUI
                 ImGui.TextColored(ImGuiColors.DalamudRed, "...");
 
             ImGui.NewLine();
-           
+
+            Util.DrawHelp(false, Loc.StSyncCharacterAndRetainerFromServerTooltip);
             bool _syncDatabaseButtonCondition = Config.LastSyncedTime != null ? Tools.UnixTime - Config.LastSyncedTime < 300 : true;
             using (ImRaii.Disabled(bIsNetworkProcessing || IsSyncingPlayers || IsSyncingRetainers || IsDbRefreshing || _client._LastServerStats.ServerStats == null|| _syncDatabaseButtonCondition)) // 5 minutes
             {
-                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.UserFriends, Loc.SyncCharacterAndRetainerFromServer))
+                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.UserFriends, Loc.StSyncCharacterAndRetainerFromServer))
                 {
                     IsSyncingPlayers = true;
                     _cancellationToken = new CancellationTokenSource();
@@ -577,6 +578,7 @@ namespace PlayerScope.GUI
                     using (ImRaii.Disabled()) { Util.TextWrapped($"{Loc.StCanSyncAgainTime} {Tools.TimeFromNow((int)syncAgainTime)}"); }
                 }
             }
+            Util.SetHoverTooltip(Loc.StSyncCharacterAndRetainerFromServerTooltip);
 
             if (IsSyncingPlayers || IsSyncingRetainers)
             {
@@ -587,6 +589,7 @@ namespace PlayerScope.GUI
                     IsSyncingPlayers = false; IsSyncingRetainers = false;
                     _playersFetchedFromServer.Clear(); 
                     _retainersFetchedFromServer.Clear();
+                    _LastCursor = 0;
                 }
 
                 Util.CompletionProgressBar(_playersFetchedFromServer.Count + _retainersFetchedFromServer.Count,
@@ -843,113 +846,125 @@ namespace PlayerScope.GUI
         public int _LastCursor = 0;
         public ConcurrentDictionary<long, PlayerDto> _playersFetchedFromServer = new ConcurrentDictionary<long, PlayerDto>();
         public ConcurrentDictionary<long, RetainerDto> _retainersFetchedFromServer = new ConcurrentDictionary<long, RetainerDto>();
+
         public async Task<bool> SyncPlayersWithLocalDb(CancellationTokenSource cts)
         {
-            _ = Task.Run(() =>
+            _ = Task.Run(async () =>
             {
-            syncplayer:
-                PlayerQueryObject query = new PlayerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-                var request = ApiClient.Instance.GetPlayers<PlayerDto>(query).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (request.Page.Data != null && !_cancellationToken.IsCancellationRequested)
+                IsSyncingPlayers = true;
+
+                while (!cts.Token.IsCancellationRequested)
                 {
-                    IsSyncingPlayers = true;
+                    var query = new PlayerQueryObject() { Cursor = _LastCursor, IsFetching = true };
+                    var request = ApiClient.Instance.GetPlayers<PlayerDto>(query).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                    foreach (var _data in request.Page.Data)
+                    if (request.Page.Data != null)
                     {
-                        _playersFetchedFromServer[_data.LocalContentId] = _data;
-                    }
+                        foreach (var _data in request.Page.Data)
+                        {
+                            _playersFetchedFromServer[_data.LocalContentId] = _data;
+                        }
 
-                    _LastCursor = request.Page.LastCursor;
-                    if (request.Page.NextCount > 0)
-                    {
+                        _LastCursor = request.Page.LastCursor;
                         _SyncMessage = $"{Loc.StFetchingCharacters} ({_playersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount})";
-                        Thread.Sleep(300);
-                        goto syncplayer;
+
+                        if (request.Page.NextCount > 0)
+                        {
+                            _SyncMessage = $"{Loc.StFetchingCharacters} ({_playersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount})";
+                            await Task.Delay(300);
+                        }
+                        else
+                        {
+                            _LastCursor = 0;
+                            IsSyncingPlayers = false;
+                            IsSyncingRetainers = true;
+                            break;
+                        }
+
+                        await Task.Delay(300, cts.Token);
                     }
                     else
                     {
-                        _LastCursor = 0;
+                        _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchCharacters;
                         IsSyncingPlayers = false;
-                        IsSyncingRetainers = true;
-                        SyncRetainersWithLocalDb();
+                        return false;
                     }
                 }
-                else
-                {
-                    if (_cancellationToken.IsCancellationRequested)
-                        _SyncMessage = Loc.StErrorStoppedFetching;
-                    else
-                        _SyncMessage = Loc.StErrorUnableToFetchCharacters;
 
-                    IsSyncingPlayers = false;
-                }
+                IsSyncingPlayers = false;
+                return await SyncRetainersWithLocalDb(cts).ConfigureAwait(false);
             });
 
             return true;
         }
-        public async Task<bool> SyncRetainersWithLocalDb()
+
+        public async Task<bool> SyncRetainersWithLocalDb(CancellationTokenSource cts)
         {
-            _ = Task.Run(() =>
+            _ = Task.Run(async () =>
             {
-            syncretainer:
-                RetainerQueryObject query = new RetainerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-                var request = ApiClient.Instance.GetRetainers<RetainerDto>(query).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (request.Page.Data != null && !_cancellationToken.IsCancellationRequested)
+                IsSyncingRetainers = true;
+                _LastCursor = 0;
+
+                while (!cts.Token.IsCancellationRequested)
                 {
-                    IsSyncingRetainers = true;
+                    var query = new RetainerQueryObject() { Cursor = _LastCursor, IsFetching = true };
+                    var request = ApiClient.Instance.GetRetainers<RetainerDto>(query).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                    foreach (var _data in request.Page.Data)
+                    if (request.Page.Data != null)
                     {
-                        _retainersFetchedFromServer[_data.LocalContentId] = _data;
-                    }
+                        foreach (var _data in request.Page.Data)
+                        {
+                            _retainersFetchedFromServer[_data.LocalContentId] = _data;
+                        }
 
-                    _LastCursor = request.Page.LastCursor;
-                    if (request.Page.NextCount > 0)
-                    {
+                        _LastCursor = request.Page.LastCursor;
                         _SyncMessage = $"{Loc.StFetchingRetainers} ({_retainersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount})";
-                        Thread.Sleep(300);
-                        goto syncretainer;
+
+                        if (request.Page.NextCount > 0)
+                        {
+                            _SyncMessage = $"{Loc.StFetchingRetainers} ({_retainersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount})";
+                            await Task.Delay(300);
+                        }
+                        else
+                        {
+                            _LastCursor = 0;
+                            IsSyncingRetainers = false;
+                            break;
+                        }
+
+                        await Task.Delay(300, cts.Token);
                     }
                     else
                     {
-                        int _serverPlayerCount = _client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount;
-                        int _serverRetainerCount = _client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount;
-
-                        if (_playersFetchedFromServer.Count > _serverPlayerCount)
-                            _serverPlayerCount = _playersFetchedFromServer.Count;
-                        if (_retainersFetchedFromServer.Count > _serverRetainerCount)
-                            _serverRetainerCount = _retainersFetchedFromServer.Count;
-
-                        _SyncMessage = $"{Loc.StFetchingComplete}\n{Loc.StCharacters}: ({_playersFetchedFromServer.Count}/{_serverPlayerCount})" +
-                                        $" - {Loc.StRetainers} ({_retainersFetchedFromServer.Count}/{_serverRetainerCount})";
-
+                        _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchRetainers;
                         IsSyncingRetainers = false;
-                        _LastCursor = 0;
-                        IsDbRefreshing = true;
-                        SyncWithLocalDB();
                     }
                 }
-                else
-                {
-                    if (_cancellationToken.IsCancellationRequested)
-                        _SyncMessage = Loc.StErrorStoppedFetching;
-                    else
-                        _SyncMessage = Loc.StErrorUnableToFetchRetainers;
 
-                    IsSyncingRetainers = false;
-                }
+                IsSyncingRetainers = false;
+                IsDbRefreshing = true;
+
+                SyncWithLocalDB();
             });
 
             return true;
         }
 
         public bool IsDbRefreshing;
-        private void SyncWithLocalDB()
+
+        private async Task SyncWithLocalDB()
         {
-            var playerMappings = _playersFetchedFromServer.Select(p => new PlayerMapping {
+            if (!_playersFetchedFromServer.Any() && !_retainersFetchedFromServer.Any())
+            {
+                IsDbRefreshing = false;
+                return;
+            }
+
+            var playerMappings = _playersFetchedFromServer.Select(p => new PlayerMapping
+            {
                 ContentId = (ulong)p.Key,
                 PlayerName = p.Value.Name,
-                AccountId = p.Value.AccountId != null ? (ulong)p.Value.AccountId : null,
+                AccountId = p.Value.AccountId.HasValue ? (ulong)p.Value.AccountId.Value : (ulong?)null,
             }).ToList();
 
             var retainerMappings = _retainersFetchedFromServer.Select(r => new Retainer
@@ -960,20 +975,31 @@ namespace PlayerScope.GUI
                 WorldId = (ushort)r.Value.WorldId,
             }).ToList();
 
-            _ = Task.Run(() =>
+            try
             {
-                PersistenceContext.Instance.HandleContentIdMappingAsync(playerMappings);
-            });
+                _SyncMessage = "\n" + Loc.StSavingToLocalDb;
 
-            _ = Task.Run(() =>
+                await Task.WhenAll(
+                    PersistenceContext.Instance.HandleContentIdMappingAsync(playerMappings),
+                    PersistenceContext.Instance.HandleMarketBoardPage(retainerMappings)
+                ).ConfigureAwait(false);
+
+                _SyncMessage = $"\n{Loc.StFetchingComplete}" +
+                               $"\n{Loc.StCharacters}: {_playersFetchedFromServer.Count}" +
+                               $"\n{Loc.StRetainers}: {_retainersFetchedFromServer.Count}";
+
+                _playersFetchedFromServer.Clear();
+                _retainersFetchedFromServer.Clear();
+            }
+            catch (Exception ex)
             {
-                PersistenceContext.Instance.HandleMarketBoardPage(retainerMappings);
-            });
-
-            _playersFetchedFromServer.Clear(); _retainersFetchedFromServer.Clear();
-            IsDbRefreshing = false;
-
-            RefreshUserProfileInfo();
+                _SyncMessage = $"{Loc.ApiError} {Loc.StErrorWhileSavingToLocalDb}";
+            }
+            finally
+            {
+                IsDbRefreshing = false;
+                RefreshUserProfileInfo();
+            }
         }
 
         public (ServerStatsDto ServerStats, string Message) CheckServerStats()

@@ -244,8 +244,13 @@ Please login with a character to continue.</value>
   <data name="StLastUpdatedOn" xml:space="preserve">
     <value>Last Updated on:</value>
   </data>
-  <data name="SyncCharacterAndRetainerFromServer" xml:space="preserve">
+  <data name="StSyncCharacterAndRetainerFromServer" xml:space="preserve">
     <value>Sync Character and Retainer info from Server</value>
+  </data>
+  <data name="StSyncCharacterAndRetainerFromServerTooltip" xml:space="preserve">
+    <value>In order to see the name of the owner of the Retainer while browsing items on the Marketboard,
+you'll need to download the player information from the server to your computer.
+If you're doing this for the first time, it may take approximately one minute.</value>
   </data>
   <data name="ToolsYear" xml:space="preserve">
     <value>Year</value>
@@ -391,6 +396,12 @@ However, if they have seen you before, they can find you by searching in the Loc
   </data>
   <data name="StFetchingComplete" xml:space="preserve">
     <value>Fetching Complete.</value>
+  </data>
+  <data name="StSavingToLocalDb" xml:space="preserve">
+    <value>Saving to the local database. This may take a moment...</value>
+  </data>
+  <data name="StErrorWhileSavingToLocalDb" xml:space="preserve">
+    <value>An error occurred while saving the data. Please try again.</value>
   </data>
   <data name="StCharacters" xml:space="preserve">
     <value>Characters</value>

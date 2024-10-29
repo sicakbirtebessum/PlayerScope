@@ -251,7 +251,6 @@ internal sealed class PersistenceContext
         }
         catch (OperationCanceledException)
         {
-            // İptal durumunu loglayın, ama hatalı bir durum olarak kaydetmeyin
             _logger.LogInformation("PostPlayerAndRetainerData was canceled.");
         }
         catch (Exception e)
@@ -461,7 +460,7 @@ internal sealed class PersistenceContext
             .AsReadOnly();
     }
 
-    public void HandleMarketBoardPage(List<Retainer> retainers)
+    public async Task HandleMarketBoardPage(List<Retainer> retainers)
     {
         try
         {
@@ -522,6 +521,8 @@ internal sealed class PersistenceContext
             int changeCount = dbContext.SaveChanges();
             if (changeCount > 0)
                 _logger.LogDebug("Saved {Count} retainer mappings", changeCount);
+
+            return;
         }
         catch (Exception e)
         {

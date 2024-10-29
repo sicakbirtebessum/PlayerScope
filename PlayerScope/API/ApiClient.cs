@@ -148,7 +148,7 @@ namespace PlayerScope.API
                     var jsonResponse = JsonConvert.DeserializeObject<PaginationBase<T>>(response.Content!);
                     if (jsonResponse != null)
                     {
-                        Message = $"- {Loc.ApiTotalFound} " + (jsonResponse.Data.Count + jsonResponse.NextCount).ToString();
+                        Message = $"- {Loc.ApiTotalFound} {jsonResponse.NextCount}";
                         return (jsonResponse, Message);
                     }
                 }
@@ -240,7 +240,7 @@ namespace PlayerScope.API
                     var jsonResponse = JsonConvert.DeserializeObject<PaginationBase<T>>(response.Content!);
                     if (jsonResponse != null)
                     {
-                        Message = $"- {Loc.ApiTotalFound} " + (jsonResponse.Data.Count + jsonResponse.NextCount).ToString();
+                        Message = $"- {Loc.ApiTotalFound} {jsonResponse.NextCount}";
                         return (jsonResponse, Message);
                     }
                 }

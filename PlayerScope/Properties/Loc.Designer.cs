@@ -1017,6 +1017,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   An error occurred while saving the data. Please try again. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StErrorWhileSavingToLocalDb {
+            get {
+                return ResourceManager.GetString("StErrorWhileSavingToLocalDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Fetched Character Info Count: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StFetchedCharacter {
@@ -1441,6 +1450,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Saving to the local database. This may take a moment... benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StSavingToLocalDb {
+            get {
+                return ResourceManager.GetString("StSavingToLocalDb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Total number of searched Character &amp; Retainer names: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StSearchedNames {
@@ -1518,6 +1536,26 @@ namespace PlayerScope.Properties {
         internal static string StStopFetching {
             get {
                 return ResourceManager.GetString("StStopFetching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sync Character and Retainer info from Server benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StSyncCharacterAndRetainerFromServer {
+            get {
+                return ResourceManager.GetString("StSyncCharacterAndRetainerFromServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   In order to see the name of the owner of the Retainer while browsing items on the Marketboard,
+        ///you&apos;ll need to download the player information from the server to your computer.
+        ///If you&apos;re doing this for the first time, it may take approximately one minute. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StSyncCharacterAndRetainerFromServerTooltip {
+            get {
+                return ResourceManager.GetString("StSyncCharacterAndRetainerFromServerTooltip", resourceCulture);
             }
         }
         
@@ -1638,15 +1676,6 @@ namespace PlayerScope.Properties {
         internal static string StUserCount {
             get {
                 return ResourceManager.GetString("StUserCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sync Character and Retainer info from Server benzeri yerelleştirilmiş bir dize arar.
-        /// </summary>
-        internal static string SyncCharacterAndRetainerFromServer {
-            get {
-                return ResourceManager.GetString("SyncCharacterAndRetainerFromServer", resourceCulture);
             }
         }
         
