@@ -454,6 +454,49 @@ However, if they have seen you before, they can find you by searching in the Loc
   <data name="MnContentId" xml:space="preserve">
     <value>Content Id</value>
   </data>
+  <data name="MnRetainerStatistics" xml:space="preserve">
+    <value>Retainer Statistics</value>
+  </data>
+  <data name="MnDatabaseInformation" xml:space="preserve">
+    <value>Database Information</value>
+  </data>
+  <data name="MnDatabaseDetails" xml:space="preserve">
+    <value>Database Details</value>
+  </data>
+  <data name="MnDatabaseLegacyDetails" xml:space="preserve">
+    <value>Legacy Database Details</value>
+  </data>
+  <data name="MnDatabasePendingDeletion" xml:space="preserve">
+    <value>It will be deleted on your next restart</value>
+  </data>
+  <data name="MnDatabaseDeleteData" xml:space="preserve">
+    <value>Delete All Local Database Data</value>
+  </data>
+  <data name="MnDatabaseLegacyDeleteData" xml:space="preserve">
+    <value>Delete Legacy Database Folder</value>
+  </data>
+  <data name="MnDatabaseDeleteDataTooltip" xml:space="preserve">
+    <value>Deletes all data in the local database.
+Hold down the CTRL+Shift keys to enable clicking.</value>
+  </data>
+  <data name="MnDatabaseSuccessfullyDeletedNotification" xml:space="preserve">
+    <value>All data have been successfully deleted.</value>
+  </data>
+  <data name="MnDatabaseFilePathCopied" xml:space="preserve">
+    <value>Database file path copied</value>
+  </data>
+  <data name="MnDatabaseCopyFilePath" xml:space="preserve">
+    <value>Copy database file path</value>
+  </data>
+  <data name="MnDatabaseOpenFolder" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
+  <data name="MnDatabaseSize" xml:space="preserve">
+    <value>Database size: </value>
+  </data>
+  <data name="MnDatabaseLogSize" xml:space="preserve">
+    <value>Database log size: </value>
+  </data>
   <data name="MnAccountId" xml:space="preserve">
     <value>Account Id</value>
   </data>
@@ -521,7 +564,7 @@ However, if they have seen you before, they can find you by searching in the Loc
     <value>Open Settings Menu to connect to Server</value>
   </data>
   <data name="MnYouAreConnected" xml:space="preserve">
-    <value>You are connected. You can sync from the server.</value>
+    <value>You're connected to the server. You can synchronize player and retainer information.</value>
   </data>
   <data name="MnOpenSettingsMenu" xml:space="preserve">
     <value>Open Settings Menu</value>
@@ -707,6 +750,9 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   <data name="MnPlayerIdentifiedAsBot" xml:space="preserve">
     <value>This player is identified as a bot.</value>
   </data>
+  <data name="MnPlayerIdentifiedAsGM" xml:space="preserve">
+    <value>This player is identified as an official Game Master.</value>
+  </data>
   <data name="MnHomeWorldColumn" xml:space="preserve">
     <value>Home World</value>
   </data>
@@ -724,5 +770,17 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   </data>
   <data name="StLinkCopied" xml:space="preserve">
     <value>Link copied.</value>
+  </data>
+  <data name="DtPlayerFlagsBotMessage" xml:space="preserve">
+    <value>This player is identified as a bot.</value>
+  </data>
+  <data name="DtPlayerFlagsGMMessage" xml:space="preserve">
+    <value>This player is a Game Master.</value>
+  </data>
+  <data name="DtPlayerFlagsSelfPrivateMessage" xml:space="preserve">
+    <value>This profile is private, but you can view it as it belongs to you.</value>
+  </data>
+  <data name="DtPlayerFlagsPrivateMessage" xml:space="preserve">
+    <value>This profile is private.</value>
   </data>
 </root>

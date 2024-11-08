@@ -389,7 +389,7 @@ Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni b
     <value>Hata: Veri çekme durduruldu.</value>
   </data>
   <data name="StErrorUnableToFetchCharacters" xml:space="preserve">
-    <value>Hata: Karakterler çekilemiyor.</value>
+    <value>Hata: Karakterler getirilemiyor.</value>
   </data>
   <data name="StErrorUnableToFetchRetainers" xml:space="preserve">
     <value>Hata: Retainerlar çekilemiyor.</value>
@@ -453,6 +453,49 @@ Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni b
   </data>
   <data name="MnContentId" xml:space="preserve">
     <value>Content Id</value>
+  </data>
+  <data name="MnRetainerStatistics" xml:space="preserve">
+    <value>Retainer Istatistikleri</value>
+  </data>
+  <data name="MnDatabaseInformation" xml:space="preserve">
+    <value>Veritabani Bilgileri</value>
+  </data>
+  <data name="MnDatabaseDetails" xml:space="preserve">
+    <value>Veritabani Detaylari</value>
+  </data>
+  <data name="MnDatabaseLegacyDetails" xml:space="preserve">
+    <value>Eski Veritabani Detaylari</value>
+  </data>
+  <data name="MnDatabasePendingDeletion" xml:space="preserve">
+    <value>Bir sonraki yeniden baslatmada silinecek</value>
+  </data>
+  <data name="MnDatabaseDeleteData" xml:space="preserve">
+    <value>Tüm Yerel Veritabani Kayitlarini Sil</value>
+  </data>
+  <data name="MnDatabaseLegacyDeleteData" xml:space="preserve">
+    <value>Eski Yerel Veritabani Klasörünü Sil</value>
+  </data>
+  <data name="MnDatabaseDeleteDataTooltip" xml:space="preserve">
+    <value>Yerel veritabanindaki tüm kayitlari siler.
+Tiklayabilmek için CTRL+Shift tuslarina basili tut.</value>
+  </data>
+  <data name="MnDatabaseSuccessfullyDeletedNotification" xml:space="preserve">
+    <value>Tüm kayitlar basariyla silindi.</value>
+  </data>
+  <data name="MnDatabaseFilePathCopied" xml:space="preserve">
+    <value>Veritabani dosya yolu kopyalandi</value>
+  </data>
+  <data name="MnDatabaseCopyFilePath" xml:space="preserve">
+    <value>Veritabani dosya yolunu kopyala</value>
+  </data>
+  <data name="MnDatabaseOpenFolder" xml:space="preserve">
+    <value>Klasörü Aç</value>
+  </data>
+  <data name="MnDatabaseSize" xml:space="preserve">
+    <value>Veritabani boyutu: </value>
+  </data>
+  <data name="MnDatabaseLogSize" xml:space="preserve">
+    <value>Veritabani log boyutu: </value>
   </data>
   <data name="MnAccountId" xml:space="preserve">
     <value>Account Id</value>
@@ -521,7 +564,7 @@ Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni b
     <value>Sunucuya baglanmak için Ayarlar Menüsünü aç</value>
   </data>
   <data name="MnYouAreConnected" xml:space="preserve">
-    <value>Sunucuya baglisin. Sunucudan senkronize edebilirsin.</value>
+    <value>Sunucuya baglisin. Oyuncu ve retainer bilgilerini senkronize edebilirsin.</value>
   </data>
   <data name="MnOpenSettingsMenu" xml:space="preserve">
     <value>Ayarlar Menüsünü Aç</value>
@@ -681,7 +724,7 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
     <value>Karakter en son surada görüldü:</value>
   </data>
   <data name="DtNameHistory" xml:space="preserve">
-    <value>Isim Geçmisi</value>
+    <value>Isim Geçmisi:</value>
   </data>
   <data name="DtHomeworldHistory" xml:space="preserve">
     <value>Anadünya Geçmisi:</value>
@@ -707,6 +750,9 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="MnPlayerIdentifiedAsBot" xml:space="preserve">
     <value>Bu oyuncu bir bot olarak tanimlandi.</value>
   </data>
+  <data name="MnPlayerIdentifiedAsGM" xml:space="preserve">
+    <value>Bu oyuncu resmi bir Game Master olarak tanimlandi.</value>
+  </data>
   <data name="MnHomeWorldColumn" xml:space="preserve">
     <value>Anadünya</value>
   </data>
@@ -724,5 +770,17 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   </data>
   <data name="StLinkCopied" xml:space="preserve">
     <value>Link kopyalandi.</value>
+  </data>
+  <data name="DtPlayerFlagsBotMessage" xml:space="preserve">
+    <value>Bu oyuncu bir bot olarak tanimlandi.</value>
+  </data>
+  <data name="DtPlayerFlagsGMMessage" xml:space="preserve">
+    <value>Bu oyuncu bir GM.</value>
+  </data>
+  <data name="DtPlayerFlagsSelfPrivateMessage" xml:space="preserve">
+    <value>Bu profil gizlidir ancak sana ait oldugu için görüntüleyebilirsin.</value>
+  </data>
+  <data name="DtPlayerFlagsPrivateMessage" xml:space="preserve">
+    <value>Bu profil gizlidir.</value>
   </data>
 </root>

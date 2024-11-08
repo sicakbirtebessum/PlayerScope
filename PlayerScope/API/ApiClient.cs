@@ -28,7 +28,7 @@ namespace PlayerScope.API
     {
         public static IRestClient _restClient = new RestClient();
         //private const string BaseUrl = "https://localhost:5001/v1/";
-        public Configuration Config = PlayerScopePlugin.Instance.Configuration;
+        public Configuration Config = Plugin.Instance.Configuration;
         internal static ApiClient Instance { get; private set; } = null!;
         public ApiClient()
         {
@@ -293,11 +293,7 @@ namespace PlayerScope.API
                 string data = System.Convert.ToBase64String(bytes);
                 authUrl = Config.BaseUrl.Replace("v1/", "Auth/DiscordAuth?") + data;
 
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = authUrl,
-                    UseShellExecute = true,
-                });
+                Util.TryOpenURI(new Uri(authUrl));
 
                 var response = await _httpClient.GetAsync($"{Config.BaseUrl.Replace("v1/", "")}waitforlogin?data={data}", HttpCompletionOption.ResponseHeadersRead);
                 using (var stream = await response.Content.ReadAsStreamAsync())

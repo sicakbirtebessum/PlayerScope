@@ -23,13 +23,13 @@ public class ContextMenu
 {
     public static void Enable()
     {
-        PlayerScopePlugin._contextMenu.OnMenuOpened -= OnOpenContextMenu;
-        PlayerScopePlugin._contextMenu.OnMenuOpened += OnOpenContextMenu;
+        Plugin._contextMenu.OnMenuOpened -= OnOpenContextMenu;
+        Plugin._contextMenu.OnMenuOpened += OnOpenContextMenu;
     }
 
     public static void Disable()
     {
-        PlayerScopePlugin._contextMenu.OnMenuOpened -= OnOpenContextMenu;
+        Plugin._contextMenu.OnMenuOpened -= OnOpenContextMenu;
     }
 
     private static bool IsMenuValid(IMenuArgs menuOpenedArgs)

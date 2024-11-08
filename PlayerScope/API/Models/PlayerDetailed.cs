@@ -1,9 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using Dalamud.Interface;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Style;
+using FFXIVClientStructs.FFXIV.Common.Math;
+using Newtonsoft.Json;
 using PlayerScope.Database;
+using PlayerScope.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -13,8 +19,8 @@ namespace PlayerScope.API.Models
 {
     public class PlayerDetailed
     {
-        [JsonProperty("0")]
-        public PrivacyStatus ProfilePrivacy { get; set; }
+        [JsonProperty("F")]
+        public int[]? Flags { get; set; }
         [JsonProperty("1")]
         public long LocalContentId { get; set; }
         [JsonProperty("2")]
@@ -65,14 +71,35 @@ namespace PlayerScope.API.Models
             [JsonProperty("D")]
             public int? CreatedAt { get; set; }
         }
-        public enum PrivacyStatus
+
+        public enum PlayerFlagKey
         {
-            Public = 0,
-            NotFound = 1,
-            Private = 2,
-            Self = 3,
-            SelfPrivate = 4,
+            IsBot = 0,
+            IsGM = 1,
+            IsPrivate = 2,
+            IsSelfPrivate = 3,
+            Custom = 4,
         }
+        public class FlagInfo
+        {
+            public FontAwesomeIcon Icon { get; set;}
+            public string Message { get; set; }
+            public Vector4 Color { get; set; }
+        }
+        public static void UpdateFlagMessages()
+        {
+            PlayerFlagsDict[PlayerFlagKey.IsBot].Message = Loc.DtPlayerFlagsBotMessage;
+            PlayerFlagsDict[PlayerFlagKey.IsGM].Message = Loc.DtPlayerFlagsGMMessage;
+            PlayerFlagsDict[PlayerFlagKey.IsPrivate].Message = Loc.DtPlayerFlagsPrivateMessage;
+            PlayerFlagsDict[PlayerFlagKey.IsSelfPrivate].Message = Loc.DtPlayerFlagsSelfPrivateMessage;
+        }
+        public static Dictionary<PlayerFlagKey, FlagInfo> PlayerFlagsDict = new Dictionary<PlayerFlagKey, FlagInfo>
+        {
+            { PlayerFlagKey.IsBot, new FlagInfo { Icon = FontAwesomeIcon.ExclamationTriangle, Message = Loc.DtPlayerFlagsBotMessage, Color = KnownColor.IndianRed.Vector() } },
+            { PlayerFlagKey.IsGM, new FlagInfo { Icon = FontAwesomeIcon.UserShield, Message = Loc.DtPlayerFlagsGMMessage, Color = KnownColor.Gold.Vector() } },
+            { PlayerFlagKey.IsPrivate, new FlagInfo { Icon = FontAwesomeIcon.Lock, Message = Loc.DtPlayerFlagsPrivateMessage, Color = KnownColor.IndianRed.Vector() } },
+            { PlayerFlagKey.IsSelfPrivate, new FlagInfo { Icon = FontAwesomeIcon.Lock, Message =  Loc.DtPlayerFlagsSelfPrivateMessage, Color = ImGuiColors.HealerGreen } },
+        };
 
         public class PlayerLastSeenDto
         {

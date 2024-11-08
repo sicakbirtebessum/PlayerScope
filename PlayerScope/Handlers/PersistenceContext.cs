@@ -75,7 +75,7 @@ internal sealed class PersistenceContext
 
         ReloadCache();
 
-        Territories = PlayerScopePlugin._dataManager.GetExcelSheet<TerritoryType>().ToList();
+        Territories = Plugin._dataManager.GetExcelSheet<TerritoryType>().ToList();
 
         _cancellationTokenSource = new CancellationTokenSource();
         _ = PostPlayerAndRetainerData(_cancellationTokenSource.Token);

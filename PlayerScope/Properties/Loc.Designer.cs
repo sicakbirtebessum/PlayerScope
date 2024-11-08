@@ -431,6 +431,42 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   This player is identified as a bot. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtPlayerFlagsBotMessage {
+            get {
+                return ResourceManager.GetString("DtPlayerFlagsBotMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This player is a Game Master. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtPlayerFlagsGMMessage {
+            get {
+                return ResourceManager.GetString("DtPlayerFlagsGMMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This profile is private. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtPlayerFlagsPrivateMessage {
+            get {
+                return ResourceManager.GetString("DtPlayerFlagsPrivateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This profile is private, but you can view it as it belongs to you. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtPlayerFlagsSelfPrivateMessage {
+            get {
+                return ResourceManager.GetString("DtPlayerFlagsSelfPrivateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Player Info benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtPlayerInfo {
@@ -593,6 +629,124 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Copy database file path benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseCopyFilePath {
+            get {
+                return ResourceManager.GetString("MnDatabaseCopyFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Delete All Local Database Data benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseDeleteData {
+            get {
+                return ResourceManager.GetString("MnDatabaseDeleteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Deletes all data in the local database.
+        ///Hold down the CTRL+Shift keys to enable clicking. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseDeleteDataTooltip {
+            get {
+                return ResourceManager.GetString("MnDatabaseDeleteDataTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Database Details benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseDetails {
+            get {
+                return ResourceManager.GetString("MnDatabaseDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Database file path copied benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseFilePathCopied {
+            get {
+                return ResourceManager.GetString("MnDatabaseFilePathCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Database Information benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseInformation {
+            get {
+                return ResourceManager.GetString("MnDatabaseInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Delete Legacy Database Folder benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseLegacyDeleteData {
+            get {
+                return ResourceManager.GetString("MnDatabaseLegacyDeleteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Legacy Database Details benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseLegacyDetails {
+            get {
+                return ResourceManager.GetString("MnDatabaseLegacyDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Database log size:  benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseLogSize {
+            get {
+                return ResourceManager.GetString("MnDatabaseLogSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open Folder benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseOpenFolder {
+            get {
+                return ResourceManager.GetString("MnDatabaseOpenFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   It will be deleted on your next restart benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabasePendingDeletion {
+            get {
+                return ResourceManager.GetString("MnDatabasePendingDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Database size:  benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseSize {
+            get {
+                return ResourceManager.GetString("MnDatabaseSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   All data have been successfully deleted. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseSuccessfullyDeletedNotification {
+            get {
+                return ResourceManager.GetString("MnDatabaseSuccessfullyDeletedNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Error: Bad search query benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnErrorBadSearchQuery {
@@ -710,6 +864,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   This player is identified as an official Game Master. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnPlayerIdentifiedAsGM {
+            get {
+                return ResourceManager.GetString("MnPlayerIdentifiedAsGM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Remove benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnRemove {
@@ -733,6 +896,15 @@ namespace PlayerScope.Properties {
         internal static string MnRetainers {
             get {
                 return ResourceManager.GetString("MnRetainers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Retainer Statistics benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnRetainerStatistics {
+            get {
+                return ResourceManager.GetString("MnRetainerStatistics", resourceCulture);
             }
         }
         
@@ -836,7 +1008,7 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   You are connected. You can sync from the server. benzeri yerelleştirilmiş bir dize arar.
+        ///   You&apos;re connected to the server. You can synchronize player and retainer information. benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnYouAreConnected {
             get {

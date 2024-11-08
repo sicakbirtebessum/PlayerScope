@@ -53,7 +53,7 @@ namespace PlayerScope
         }
         public void Save()
         {
-            PlayerScopePlugin.Instance._pluginInterface.SavePluginConfig(this);
+            Plugin.Instance._pluginInterface.SavePluginConfig(this);
         }
     }
 

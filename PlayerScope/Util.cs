@@ -1,4 +1,7 @@
-﻿using Dalamud.Interface.Colors;
+﻿using Dalamud.Interface;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Components;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -11,6 +14,7 @@ using PlayerScope.Handlers;
 using PlayerScope.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -42,7 +46,7 @@ namespace PlayerScope
         }
         public static World GetWorld(uint worldId)
         {
-            var worldSheet = PlayerScopePlugin._dataManager.GetExcelSheet<World>()!;
+            var worldSheet = Plugin._dataManager.GetExcelSheet<World>()!;
             var world = worldSheet.FirstOrDefault(x => x.RowId == worldId);
             if (world == null)
             {
@@ -172,6 +176,15 @@ namespace PlayerScope
             ImGui.PopTextWrapPos();
         }
 
+        public static void OpenFolder(string path)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = path,
+                UseShellExecute = true
+            });
+        }
+
         public static void ColoredErrorTextWrapped(string s)
         {
             if (!string.IsNullOrWhiteSpace(s))
@@ -252,11 +265,36 @@ namespace PlayerScope
         }
         public static void SetHoverTooltip(string tooltip)
         {
-            if (ImGui.IsItemHovered())
+            if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             {
                 ImGui.BeginTooltip();
                 ImGui.TextUnformatted(tooltip);
                 ImGui.EndTooltip();
+            }
+        }
+
+        public static void IconText(Vector4 textColor, FontAwesomeIcon icon)
+        {
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, textColor))
+            {
+                ImGui.TextUnformatted(icon.ToIconString());
+            }
+        }
+
+        public static void HeaderWarningText(Vector4 textColor, FontAwesomeIcon icon, string text)
+        {
+            ImGuiHelpers.ScaledDummy(5.0f);
+
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, textColor))
+            {
+                ImGui.TextUnformatted($"{icon.ToIconString()}");
+                using (ImRaii.PushFont(UiBuilder.DefaultFont))
+                {
+                    ImGui.SameLine();
+                    ImGui.TextUnformatted($"{text}");
+                }
             }
         }
 
@@ -293,6 +331,49 @@ namespace PlayerScope
                 float.Parse(parts[0]),
                 float.Parse(parts[1]),
                 float.Parse(parts[2]));
+        }
+
+        public static void AddNotification(string content, NotificationType type, bool minimized = true)
+        {
+            Plugin.Notification.AddNotification(new Notification { Content = content, Type = type, Minimized = minimized });
+        }
+
+        public static string BytesToString(long byteCount)
+        {
+            string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
+            if (byteCount == 0)
+                return "0 " + suf[0];
+
+            var bytes = Math.Abs(byteCount);
+            var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            var num = Math.Round(bytes / Math.Pow(1024, place), 2);
+            return (Math.Sign(byteCount) * num).ToString("N2") + " " + suf[place];
+        }
+
+        public static bool CtrlShiftButton(FontAwesomeIcon icon, string label, string tooltip = "")
+        {
+            var ctrlShiftHeld = ImGui.GetIO() is { KeyCtrl: true, KeyShift: true };
+
+            bool ret;
+            using (ImRaii.Disabled(!ctrlShiftHeld))
+                ret = ImGuiComponents.IconButtonWithText(icon, label) && ctrlShiftHeld;
+
+            if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+                ImGui.SetTooltip(tooltip);
+
+            return ret;
+        }
+
+        public static void TryOpenURI(Uri uri)
+        {
+            try
+            {
+                Dalamud.Utility.Util.OpenLink(uri.ToString());
+            }
+            catch (Exception ex)
+            {
+                AddNotification("Failed to open the link in the browser, please report this issue", NotificationType.Error);
+            }
         }
     }
 }

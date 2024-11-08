@@ -40,6 +40,8 @@ using PlayerScope.Models;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.GeneratedSheets;
 using PlayerScope.Properties;
+using static PlayerScope.API.Models.PlayerDetailed;
+using Dalamud.Interface.Style;
 namespace PlayerScope.GUI
 {
     public class DetailsWindow : Window, IDisposable
@@ -51,17 +53,72 @@ namespace PlayerScope.GUI
             {
                 _instance = this;
             }
-            LanguageChanged();
+            UpdateWindowTitle();
             this.SizeConstraints = new WindowSizeConstraints
             {
                 MinimumSize = new Vector2(600, 550),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
         }
-        public void LanguageChanged()
+        public void UpdateWindowTitle()
             => WindowName = $"{Loc.TitleDetailsMenu}{WindowId}";
 
-        public Configuration Config = PlayerScopePlugin.Instance.Configuration;
+        public void LanguageChanged()
+        {
+            UpdateWindowTitle();
+
+            PlayerTableColumn = new string[]
+            {
+            Loc.MnCharacter, Loc.MnAccountId, Loc.MnContentId,
+            };
+
+            RetainerTableColumn = new string[]
+            {
+            Loc.DtRetainerName, Loc.MnContentId, Loc.MnWorld, Loc.DtOwnerName
+            };
+
+            DetailedPlayerCId_AccIdTableColumn = new string[]
+            {
+            Loc.MnContentId,Loc.MnAccountId
+            };
+
+            DetailedPlayerLastSeenZoneTableColumn = new string[]
+            {
+            Loc.DtZoneName, Loc.MnWorld, Loc.MnAddedAt
+            };
+
+            DetailedPlayerNamesTableColumn = new string[]
+            {
+            Loc.DtCharacterName, Loc.MnAddedAt
+            };
+
+            DetailedPlayerWorldsTableColumn = new string[]
+            {
+            Loc.MnHomeWorldColumn, Loc.MnAddedAt
+            };
+
+            DetailedPlayerRetainerTableColumn = new string[]
+            {
+            Loc.DtRetainerName, Loc.MnHomeWorldColumn, Loc.DtLastSeen, Loc.MnAddedAt, Loc.DtOwnerName, Loc.MnContentId
+            };
+
+            AltCharPlayerTableColumn = new string[]
+            {
+            Loc.DtCharacterName, Loc.MnHomeWorldColumn, Loc.MnContentId
+            };
+
+            DetailedPlayerTerritoriesTableColumn = new string[]
+            {
+            Loc.DtZoneName, Loc.MnWorld, Loc.DtFirstSeen, Loc.DtLastSeen, Loc.DtDuration
+            };
+
+            DetailedPlayerCustomizationTableColumn = new string[]
+            {
+            Loc.DtRaceInfo, Loc.DtHeight, Loc.DtMuscleMass, Loc.DtBustSize, Loc.MnAddedAt
+            };
+        }
+
+        public Configuration Config = Plugin.Instance.Configuration;
         private static DetailsWindow _instance = null;
         public static DetailsWindow Instance
         {
@@ -79,51 +136,51 @@ namespace PlayerScope.GUI
         public ulong SelectedPlayerContentId = 0;
         private string _searchContent = "";
 
-        private readonly string[] PlayerTableColumn = new string[]
+        private string[] PlayerTableColumn = new string[]
         {
             Loc.MnCharacter, Loc.MnAccountId, Loc.MnContentId,
         };
 
-        private readonly string[] RetainerTableColumn = new string[]
+        private string[] RetainerTableColumn = new string[]
         {
             Loc.DtRetainerName, Loc.MnContentId, Loc.MnWorld, Loc.DtOwnerName
         };
 
-        private readonly string[] DetailedPlayerCId_AccIdTableColumn = new string[]
+        private string[] DetailedPlayerCId_AccIdTableColumn = new string[]
         {
             Loc.MnContentId,Loc.MnAccountId
         };
 
-        private readonly string[] DetailedPlayerLastSeenZoneTableColumn = new string[]
+        private string[] DetailedPlayerLastSeenZoneTableColumn = new string[]
         {
             Loc.DtZoneName, Loc.MnWorld, Loc.MnAddedAt
         };
 
-        private readonly string[] DetailedPlayerNamesTableColumn = new string[]
+        private string[] DetailedPlayerNamesTableColumn = new string[]
         {
             Loc.DtCharacterName, Loc.MnAddedAt
         };
 
-        private readonly string[] DetailedPlayerWorldsTableColumn = new string[]
+        private string[] DetailedPlayerWorldsTableColumn = new string[]
         {
-            Loc.StHomeWorld, Loc.MnAddedAt
+            Loc.MnHomeWorldColumn, Loc.MnAddedAt
         };
 
-        private readonly string[] DetailedPlayerRetainerTableColumn = new string[]
+        private string[] DetailedPlayerRetainerTableColumn = new string[]
         {
-            Loc.DtRetainerName, Loc.StHomeWorld, Loc.DtLastSeen, Loc.MnAddedAt, Loc.DtOwnerName, Loc.MnContentId
+            Loc.DtRetainerName, Loc.MnHomeWorldColumn, Loc.DtLastSeen, Loc.MnAddedAt, Loc.DtOwnerName, Loc.MnContentId
         };
 
-        private readonly string[] AltCharPlayerTableColumn = new string[]
+        private string[] AltCharPlayerTableColumn = new string[]
         {
-            Loc.DtCharacterName, Loc.StHomeWorld, Loc.MnContentId
+            Loc.DtCharacterName, Loc.MnHomeWorldColumn, Loc.MnContentId
         };
 
-        private readonly string[] DetailedPlayerTerritoriesTableColumn = new string[]
+        private string[] DetailedPlayerTerritoriesTableColumn = new string[]
         {
             Loc.DtZoneName, Loc.MnWorld, Loc.DtFirstSeen, Loc.DtLastSeen, Loc.DtDuration
         };
-        private readonly string[] DetailedPlayerCustomizationTableColumn = new string[]
+        private string[] DetailedPlayerCustomizationTableColumn = new string[]
         {
             Loc.DtRaceInfo, Loc.DtHeight, Loc.DtMuscleMass, Loc.DtBustSize, Loc.MnAddedAt
         };
@@ -133,9 +190,8 @@ namespace PlayerScope.GUI
         {
             _TestTempPlayerWithRetainers.Clear();
 
-            _LastMessage = string.Empty;
+            _LastMessage = Loc.DtLoading;
             _seeExtraDetailsOfRetainer = null;
-            //_LastPlayerDetailedInfo = new();
 
             if (GetInfoFromServer)
             {
@@ -157,7 +213,6 @@ namespace PlayerScope.GUI
             {
                 IsDataFromServer = false;
                 AccountsFetched = false;
-                //_TestTempPlayerWithRetainers.Clear();
 
                 SelectedPlayerContentId = PlayerContentId;
             }
@@ -166,7 +221,7 @@ namespace PlayerScope.GUI
         bool IsDataFromServer = false;
 
         PlayerDetailed.RetainerDto _seeExtraDetailsOfRetainer = null;
-        string _LastMessage = string.Empty;
+        public string _LastMessage = string.Empty;
         static ConcurrentDictionary<ulong, (CachedPlayer, List<Database.Retainer>)> _TestTempPlayerWithRetainers = new();
         static (PlayerDetailed Player, string Message) _LastPlayerDetailedInfo = new();
 
@@ -202,18 +257,26 @@ namespace PlayerScope.GUI
                             Config.Save();
                         }
                     }
-                   
+
                     ImGui.SameLine();
 
-                    if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Sync, Loc.DtRefreshProfile))
+                    using (ImRaii.Disabled(_LastMessage == Loc.DtLoading))
                     {
-                        OpenDetailedPlayerWindow((ulong)_LastPlayerDetailedInfo.Player.LocalContentId, true);
+                        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Sync, Loc.DtRefreshProfile))
+                        {
+                            OpenDetailedPlayerWindow((ulong)_LastPlayerDetailedInfo.Player.LocalContentId, true);
+                        }
                     }
                 }
-
                 if (!string.IsNullOrWhiteSpace(_LastMessage))
                 {
-                    ImGui.TextColored(ImGuiColors.DalamudRed, _LastMessage); //Error message
+                    if (_LastMessage == Loc.DtLoading)
+                    {
+                        ImGui.SameLine();
+                        ImGui.TextColored(ImGuiColors.ParsedGreen, _LastMessage); // Loading... message
+                    }
+                    else
+                        ImGui.TextColored(ImGuiColors.DalamudRed, _LastMessage); //Error message
                 }
                 else if (_LastPlayerDetailedInfo.Player == null)
                 {
@@ -336,7 +399,7 @@ namespace PlayerScope.GUI
                     ImGui.EndTabItem();
                 }
 
-                if (player.PlayerLastSeenInfo != null && player.PlayerLastSeenInfo.TerritoryHistory != null && player.PlayerLastSeenInfo.TerritoryHistory.Count > 0)
+                if (player.PlayerLastSeenInfo != null && player.PlayerLastSeenInfo.TerritoryHistory?.Count > 0)
                 {
                     if (ImGui.BeginTabItem(Loc.DtLocationHistory))
                     {
@@ -344,9 +407,14 @@ namespace PlayerScope.GUI
                         ImGui.EndTabItem();
                     }
                 }
-                if (player.PlayerCustomizationHistories != null && player.PlayerCustomizationHistories.Count > 0)
+
+                if (player.PlayerCustomizationHistories?.Count > 0)
                 {
-                    if (ImGui.BeginTabItem(Loc.DtCustomizationHistory))
+                    string customizationTabHeader = player.PlayerCustomizationHistories.Count > 1
+                        ? $"{Loc.DtCustomizationHistory} ({player.PlayerCustomizationHistories.Count})"
+                    : Loc.DtCustomizationHistory;
+
+                    if (ImGui.BeginTabItem(customizationTabHeader))
                     {
                         DrawPlayerCustomizationInfoTab();
                         ImGui.EndTabItem();
@@ -360,6 +428,26 @@ namespace PlayerScope.GUI
         public void DrawPlayerInfoTab()
         {
             var player = _LastPlayerDetailedInfo.Player;
+
+            if (player.Flags != null && player.Flags.Length > 0)
+            {
+                foreach (var flagValue in player.Flags)
+                {
+                    if (Enum.IsDefined(typeof(PlayerFlagKey), flagValue))
+                    {
+                        var flagKey = (PlayerFlagKey)flagValue;
+
+                        if (PlayerFlagsDict.TryGetValue(flagKey, out var flagInfo))
+                        {
+                            Util.HeaderWarningText(flagInfo.Color, flagInfo.Icon, flagInfo.Message);
+                        }
+                    }
+                }
+
+                ImGuiHelpers.ScaledDummy(5.0f);
+                ImGui.Separator();
+                ImGuiHelpers.ScaledDummy(5.0f);
+            }
 
             ImGui.BeginGroup();
             ImGui.Text(Loc.DtShowingResultsFor); ImGui.SameLine();
@@ -540,10 +628,13 @@ namespace PlayerScope.GUI
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
-                        if (ImGui.Button($"{Loc.StLoadDetails} ->" + $"##{index}"))
+                        using (ImRaii.Disabled(_LastMessage == Loc.DtLoading))
                         {
-                            IsOpen = true;
-                            OpenDetailedPlayerWindow((ulong)altChar.LocalContentId, true);
+                            if (ImGui.Button($"{Loc.StLoadDetails} ->" + $"##{index}"))
+                            {
+                                IsOpen = true;
+                                OpenDetailedPlayerWindow((ulong)altChar.LocalContentId, true);
+                            }
                         }
                         ImGui.SameLine();
 
@@ -774,9 +865,7 @@ namespace PlayerScope.GUI
                                     playerPos.X,
                                     playerPos.Y
                                 );
-                                _logger.LogCritical(playerPos.ToString());
-                                _logger.LogCritical($"{playerPos.X} Y: {playerPos.Y}");
-                                PlayerScopePlugin._gameGui.OpenMapWithMapLink(mapLink);
+                                Plugin._gameGui.OpenMapWithMapLink(mapLink);
                             }
                             ImGui.SameLine();
 
@@ -855,13 +944,13 @@ namespace PlayerScope.GUI
 
                     if (Race.SplitRace().Gender == Gender.Male)
                     {
-                        ImGuiComponents.IconButton(FontAwesomeIcon.Mars);
+                        Util.IconText(ImGuiColors.ParsedBlue, FontAwesomeIcon.Mars);
                         ImGui.SameLine();
                         ImGui.Text($"{Race.SplitRace().Gender.ToName()} {Race.ToRaceName()} | {Race.ToSubRaceName()}"); //SubRace Name
                     }
                     else
                     {
-                        ImGuiComponents.IconButton(FontAwesomeIcon.Venus);
+                        Util.IconText(ImGuiColors.ParsedPink, FontAwesomeIcon.Venus);
                         ImGui.SameLine();
                         ImGui.Text($"{Race.SplitRace().Gender.ToName()} {Race.ToRaceName()} | {Race.ToSubRaceName()}"); //SubRace Name
                     }

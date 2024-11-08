@@ -1,7 +1,9 @@
 ﻿using Dalamud.Extensions.MicrosoftLogging;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
+using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Windowing;
+using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -21,7 +23,7 @@ using System.Net.Http;
 
 namespace PlayerScope;
 
-public sealed class PlayerScopePlugin : IDalamudPlugin
+public sealed class Plugin : IDalamudPlugin
 {
     public const string DatabaseFileName = "PlayerScope.data.sqlite3";
     private readonly string _sqliteConnectionString;
@@ -30,7 +32,8 @@ public sealed class PlayerScopePlugin : IDalamudPlugin
     internal static IContextMenu _contextMenu { get; set; } = null!;
     internal static IDataManager _dataManager { get; set; } = null!;
     internal static IGameGui _gameGui { get; set; } = null!;
-    internal static PlayerScopePlugin Instance { get; private set; } = null!;
+    [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
+    internal static Plugin Instance { get; private set; } = null!;
     public Configuration Configuration { get; }
     public ApiClient ApiClient { get; set; }
     public GUI.SettingsWindow ConfigWindow;
@@ -38,7 +41,7 @@ public sealed class PlayerScopePlugin : IDalamudPlugin
     public GUI.DetailsWindow DetailsWindow;
     internal WindowSystem ws;
     internal IDalamudPluginInterface _pluginInterface {  get; }
-    public PlayerScopePlugin(
+    public Plugin(
         IDalamudPluginInterface pluginInterface,
         IFramework framework,
         IClientState clientState,

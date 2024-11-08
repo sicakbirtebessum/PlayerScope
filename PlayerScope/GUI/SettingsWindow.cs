@@ -76,8 +76,6 @@ namespace PlayerScope.GUI
                 ShowTooltip = () => ImGui.SetTooltip(Loc.MnOpenMainMenu),
             });
         }
-        public void LanguageChanged()
-            => WindowName = $"{Loc.TitleSettingsMenu}{WindowId}";
 
         private static SettingsWindow _instance = null;
         public static SettingsWindow Instance
@@ -104,7 +102,7 @@ namespace PlayerScope.GUI
 
             IsRefreshed = false;
             IsSaved = false;
-            if (string.IsNullOrWhiteSpace(_client._ServerStatus))
+            if (string.IsNullOrWhiteSpace(_client._ServerStatus) || _client._ServerStatus != "ONLINE")
             {
                 _client.CheckServerStatus();
             }
@@ -152,7 +150,7 @@ namespace PlayerScope.GUI
         int _accountId = 0;
         string _key = string.Empty;
 
-        public Configuration Config = PlayerScopePlugin.Instance.Configuration;
+        public Configuration Config = Plugin.Instance.Configuration;
         ApiClient _client = ApiClient.Instance;
 
         public void SaveUserResultToConfig(User user)
@@ -562,7 +560,6 @@ namespace PlayerScope.GUI
 
             ImGui.NewLine();
 
-            Util.DrawHelp(false, Loc.StSyncCharacterAndRetainerFromServerTooltip);
             bool _syncDatabaseButtonCondition = Config.LastSyncedTime != null ? Tools.UnixTime - Config.LastSyncedTime < 300 : true;
             using (ImRaii.Disabled(bIsNetworkProcessing || IsSyncingPlayers || IsSyncingRetainers || IsDbRefreshing || _client._LastServerStats.ServerStats == null|| _syncDatabaseButtonCondition)) // 5 minutes
             {
@@ -572,21 +569,23 @@ namespace PlayerScope.GUI
                     _cancellationToken = new CancellationTokenSource();
                     var syncPlayers = SyncPlayersWithLocalDb(_cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
                 }
-                if (_syncDatabaseButtonCondition)
-                {
-                    var syncAgainTime = Config.LastSyncedTime + 300;
-                    using (ImRaii.Disabled()) { Util.TextWrapped($"{Loc.StCanSyncAgainTime} {Tools.TimeFromNow((int)syncAgainTime)}"); }
-                }
             }
+           
             Util.SetHoverTooltip(Loc.StSyncCharacterAndRetainerFromServerTooltip);
+
+            if (_syncDatabaseButtonCondition)
+            {
+                var syncAgainTime = Config.LastSyncedTime + 300;
+                using (ImRaii.Disabled()) { Util.TextWrapped($"{Loc.StCanSyncAgainTime} {Tools.TimeFromNow((int)syncAgainTime)}"); }
+            }
 
             if (IsSyncingPlayers || IsSyncingRetainers)
             {
                 ImGui.SameLine();
                 if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Stop, Loc.StStopFetching))
                 {
+                    _SyncMessage = string.Empty;
                     _cancellationToken.Cancel();
-                    IsSyncingPlayers = false; IsSyncingRetainers = false;
                     _playersFetchedFromServer.Clear(); 
                     _retainersFetchedFromServer.Clear();
                     _LastCursor = 0;
@@ -608,9 +607,17 @@ namespace PlayerScope.GUI
         }
 
         private List<long?> EditedCharactersPrivacy = new List<long?>();
+        bool isActive = false;
+        bool isActive2 = true;
         private async void DrawMyCharactersTab()
         {
             ServerStatusGui();
+
+            if (ImGui.Button("TestNotif"))
+            {
+                Util.AddNotification("Error", NotificationType.Error);
+                Util.TryOpenURI(new Uri("https://google.com"));
+            }
 
             ImGui.TextWrapped(Loc.StConfigurePrivacyOfChars);
 
@@ -626,15 +633,15 @@ namespace PlayerScope.GUI
 
             if (LastUserInfo != null && LastUserInfo.Characters != null && LastUserInfo.Characters.Count > 0 && _LocalUserCharacters.Count > 0)
             {
-
                 var index = 0;
                 foreach (var character in LastUserInfo.Characters)
                 {
-                    if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
-                    {
-                        DetailsWindow.Instance.IsOpen = true;
-                        DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)character.LocalContentId, true);
-                    }
+                    using (ImRaii.Disabled(DetailsWindow.Instance._LastMessage == Loc.DtLoading))
+                        if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
+                        {
+                            DetailsWindow.Instance.IsOpen = true;
+                            DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)character.LocalContentId, true);
+                        }
 
                     ImGui.SameLine();
                     var charName = character.Name != null || !string.IsNullOrWhiteSpace(character.Name) ? character.Name : Loc.StNameNotFound;
@@ -760,11 +767,9 @@ namespace PlayerScope.GUI
 
                 using (ImRaii.Disabled(bIsNetworkProcessing))
                     if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Sync, Loc.StRefreshProfileInfo))
-                        RefreshUserProfileInfo();
+                        RefreshUserProfileInfo(); 
 
                 Util.SetHoverTooltip(Loc.StRefreshProfileInfoHint);
-
-                //ImGui.SameLine();
 
                 if (!string.IsNullOrWhiteSpace(LastNetworkMessage))
                 {
@@ -810,10 +815,11 @@ namespace PlayerScope.GUI
 
         public void RefreshUserProfileInfo()
         {
-            _ = Task.Run(() =>
+            _ = Task.Run(async () =>
             {
                 bIsNetworkProcessing = true;
-                var request = _client.UserRefreshMyInfo().ConfigureAwait(false).GetAwaiter().GetResult();
+                //var request = _client.UserRefreshMyInfo().ConfigureAwait(false).GetAwaiter().GetResult();
+                var request = await _client.UserRefreshMyInfo();
                 LastNetworkMessage = request.Message;
                 bIsNetworkProcessing = false;
                 if (request.User != null)
@@ -852,47 +858,52 @@ namespace PlayerScope.GUI
             _ = Task.Run(async () =>
             {
                 IsSyncingPlayers = true;
-
-                while (!cts.Token.IsCancellationRequested)
+                try
                 {
-                    var query = new PlayerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-                    var request = ApiClient.Instance.GetPlayers<PlayerDto>(query).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                    if (request.Page.Data != null)
+                    while (!cts.Token.IsCancellationRequested)
                     {
-                        foreach (var _data in request.Page.Data)
+                        var query = new PlayerQueryObject() { Cursor = _LastCursor, IsFetching = true };
+                        var request = await ApiClient.Instance.GetPlayers<PlayerDto>(query);
+ 
+                        if (!cts.Token.IsCancellationRequested && request.Page != null && request.Page.Data != null)
                         {
-                            _playersFetchedFromServer[_data.LocalContentId] = _data;
-                        }
 
-                        _LastCursor = request.Page.LastCursor;
-                        _SyncMessage = $"{Loc.StFetchingCharacters} ({_playersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount})";
+                            foreach (var _data in request.Page.Data)
+                            {
+                                _playersFetchedFromServer[_data.LocalContentId] = _data;
+                            }
 
-                        if (request.Page.NextCount > 0)
-                        {
+                            _LastCursor = request.Page.LastCursor;
                             _SyncMessage = $"{Loc.StFetchingCharacters} ({_playersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount})";
-                            await Task.Delay(300);
+
+                            if (request.Page.NextCount > 0)
+                            {
+                                await Task.Delay(1, cts.Token);
+                            }
+                            else
+                            {
+                                _LastCursor = 0;
+                                IsSyncingPlayers = false;
+                                IsSyncingRetainers = true;
+                                break;
+                            }
+
+                            await Task.Delay(1, cts.Token);
                         }
                         else
                         {
-                            _LastCursor = 0;
-                            IsSyncingPlayers = false;
-                            IsSyncingRetainers = true;
-                            break;
+                            _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchCharacters;
+                            return false;
                         }
-
-                        await Task.Delay(300, cts.Token);
-                    }
-                    else
-                    {
-                        _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchCharacters;
-                        IsSyncingPlayers = false;
-                        return false;
                     }
                 }
-
-                IsSyncingPlayers = false;
-                return await SyncRetainersWithLocalDb(cts).ConfigureAwait(false);
+                finally
+                {
+                    _LastCursor = 0;
+                    IsSyncingPlayers = false;
+                    _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchCharacters;
+                }
+                return await SyncRetainersWithLocalDb(cts);
             });
 
             return true;
@@ -905,46 +916,49 @@ namespace PlayerScope.GUI
                 IsSyncingRetainers = true;
                 _LastCursor = 0;
 
-                while (!cts.Token.IsCancellationRequested)
+                try
                 {
-                    var query = new RetainerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-                    var request = ApiClient.Instance.GetRetainers<RetainerDto>(query).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                    if (request.Page.Data != null)
+                    while (!cts.Token.IsCancellationRequested)
                     {
-                        foreach (var _data in request.Page.Data)
-                        {
-                            _retainersFetchedFromServer[_data.LocalContentId] = _data;
-                        }
+                        var query = new RetainerQueryObject() { Cursor = _LastCursor, IsFetching = true };
+                        var request = await ApiClient.Instance.GetRetainers<RetainerDto>(query);
 
-                        _LastCursor = request.Page.LastCursor;
-                        _SyncMessage = $"{Loc.StFetchingRetainers} ({_retainersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount})";
-
-                        if (request.Page.NextCount > 0)
+                        if (request.Page != null && request.Page.Data != null)
                         {
+                            foreach (var _data in request.Page.Data)
+                            {
+                                _retainersFetchedFromServer[_data.LocalContentId] = _data;
+                            }
+
+                            _LastCursor = request.Page.LastCursor;
                             _SyncMessage = $"{Loc.StFetchingRetainers} ({_retainersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount})";
-                            await Task.Delay(300);
+
+                            if (request.Page.NextCount > 0)
+                            {
+                                await Task.Delay(10, cts.Token);
+                            }
+                            else
+                            {
+                                _LastCursor = 0;
+                                break;
+                            }
+
+                            await Task.Delay(10, cts.Token);
                         }
                         else
                         {
-                            _LastCursor = 0;
+                            _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchRetainers;
                             IsSyncingRetainers = false;
-                            break;
                         }
-
-                        await Task.Delay(300, cts.Token);
-                    }
-                    else
-                    {
-                        _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchRetainers;
-                        IsSyncingRetainers = false;
                     }
                 }
+                finally
+                {
+                    IsSyncingRetainers = false;
+                    IsDbRefreshing = true;
 
-                IsSyncingRetainers = false;
-                IsDbRefreshing = true;
-
-                SyncWithLocalDB();
+                    SyncWithLocalDB();
+                }
             });
 
             return true;
@@ -1116,12 +1130,18 @@ namespace PlayerScope.GUI
                     SetLanguage(LanguageEnum.tr);
 
                 LanguageChanged();
-                DetailsWindow.Instance.LanguageChanged();
-                MainWindow.Instance.LanguageChanged();
             }
 
             ImGui.Separator();
             ImGuiHelpers.ScaledDummy(4.0f);
+        }
+
+        private void LanguageChanged()
+        {
+            WindowName = $"{Loc.TitleSettingsMenu}{WindowId}";
+            DetailsWindow.Instance.LanguageChanged();
+            MainWindow.Instance.LanguageChanged();
+            PlayerDetailed.UpdateFlagMessages();
         }
         
         public void SetLanguage(Configuration.LanguageEnum lang)
