@@ -5,11 +5,14 @@ using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Lua;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
+using PlayerScope.API.Models;
 using PlayerScope.Handlers;
 using PlayerScope.Properties;
 using System;
@@ -44,13 +47,22 @@ namespace PlayerScope
                 ImGui.SameLine();
             }
         }
+        public static string GetWorldName(uint worldId)
+        {
+            var world = Plugin.DataManager.GetExcelSheet<World>().GetRowOrDefault(worldId);
+            if (world != null)
+            {
+                return world.Value.Name.ToString();
+            }
+            return "Unknown";
+        }
+
         public static World GetWorld(uint worldId)
         {
-            var worldSheet = Plugin._dataManager.GetExcelSheet<World>()!;
-            var world = worldSheet.FirstOrDefault(x => x.RowId == worldId);
-            if (world == null)
+            var worldSheet = Plugin.DataManager.GetExcelSheet<World>();
+            if (worldSheet.TryGetRow(worldId, out var world))
             {
-                return worldSheet.First();
+                return world;
             }
 
             return world;
@@ -58,7 +70,7 @@ namespace PlayerScope
 
         public static string GetRegionCode(World world)
         {
-            return world.DataCenter?.Value?.Region switch
+            return world.DataCenter.ValueNullable?.Region switch
             {
                 1 => "JP",
                 2 => "NA",
@@ -75,12 +87,12 @@ namespace PlayerScope
 
         public static bool IsWorldValid(World world)
         {
-            if (world.Name.RawData.IsEmpty || GetRegionCode(world) == string.Empty)
+            if (world.Name.IsEmpty || GetRegionCode(world) == string.Empty)
             {
                 return false;
             }
 
-            return char.IsUpper((char)world.Name.RawData[0]);
+            return char.IsUpper(world.Name.ToString()[0]);
         }
 
         public static void TextCopy(Vector4 col, string text)
@@ -296,6 +308,17 @@ namespace PlayerScope
                     ImGui.TextUnformatted($"{text}");
                 }
             }
+        }
+
+        public static void HeaderProfileVisitInfoText(PlayerDetailed.PlayerProfileVisitInfoDto visitInfo)
+        {
+            ImGuiHelpers.ScaledDummy(5.0f);
+
+            Util.TextWrapped(string.Format(Loc.DtCharacterVisitInfo, Tools.ToTimeSinceString((int)visitInfo.LastProfileVisitDate), visitInfo.ProfileTotalVisitCount, visitInfo.UniqueVisitorCount));
+
+            ImGuiHelpers.ScaledDummy(5.0f);
+            ImGui.Separator();
+            ImGuiHelpers.ScaledDummy(5.0f);
         }
 
         public static string GenerateRandomKey(int length = 20)

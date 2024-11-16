@@ -83,8 +83,8 @@ namespace PlayerScope
         public static string GetTerritoryName(ushort territoryId)
         {
             var territory = PersistenceContext.Instance.Territories.First(row => row.RowId == territoryId);
-            var territoryName = territory.PlaceName.Value?.Name;
-            var territoryRegion = territory.PlaceNameRegion.Value?.Name;
+            var territoryName = territory.PlaceName.Value.Name;
+            var territoryRegion = territory.PlaceNameRegion.Value.Name;
             return $"{territoryName}, {territoryRegion}";
         }
 

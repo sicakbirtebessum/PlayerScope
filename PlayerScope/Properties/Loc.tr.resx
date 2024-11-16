@@ -783,4 +783,16 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="DtPlayerFlagsPrivateMessage" xml:space="preserve">
     <value>Bu profil gizlidir.</value>
   </data>
+  <data name="StThisCharacterIsPrivate" xml:space="preserve">
+    <value>Bu karakterin profili gizlidir.</value>
+  </data>
+  <data name="StSomeDetailsThisCharacterAreHidden" xml:space="preserve">
+    <value>Bu karakterin profilinin bazi ayrintilari gizlidir.</value>
+  </data>
+  <data name="StSomeDetailsCharacterArePrivate" xml:space="preserve">
+    <value>Bu karakterin profilinin bazı ayrintilari gizlidir.</value>
+  </data>
+  <data name="DtCharacterVisitInfo" xml:space="preserve">
+    <value>Toplam {1} kez, {2} farkli üye tarafindan ziyaret edildi. [Son ziyaret: {0}]</value>
+  </data>
 </root>

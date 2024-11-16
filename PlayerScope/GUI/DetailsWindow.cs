@@ -38,10 +38,10 @@ using Dalamud.Interface.Utility.Raii;
 using System.Drawing;
 using PlayerScope.Models;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Lumina.Excel.GeneratedSheets;
 using PlayerScope.Properties;
 using static PlayerScope.API.Models.PlayerDetailed;
 using Dalamud.Interface.Style;
+using Lumina.Excel.Sheets;
 namespace PlayerScope.GUI
 {
     public class DetailsWindow : Window, IDisposable
@@ -90,6 +90,11 @@ namespace PlayerScope.GUI
             DetailedPlayerNamesTableColumn = new string[]
             {
             Loc.DtCharacterName, Loc.MnAddedAt
+            };
+
+            DetailedRetainerNamesTableColumn = new string[]
+            {
+            Loc.DtRetainerName, Loc.MnAddedAt
             };
 
             DetailedPlayerWorldsTableColumn = new string[]
@@ -159,6 +164,11 @@ namespace PlayerScope.GUI
         private string[] DetailedPlayerNamesTableColumn = new string[]
         {
             Loc.DtCharacterName, Loc.MnAddedAt
+        };
+
+        private string[] DetailedRetainerNamesTableColumn = new string[]
+        {
+            Loc.DtRetainerName, Loc.MnAddedAt
         };
 
         private string[] DetailedPlayerWorldsTableColumn = new string[]
@@ -298,7 +308,7 @@ namespace PlayerScope.GUI
         {
             if (Config.LoggedIn && !string.IsNullOrWhiteSpace(Config.Key))
             {
-                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Server, Loc.DtFetchDetailedCharacterInfo))
+                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Database, Loc.DtFetchDetailedCharacterInfo))
                 {
                     OpenDetailedPlayerWindow(SelectedPlayerContentId, true);
                 }
@@ -336,11 +346,13 @@ namespace PlayerScope.GUI
                     ImGui.TableNextColumn();
 
                     ImGui.Text(account.Key.ToString()); //cId column
+
+                    index++;
                 }
 
-                index++;
+                ImGui.EndTable();
             }
-            ImGui.EndTable();
+            
             ImGui.EndGroup();
 
             ImGui.BeginGroup();
@@ -373,17 +385,18 @@ namespace PlayerScope.GUI
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text($"{Util.GetWorld(retainer.WorldId).Name}"); // Servername column
+                            ImGui.Text($"{Util.GetWorldName(retainer.WorldId)}"); // Servername column
 
                             ImGui.TableNextColumn();
 
                             ImGui.Text(Item.Value.Item1.Name); //OwnerName column
                         }
-                    }
 
-                    index++;
+                        index++;
+                    }
+                    ImGui.EndTable();
                 }
-                ImGui.EndTable();
+                
             }
             ImGui.EndGroup();
         }
@@ -399,7 +412,7 @@ namespace PlayerScope.GUI
                     ImGui.EndTabItem();
                 }
 
-                if (player.PlayerLastSeenInfo != null && player.PlayerLastSeenInfo.TerritoryHistory?.Count > 0)
+                if (player.TerritoryHistory.Count > 0)
                 {
                     if (ImGui.BeginTabItem(Loc.DtLocationHistory))
                     {
@@ -429,7 +442,12 @@ namespace PlayerScope.GUI
         {
             var player = _LastPlayerDetailedInfo.Player;
 
-            if (player.Flags != null && player.Flags.Length > 0)
+            if (player.ProfileVisitInfo != null)
+            {
+                Util.HeaderProfileVisitInfoText(player.ProfileVisitInfo);
+            }
+
+            if (player.Flags.Length > 0)
             {
                 foreach (var flagValue in player.Flags)
                 {
@@ -468,62 +486,43 @@ namespace PlayerScope.GUI
                 ImGui.TableNextColumn();
 
                 ImGui.Text(player.AccountId.ToString()); //AccId column
-            }
-            ImGui.EndTable();
 
-            if (player.PlayerLastSeenInfo != null)
-            {
-                TerritoryType getLastTerritory = new TerritoryType();
-                if (player.PlayerLastSeenInfo.TerritoryHistory.Count > 0)
-                {
-                    getLastTerritory = PersistenceContext.Instance.Territories.Where(a => a.RowId == player.PlayerLastSeenInfo.TerritoryHistory.FirstOrDefault()?.TerritoryId).FirstOrDefault();
-                }
-
-                ImGui.Text(Loc.DtCharacterLastSeenIn); ImGui.SameLine();
-                if (ImGui.BeginTable($"_Lastseen", DetailedPlayerLastSeenZoneTableColumn.Length, ImGuiTableFlags.BordersInner))
-                {
-                    foreach (var t in DetailedPlayerLastSeenZoneTableColumn)
-                    {
-                        ImGui.TableSetupColumn(t, ImGuiTableColumnFlags.WidthFixed);
-                    }
-                    ImGui.TableHeadersRow();
-
-                    ImGui.TableNextRow();
-                    ImGui.TableNextColumn();
-
-                    if (player.PlayerLastSeenInfo.TerritoryHistory.Count > 0)
-                    {
-                        if (getLastTerritory != null && player.PlayerLastSeenInfo.CreatedAt == player.PlayerLastSeenInfo.TerritoryHistory.FirstOrDefault().LastSeenAt)
-                        {
-                            Util.DrawHelp(false, $"{getLastTerritory.PlaceName.Value.Name.ToString()} | {getLastTerritory.PlaceNameRegion.Value.Name.ToString()}");
-                            ImGui.Text(getLastTerritory.PlaceName.Value.Name.ToString()); //Zone Name column
-                        }
-                    }
-                    else
-                    {
-                        ImGui.Text("---");
-                    }
-
-                    ImGui.TableNextColumn();
-
-                    if (player.PlayerLastSeenInfo.WorldId != null)
-                    {
-                        ImGui.Text(Util.GetWorld((uint)player.PlayerLastSeenInfo.WorldId).Name.ToString()); //World column
-                    }
-                    else
-                        ImGui.Text("---");
-
-                    ImGui.TableNextColumn();
-
-                    if (player.PlayerLastSeenInfo.CreatedAt != null)
-                    {
-                        var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(player.PlayerLastSeenInfo.CreatedAt)} ({Tools.ToTimeSinceString((int)player.PlayerLastSeenInfo.CreatedAt)})" : Tools.ToTimeSinceString((int)player.PlayerLastSeenInfo.CreatedAt);
-                        ImGui.Text(AddedAtDate); //Added At column
-                    }
-                    else
-                        ImGui.Text("---");
-                }
                 ImGui.EndTable();
+            }
+            
+            if (player.TerritoryHistory.Count > 0)
+            {
+                TerritoryType lastTerritory = PersistenceContext.Instance.Territories.Where(a => a.RowId == player.TerritoryHistory.FirstOrDefault()?.TerritoryId).FirstOrDefault();
+                if (player.TerritoryHistory.FirstOrDefault() != null)
+                {
+                    ImGui.Text(Loc.DtCharacterLastSeenIn);
+                    ImGui.SameLine();
+                    if (ImGui.BeginTable($"_Lastseen", DetailedPlayerLastSeenZoneTableColumn.Length, ImGuiTableFlags.BordersInner))
+                    {
+                        foreach (var t in DetailedPlayerLastSeenZoneTableColumn)
+                        {
+                            ImGui.TableSetupColumn(t, ImGuiTableColumnFlags.WidthFixed);
+                        }
+                        ImGui.TableHeadersRow();
+
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
+
+                        Util.DrawHelp(false, $"{lastTerritory.PlaceName.Value.Name.ToString()} | {lastTerritory.PlaceNameRegion.Value.Name.ToString()}");
+                        ImGui.Text(lastTerritory.PlaceName.Value.Name.ToString()); //Zone Name column
+
+                        ImGui.TableNextColumn();
+
+                        ImGui.Text(Util.GetWorldName((uint)player.TerritoryHistory.FirstOrDefault().WorldId)); //World column
+
+                        ImGui.TableNextColumn();
+
+                        var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(player.TerritoryHistory.FirstOrDefault().LastSeenAt)} ({Tools.ToTimeSinceString((int)player.TerritoryHistory.FirstOrDefault().LastSeenAt)})" : Tools.ToTimeSinceString((int)player.TerritoryHistory.FirstOrDefault().LastSeenAt);
+                        ImGui.Text(AddedAtDate); //Added At column
+
+                        ImGui.EndTable();
+                    }
+                }
             }
 
             ImGui.EndGroup();
@@ -558,11 +557,12 @@ namespace PlayerScope.GUI
 
                         var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(name.CreatedAt)} ({Tools.ToTimeSinceString((int)name.CreatedAt)})" : Tools.ToTimeSinceString((int)name.CreatedAt);
                         ImGui.Text(AddedAtDate); //Added At column
-                    }
 
-                    index++;
+                        index++;
+                    }
+                    ImGui.EndTable();
                 }
-                ImGui.EndTable();
+               
                 ImGui.EndGroup();
             }
 
@@ -590,17 +590,18 @@ namespace PlayerScope.GUI
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
-                        ImGui.Text(Util.GetWorld((uint)world.WorldId).Name.ToString()); //World Name
+                        ImGui.Text(Util.GetWorldName((uint)world.WorldId)); //World Name
 
                         ImGui.TableNextColumn();
 
                         var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(world.CreatedAt)} ({Tools.ToTimeSinceString((int)world.CreatedAt)})" : Tools.ToTimeSinceString((int)world.CreatedAt);
                         ImGui.Text(AddedAtDate); //Added At column
-                    }
 
-                    index++;
+                        index++;
+                    }
+                    ImGui.EndTable();
                 }
-                ImGui.EndTable();
+                
                 ImGui.EndGroup();
             }
 
@@ -646,7 +647,7 @@ namespace PlayerScope.GUI
                         ImGui.TableNextColumn();
 
                         if (!string.IsNullOrWhiteSpace(altChar.WorldId.ToString()))
-                            ImGui.Text(Util.GetWorld(((uint)altChar.WorldId)).Name.ToString()); //World
+                            ImGui.Text(Util.GetWorldName(((uint)altChar.WorldId))); //World
                         else
                             ImGui.Text("---");
 
@@ -656,11 +657,11 @@ namespace PlayerScope.GUI
 
                         index++;
                     }
+                    ImGui.EndTable();
                 }
-                ImGui.EndTable();
+                
                 ImGui.EndGroup();
             }
-
 
             var AllRetainers = new List<PlayerDetailed.RetainerDto>(player.Retainers);
             player.PlayerAltCharacters.ToList().ForEach(r =>
@@ -682,11 +683,12 @@ namespace PlayerScope.GUI
 
                             ImGui.BeginGroup();
 
-                            ImGui.Text(Loc.DtNameHistory); ImGui.SameLine();
+                            ImGui.Text(Loc.DtNameHistory); 
+                            ImGui.SameLine();
 
-                            if (ImGui.BeginTable($"_RetainerNames", DetailedPlayerNamesTableColumn.Length, ImGuiTableFlags.BordersInner))
+                            if (ImGui.BeginTable($"_RetainerNames", DetailedRetainerNamesTableColumn.Length, ImGuiTableFlags.BordersInner))
                             {
-                                foreach (var t in DetailedPlayerNamesTableColumn)
+                                foreach (var t in DetailedRetainerNamesTableColumn)
                                 {
                                     ImGui.TableSetupColumn(t, ImGuiTableColumnFlags.WidthFixed);
                                 }
@@ -704,20 +706,19 @@ namespace PlayerScope.GUI
                                     var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(name.CreatedAt)} ({Tools.ToTimeSinceString((int)name.CreatedAt)})" : Tools.ToTimeSinceString((int)name.CreatedAt);
                                     ImGui.Text(AddedAtDate); //Added At column
                                 }
+                                ImGui.EndTable();
                             }
-                            ImGui.EndTable();
                             ImGui.EndGroup();
                         }
 
                         ImGui.SameLine();
 
-                        ImGui.Text("\n");
-                        ImGui.SameLine();
                         if (_seeExtraDetailsOfRetainer.Worlds.Count > 0)
                         {
                             ImGui.BeginGroup();
 
-                            ImGui.Text(Loc.DtHomeworldHistory); ImGui.SameLine();
+                            ImGui.Text(Loc.DtHomeworldHistory); 
+                            ImGui.SameLine();
 
                             if (ImGui.BeginTable($"_RetainerWorlds", DetailedPlayerWorldsTableColumn.Length, ImGuiTableFlags.BordersInner))
                             {
@@ -732,15 +733,15 @@ namespace PlayerScope.GUI
                                     ImGui.TableNextRow();
                                     ImGui.TableNextColumn();
 
-                                    ImGui.Text(Util.GetWorld((uint)world.WorldId).Name.ToString()); //World Name
+                                    ImGui.Text(Util.GetWorldName((uint)world.WorldId)); //World Name
 
                                     ImGui.TableNextColumn();
 
                                     var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(world.CreatedAt)} ({Tools.ToTimeSinceString((int)world.CreatedAt)})" : Tools.ToTimeSinceString((int)world.CreatedAt);
                                     ImGui.Text(AddedAtDate); //Added At column
                                 }
+                                ImGui.EndTable();
                             }
-                            ImGui.EndTable();
                             ImGui.EndGroup();
                         }
                     }
@@ -774,7 +775,7 @@ namespace PlayerScope.GUI
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorld((uint)retainer.Worlds.LastOrDefault().WorldId).Name.ToString()); // World
+                            ImGui.Text(Util.GetWorldName((uint)retainer.Worlds.LastOrDefault().WorldId)); // World
 
                             ImGui.TableNextColumn();
 
@@ -814,11 +815,11 @@ namespace PlayerScope.GUI
 
                             index++;
                         }
+                        ImGui.EndTable();
                     }
-                    ImGui.EndTable();
+                    
                     ImGui.EndGroup();
                 }
-
             }
         }
 
@@ -826,9 +827,9 @@ namespace PlayerScope.GUI
         {
             var player = _LastPlayerDetailedInfo.Player;
 
-            if (_LastPlayerDetailedInfo.Player.PlayerLastSeenInfo?.TerritoryHistory.Count > 0)
+            if (player.TerritoryHistory.Count > 0)
             {
-                ImGui.Text(string.Format(Loc.DtLocationHistoryResultsAreDisplayed, _LastPlayerDetailedInfo.Player.PlayerLastSeenInfo?.TerritoryHistory.Count));
+                ImGui.Text(string.Format(Loc.DtLocationHistoryResultsAreDisplayed, player.TerritoryHistory.Count));
                 
                 ImGui.SameLine();
 
@@ -847,41 +848,33 @@ namespace PlayerScope.GUI
                     ImGui.TableHeadersRow();
                     var index = 0;
 
-                    foreach (var territory in _LastPlayerDetailedInfo.Player.PlayerLastSeenInfo.TerritoryHistory)
+                    foreach (var territory in player.TerritoryHistory)
                     {
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
                         var getTerritory = PersistenceContext.Instance.Territories.Where(a => a.RowId == territory.TerritoryId).FirstOrDefault();
-                        if (getTerritory != null)
-                        {
-                            if (ImGui.Button(Loc.DtMapButton + $"##{index}"))
-                            {
-                                var playerPos = Util.Vector3FromString(territory.PlayerPos);
-                                var _territory = PersistenceContext.Instance.Territories.First(row => row.RowId == _LastPlayerDetailedInfo.Player.PlayerLastSeenInfo.TerritoryHistory[index].TerritoryId);
-                                var mapLink = new MapLinkPayload(
-                                    _territory.RowId,
-                                    _territory.Map.Value.RowId,
-                                    playerPos.X,
-                                    playerPos.Y
-                                );
-                                Plugin._gameGui.OpenMapWithMapLink(mapLink);
-                            }
-                            ImGui.SameLine();
 
-                            Util.DrawHelp(false, $"{getTerritory.PlaceName.Value.Name.ToString()} | {getTerritory.PlaceNameRegion.Value.Name.ToString()}");
-                            ImGui.Text(getTerritory.PlaceName.Value.Name.ToString());
-                        }
-                        else
+                        if (ImGui.Button(Loc.DtMapButton + $"##{index}"))
                         {
-                            Util.DrawHelp(false, $"Player's map could not be detected. Most likely, they were added from lists like player search or friend list.");
-                            ImGui.Text(" - ");
+                            var playerPos = Util.Vector3FromString(territory.PlayerPos);
+                            var _territory = PersistenceContext.Instance.Territories.First(row => row.RowId == player.TerritoryHistory[index].TerritoryId);
+                            var mapLink = new MapLinkPayload(
+                                _territory.RowId,
+                                _territory.Map.Value.RowId,
+                                playerPos.X,
+                                playerPos.Y
+                            );
+                            Plugin._gameGui.OpenMapWithMapLink(mapLink);
                         }
-                            
+                        ImGui.SameLine();
+
+                        Util.DrawHelp(false, $"{getTerritory.PlaceName.Value.Name.ToString()} | {getTerritory.PlaceNameRegion.Value.Name.ToString()}");
+                        ImGui.Text(getTerritory.PlaceName.Value.Name.ToString());
 
                         ImGui.TableNextColumn();
 
-                        ImGui.Text(Util.GetWorld((uint)territory.WorldId).Name); //World Name
+                        ImGui.Text(Util.GetWorldName((uint)territory.WorldId)); //World Name
 
                         ImGui.TableNextColumn();
 
@@ -910,8 +903,9 @@ namespace PlayerScope.GUI
 
                         index++;
                     }
+                    ImGui.EndTable();
                 }
-                ImGui.EndTable();
+                
                 ImGui.EndGroup();
             }
         }
@@ -935,7 +929,7 @@ namespace PlayerScope.GUI
                 ImGui.TableHeadersRow();
                 var index = 0;
 
-                foreach (var customization in _LastPlayerDetailedInfo.Player.PlayerCustomizationHistories)
+                foreach (var customization in player.PlayerCustomizationHistories)
                 {
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
@@ -978,13 +972,13 @@ namespace PlayerScope.GUI
 
                     var LastSeenDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(customization.CreatedAt)} ({Tools.ToTimeSinceString((int)customization.CreatedAt)})" : Tools.ToTimeSinceString((int)customization.CreatedAt);
                     ImGui.Text(LastSeenDate); //Added At column
+
+                    index++;
                 }
-
-                index++;
+                ImGui.EndTable();
             }
-            ImGui.EndTable();
+            
             ImGui.EndGroup();
-
         }
 
         List<KeyValuePair<ulong, (CachedPlayer, List<Database.Retainer>)>> FetchedAccounts = new();

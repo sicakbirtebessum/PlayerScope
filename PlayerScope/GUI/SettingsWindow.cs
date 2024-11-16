@@ -129,8 +129,8 @@ namespace PlayerScope.GUI
                         {
                             var homeWorld = PersistenceContext._clientState.LocalPlayer?.HomeWorld;
                             _playerName = $"{bChar->NameString}";
-                            _worldName = homeWorld.GameData.Name;
-                            _worldId = homeWorld.Id;
+                            _worldName = homeWorld.Value.Value.Name.ExtractText();
+                            _worldId = homeWorld.Value.RowId;
                             _accountId = (int)bChar->AccountId;
                             _contentId = (long)bChar->ContentId;
 
@@ -174,8 +174,21 @@ namespace PlayerScope.GUI
                 Config.FetchedPlayerInfoCount = LastUserInfo.NetworkStats?.FetchedPlayerInfoCount;
                 Config.SearchedNamesCount = LastUserInfo.NetworkStats?.SearchedNamesCount;
                 Config.LastSyncedTime = LastUserInfo.NetworkStats?.LastSyncedTime;
-  
-                LastUserCharacters = LastUserInfo.Characters;
+
+                LastUserCharactersPrivacySettings = LastUserInfo.Characters
+                .Select(character => character == null ? null : new User.UserCharacterDto
+                {
+                    LocalContentId = character.LocalContentId,
+                    Privacy = new CharacterPrivacySettingsDto
+                    {
+                        HideFullProfile = character.Privacy.HideFullProfile,
+                        HideTerritoryInfo = character.Privacy.HideTerritoryInfo,
+                        HideCustomizations = character.Privacy.HideCustomizations,
+                        HideInSearchResults = character.Privacy.HideInSearchResults,
+                        HideRetainersInfo = character.Privacy.HideRetainersInfo,
+                        HideAltCharacters = character.Privacy.HideAltCharacters
+                    },
+                }).ToList();
 
                 if (LastUserInfo.Characters != null && LastUserInfo.Characters.Count > 0)
                 {
@@ -185,7 +198,7 @@ namespace PlayerScope.GUI
                         {
                             character.Privacy = new CharacterPrivacySettingsDto();
                         }
-                        _LocalUserCharacters[(long)character.LocalContentId] = new UserCharacters { Name = character.Name, Privacy = character.Privacy };
+                        _localUserCharacters[(long)character.LocalContentId] = new UserCharacters { Name = character.Name, Privacy = character.Privacy };
                     }
                 }
    
@@ -197,7 +210,7 @@ namespace PlayerScope.GUI
         }
 
         User LastUserInfo { get; set; }
-        List<User.UserCharacterDto?> LastUserCharacters { get; set; }
+        List<User.UserCharacterDto?> LastUserCharactersPrivacySettings = new();
 
         bool IsRefreshed;
         bool IsSaved;
@@ -599,31 +612,25 @@ namespace PlayerScope.GUI
             Util.ShowColoredMessage(_SyncMessage);
         }
 
-        private ConcurrentDictionary<long, UserCharacters> _LocalUserCharacters = new();
+        private ConcurrentDictionary<long, UserCharacters> _localUserCharacters = new();
         public class UserCharacters
         {
             public string? Name { get; set; }
             public User.CharacterPrivacySettingsDto? Privacy { get; init; }
         }
 
-        private List<long?> EditedCharactersPrivacy = new List<long?>();
-        bool isActive = false;
-        bool isActive2 = true;
+        private HashSet<long?> editedCharactersPrivacy = new();
+        private bool isPrivacySettingsChanged;
+
         private async void DrawMyCharactersTab()
         {
             ServerStatusGui();
-
-            if (ImGui.Button("TestNotif"))
-            {
-                Util.AddNotification("Error", NotificationType.Error);
-                Util.TryOpenURI(new Uri("https://google.com"));
-            }
 
             ImGui.TextWrapped(Loc.StConfigurePrivacyOfChars);
 
             ImGui.NewLine();
 
-            ImGui.TextWrapped(string.Format(Loc.StATotalOfCharsFound, _LocalUserCharacters.Count));
+            ImGui.TextWrapped(string.Format(Loc.StATotalOfCharsFound, _localUserCharacters.Count));
 
             ImGuiHelpers.ScaledDummy(5.0f);
             ImGui.Separator();
@@ -631,7 +638,7 @@ namespace PlayerScope.GUI
 
             ImGui.BeginGroup();
 
-            if (LastUserInfo != null && LastUserInfo.Characters != null && LastUserInfo.Characters.Count > 0 && _LocalUserCharacters.Count > 0)
+            if (LastUserInfo != null && LastUserInfo.Characters != null && LastUserInfo.Characters.Count > 0 && !_localUserCharacters.IsEmpty && LastUserCharactersPrivacySettings != null)
             {
                 var index = 0;
                 foreach (var character in LastUserInfo.Characters)
@@ -644,7 +651,46 @@ namespace PlayerScope.GUI
                         }
 
                     ImGui.SameLine();
-                    var charName = character.Name != null || !string.IsNullOrWhiteSpace(character.Name) ? character.Name : Loc.StNameNotFound;
+                    
+                    _localUserCharacters.TryGetValue((long)character.LocalContentId, out var _getLocalChara);
+
+                    bool _bHideFullProfile = _getLocalChara.Privacy.HideFullProfile;
+                    bool _bHideTerritoryInfo = _getLocalChara.Privacy.HideTerritoryInfo;
+                    bool _bHideCustomizations = _getLocalChara.Privacy.HideCustomizations;
+                    bool _bHideInSearchResults = _getLocalChara.Privacy.HideInSearchResults;
+                    bool _bHideRetainersInfo = _getLocalChara.Privacy.HideRetainersInfo;
+                    bool _bHideAltCharacters = _getLocalChara.Privacy.HideAltCharacters;
+
+                    if (LastUserCharactersPrivacySettings?[index].Privacy != null)
+                    {
+                        if (LastUserCharactersPrivacySettings[index].Privacy.HideFullProfile)
+                        {
+                            using (ImRaii.PushFont(UiBuilder.IconFont))
+                            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed))
+                            {
+                                ImGui.TextUnformatted($"{FontAwesomeIcon.Lock.ToIconString()}");
+                                Util.SetHoverTooltip(Loc.StThisCharacterIsPrivate);
+                                ImGui.SameLine();
+                            }
+                        }
+                        else if (LastUserCharactersPrivacySettings[index].Privacy.HideTerritoryInfo 
+                                || LastUserCharactersPrivacySettings[index].Privacy.HideCustomizations 
+                                || LastUserCharactersPrivacySettings[index].Privacy.HideAltCharacters
+                                || LastUserCharactersPrivacySettings[index].Privacy.HideInSearchResults
+                                || LastUserCharactersPrivacySettings[index].Privacy.HideRetainersInfo)
+                        {
+                            using (ImRaii.PushFont(UiBuilder.IconFont))
+                            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed))
+                            {
+                                ImGui.TextUnformatted($"{FontAwesomeIcon.UnlockAlt.ToIconString()}");
+                                Util.SetHoverTooltip(Loc.StSomeDetailsThisCharacterAreHidden);
+                                ImGui.SameLine();
+                            }
+                        }
+                    } 
+                    
+
+                    var charName = !string.IsNullOrWhiteSpace(character.Name) ? character.Name : Loc.StNameNotFound;
                     var headerText = $"{charName}";
 
                     int visitCount = character.ProfileVisitInfo != null ? (int)character.ProfileVisitInfo.ProfileTotalVisitCount : 0;
@@ -662,19 +708,10 @@ namespace PlayerScope.GUI
                         }
                         if (character.Privacy != null)
                         {
-                            _LocalUserCharacters.TryGetValue((long)character.LocalContentId, out var _getLocalChara);
-
-                            bool _bHideFullProfile = _getLocalChara.Privacy.HideFullProfile;
-                            bool _bHideTerritoryInfo = _getLocalChara.Privacy.HideTerritoryInfo;
-                            bool _bHideCustomizations = _getLocalChara.Privacy.HideCustomizations;
-                            bool _bHideInSearchResults = _getLocalChara.Privacy.HideInSearchResults;
-                            bool _bHideRetainersInfo = _getLocalChara.Privacy.HideRetainersInfo;
-                            bool _bHideAltCharacters = _getLocalChara.Privacy.HideAltCharacters;
-
                             if (ImGui.Checkbox(Loc.StPrivacyHideFullProfile + $"##{index}", ref _bHideFullProfile))
                             {
                                 _getLocalChara.Privacy.HideFullProfile = _bHideFullProfile;
-                                if (!EditedCharactersPrivacy.Contains(character.LocalContentId)) EditedCharactersPrivacy.Add(character.LocalContentId);
+                                if (!editedCharactersPrivacy.Add(character.LocalContentId)) { }
                             }
                             Util.SetHoverTooltip(Loc.StPrivacyHideFullProfileTooltip);
 
@@ -685,7 +722,7 @@ namespace PlayerScope.GUI
                                 if (ImGui.Checkbox(Loc.StPrivacyHideLocationHistory + $"##{index}", ref _bHideTerritoryInfo))
                                 {
                                     _getLocalChara.Privacy.HideTerritoryInfo = _bHideTerritoryInfo;
-                                    if (!EditedCharactersPrivacy.Contains(character.LocalContentId)) EditedCharactersPrivacy.Add(character.LocalContentId);
+                                    if (!editedCharactersPrivacy.Add(character.LocalContentId)) { }
                                 }
                                 Util.SetHoverTooltip(Loc.StPrivacyHideLocationHistoryTooltip);
 
@@ -694,14 +731,14 @@ namespace PlayerScope.GUI
                                 if (ImGui.Checkbox(Loc.StPrivacyHideCustomizationHistory + $"##{index}", ref _bHideCustomizations))
                                 {
                                     _getLocalChara.Privacy.HideCustomizations = _bHideCustomizations;
-                                    if (!EditedCharactersPrivacy.Contains(character.LocalContentId)) EditedCharactersPrivacy.Add(character.LocalContentId);
+                                    if (!editedCharactersPrivacy.Add(character.LocalContentId)) { }
                                 }
                                 Util.SetHoverTooltip(Loc.StPrivacyHideCustomizationHistoryTooltip);
 
                                 if (ImGui.Checkbox(Loc.StPrivacyDontAppearInSearchResults + $"##{index}", ref _bHideInSearchResults))
                                 {
                                     _getLocalChara.Privacy.HideInSearchResults = _bHideInSearchResults;
-                                    if (!EditedCharactersPrivacy.Contains(character.LocalContentId)) EditedCharactersPrivacy.Add(character.LocalContentId);
+                                    if (!editedCharactersPrivacy.Add(character.LocalContentId)) { }
                                 }
                                 Util.SetHoverTooltip(Loc.StPrivacyDontAppearInSearchResultsTooltip);
 
@@ -710,7 +747,7 @@ namespace PlayerScope.GUI
                                 if (ImGui.Checkbox(Loc.StPrivacyHideAltCharacters + $"##{index}", ref _bHideAltCharacters))
                                 {
                                     _getLocalChara.Privacy.HideAltCharacters = _bHideAltCharacters;
-                                    if (!EditedCharactersPrivacy.Contains(character.LocalContentId)) EditedCharactersPrivacy.Add(character.LocalContentId);
+                                    if (!editedCharactersPrivacy.Add(character.LocalContentId)) { }
                                 }
                                 Util.SetHoverTooltip(Loc.StPrivacyHideAltCharactersTooltip);
                             }
@@ -720,7 +757,7 @@ namespace PlayerScope.GUI
                             if (ImGui.Checkbox(Loc.StPrivacyHideRetainers + $"##{index}", ref _bHideRetainersInfo))
                             {
                                 _getLocalChara.Privacy.HideRetainersInfo = _bHideRetainersInfo;
-                                if (!EditedCharactersPrivacy.Contains(character.LocalContentId)) EditedCharactersPrivacy.Add(character.LocalContentId);
+                                if (!editedCharactersPrivacy.Add(character.LocalContentId)) { }
                             }
                             Util.SetHoverTooltip(Loc.StPrivacyHideRetainersTooltip);
                         }
@@ -738,13 +775,13 @@ namespace PlayerScope.GUI
 
             using (ImRaii.Disabled(bIsNetworkProcessing))
             {
-                using (ImRaii.Disabled(EditedCharactersPrivacy.Count == 0))
+                using (ImRaii.Disabled(editedCharactersPrivacy.Count == 0))
                     if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Save, Loc.StSaveConfig))
                     {
                         var updateCharacters = new List<UserCharacterDto?>();
-                        foreach (var chara in _LocalUserCharacters)
+                        foreach (var chara in _localUserCharacters)
                         {
-                            if (EditedCharactersPrivacy.Contains(chara.Key))
+                            if (editedCharactersPrivacy.Contains(chara.Key))
                             {
                                 updateCharacters.Add(new UserCharacterDto { LocalContentId = chara.Key, Name = chara.Value.Name, Privacy = chara.Value.Privacy });
                             }
@@ -759,7 +796,8 @@ namespace PlayerScope.GUI
                             RefreshUserProfileInfo();
                         });
 
-                        EditedCharactersPrivacy.Clear();
+                        isPrivacySettingsChanged = false;
+                        editedCharactersPrivacy.Clear();
                     }
                 Util.SetHoverTooltip(Loc.StSaveConfigTooltip);
 
@@ -1076,7 +1114,6 @@ namespace PlayerScope.GUI
             else
             {
                 _serverIpAdressField = Config.BaseUrl.ToString();
-                //ImGui.TextWrapped(_serverIpAdressField.ToString());
                 ImGui.SameLine();
             }
 

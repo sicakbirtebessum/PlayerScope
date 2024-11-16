@@ -305,6 +305,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Total visits: {1} from {2} unique users. [Last visit: {0}] benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtCharacterVisitInfo {
+            get {
+                return ResourceManager.GetString("DtCharacterVisitInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Customization History benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtCustomizationHistory {
@@ -1694,6 +1703,24 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   This character&apos;s profile has some hidden details. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StSomeDetailsCharacterArePrivate {
+            get {
+                return ResourceManager.GetString("StSomeDetailsCharacterArePrivate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Some details of this character&apos;s profile are hidden. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StSomeDetailsThisCharacterAreHidden {
+            get {
+                return ResourceManager.GetString("StSomeDetailsThisCharacterAreHidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Your character&apos;s profile was last visited on: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StSomeoneVisitedYourProfile {
@@ -1755,6 +1782,15 @@ namespace PlayerScope.Properties {
         internal static string StTabUserInfo {
             get {
                 return ResourceManager.GetString("StTabUserInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This character&apos;s profile is private. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StThisCharacterIsPrivate {
+            get {
+                return ResourceManager.GetString("StThisCharacterIsPrivate", resourceCulture);
             }
         }
         

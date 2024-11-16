@@ -222,7 +222,7 @@ namespace PlayerScope.GUI
             _LastRetainerSearchResult = (RetainerResult.Retainers, RetainerResult.Message);
         }
 
-        public async Task DrawSearchPlayersAndRetainers_FromServerTab()
+        public void DrawSearchPlayersAndRetainers_FromServerTab()
         {
             if (lastSelectedPlayerOrRetainerValue != selectedComboItem_PlayerOrRetainer)
             {
@@ -275,7 +275,7 @@ namespace PlayerScope.GUI
             ImGui.Text("->");
             ImGui.SameLine();
             ImGui.SetNextItemWidth(150);
-            ImGui.InputTextWithHint("##searchC", string.Format(Loc.MnTextInputEnterHere, SearchByPlayerOrRetainer, SearchByNameorId), ref _searchContent, 32);
+            ImGui.InputTextWithHint("##searchC", string.Format(Loc.MnTextInputEnterHere, SearchByPlayerOrRetainer, SearchByNameorId), ref _searchContent, 32, ImGuiInputTextFlags.AutoSelectAll);
 
             ImGui.SetNextItemWidth(140);
             ImGui.SameLine();
@@ -469,7 +469,7 @@ namespace PlayerScope.GUI
 
                             if (player.WorldId != null)
                             {
-                                ImGui.Text(Util.GetWorld((uint)player.WorldId).Name.ToString());
+                                ImGui.Text(Util.GetWorldName((uint)player.WorldId));
                             }
                             else
                             {
@@ -561,11 +561,11 @@ namespace PlayerScope.GUI
                             {
                                 if (ImGui.Button("c" + $"##RetainerWorldName_{index}"))
                                 {
-                                    ImGui.SetClipboardText(Util.GetWorld(retainer.WorldId).Name.ToString());
+                                    ImGui.SetClipboardText(Util.GetWorldName(retainer.WorldId));
                                 }
                                 ImGui.SameLine();
                             }
-                            ImGui.Text(Util.GetWorld(retainer.WorldId).Name.ToString());
+                            ImGui.Text(Util.GetWorldName(retainer.WorldId));
 
                             ImGui.TableNextColumn(); //Created At column
 
@@ -780,11 +780,11 @@ namespace PlayerScope.GUI
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorld(server.Key).Name); // Servername column
+                            ImGui.Text(Util.GetWorldName(server.Key)); // Servername column
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorld(server.Key).DataCenter.Value.Name); //DataCenter column
+                            ImGui.Text(Util.GetWorld(server.Key).DataCenter.Value.Name.ToString()); //DataCenter column
 
                             ImGui.TableNextColumn();
 
@@ -904,15 +904,37 @@ namespace PlayerScope.GUI
         void DeleteLegacyDatabase(string folderName, string dbFileName)
         {
             var fullPath = Path.Combine(Plugin.Instance._pluginInterface.ConfigDirectory.Parent.FullName, folderName);
-            Directory.Delete(fullPath, true);
-            var configPath = Path.ChangeExtension(fullPath, "json");
-            if (File.Exists(configPath))
-            {
-                File.Delete(configPath);
-            }
 
-            Util.AddNotification(Loc.MnDatabaseSuccessfullyDeletedNotification, NotificationType.Info);
+            try
+            {
+                if (Directory.Exists(fullPath))
+                {
+                    foreach (var file in Directory.GetFiles(fullPath, "*", SearchOption.AllDirectories))
+                    {
+                        var fileInfo = new FileInfo(file);
+                        if (fileInfo.IsReadOnly)
+                        {
+                            fileInfo.IsReadOnly = false;
+                        }
+                    }
+
+                    Directory.Delete(fullPath, true);
+                }
+
+                var configPath = Path.ChangeExtension(fullPath, "json");
+                if (File.Exists(configPath))
+                {
+                    File.Delete(configPath);
+                }
+
+                Util.AddNotification(Loc.MnDatabaseSuccessfullyDeletedNotification, NotificationType.Info);
+            }
+            catch (Exception ex)
+            {
+                Util.AddNotification($"Failed to delete database: {ex.Message}", NotificationType.Error);
+            }
         }
+
         void DisplayPathInfo(string path)
         {
             Util.TextWrapped(path);

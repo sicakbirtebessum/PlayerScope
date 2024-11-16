@@ -37,7 +37,7 @@ internal sealed class MarketBoardOfferingsHandler : IDisposable
 
     private void HandleOfferings(IMarketBoardCurrentOfferings currentOfferings)
     {
-        ushort worldId = (ushort?)_clientState.LocalPlayer?.CurrentWorld.Id ?? 0;
+        ushort worldId = (ushort?)_clientState.LocalPlayer?.CurrentWorld.RowId ?? 0;
         if (worldId == 0)
         {
             _logger.LogInformation("Skipping market board handler, current world unknown");

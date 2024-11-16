@@ -1,21 +1,12 @@
 ﻿using Dalamud.Game.Gui.ContextMenu;
-using Dalamud.Game.Gui.PartyFinder.Types;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Lumina.Text;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PlayerScope.API.Models;
 using PlayerScope.API.Query;
 using PlayerScope.GUI;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static FFXIVClientStructs.FFXIV.Client.UI.AddonAetherCurrent.Delegates;
-using static FFXIVClientStructs.FFXIV.Client.UI.AddonRelicNoteBook;
 
 namespace PlayerScope.Handlers;
 
@@ -23,13 +14,13 @@ public class ContextMenu
 {
     public static void Enable()
     {
-        Plugin._contextMenu.OnMenuOpened -= OnOpenContextMenu;
-        Plugin._contextMenu.OnMenuOpened += OnOpenContextMenu;
+        Plugin.ContextMenu.OnMenuOpened -= OnOpenContextMenu;
+        Plugin.ContextMenu.OnMenuOpened += OnOpenContextMenu;
     }
 
     public static void Disable()
     {
-        Plugin._contextMenu.OnMenuOpened -= OnOpenContextMenu;
+        Plugin.ContextMenu.OnMenuOpened -= OnOpenContextMenu;
     }
 
     private static bool IsMenuValid(IMenuArgs menuOpenedArgs)
@@ -38,9 +29,11 @@ public class ContextMenu
         {
             return false;
         }
+
         switch (menuOpenedArgs.AddonName)
         {
             case null: // Nameplate/Model menu
+            case "CircleBook": // Fellowships
             case "LookingForGroup":
             case "PartyMemberList":
             case "FriendList":
@@ -53,7 +46,7 @@ public class ContextMenu
             case "CrossWorldLinkshell":
             case "ContentMemberList": // Eureka/Bozja/...
             case "BeginnerChatList":
-                return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.Id);
+                return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.RowId);
             case "BlackList":
             case "MuteList":
                 return menuTargetDefault.TargetName != string.Empty;
@@ -68,18 +61,18 @@ public class ContextMenu
         {
             return;
         }
-
+        
         if (!IsMenuValid(menuOpenedArgs))
             return;
-
-        if (menuTargetDefault.TargetHomeWorld.Id < 10000)
+        
+        if (menuTargetDefault.TargetHomeWorld.RowId < 10000)
         {
             if (menuTargetDefault.TargetContentId != 0)
             {
                 menuOpenedArgs.AddMenuItem(new MenuItem
                 {
                     PrefixColor = 15,
-                    PrefixChar = 'R',
+                    PrefixChar = 'P',
                     Name = "See Detailed Info",
                     OnClicked = SearchDetailedPlayerInfoById
                 });
@@ -88,8 +81,8 @@ public class ContextMenu
             {
                 menuOpenedArgs.AddMenuItem(new MenuItem
                 {
-                    PrefixColor = 17,
-                    PrefixChar = 'R',
+                    PrefixColor = 15,
+                    PrefixChar = 'P',
                     Name = "Search Player By Name",
                     OnClicked = SearchPlayerName
                 });

@@ -26,9 +26,9 @@ namespace PlayerScope.API.Models
         [JsonProperty("4")]
         public int AppRoleId { get; set; }
         [JsonProperty("5")]
-        public List<UserCharacterDto?> Characters { get; set; }
+        public List<UserCharacterDto> Characters { get; set; } = new List<UserCharacterDto>();
         [JsonProperty("6")]
-        public UserNetworkStatsDto? NetworkStats { get; set; }
+        public UserNetworkStatsDto NetworkStats { get; set; } = new UserNetworkStatsDto();
         public class UserCharacterDto
         {
             [JsonProperty("1"), JsonPropertyName("1")]
@@ -66,19 +66,19 @@ namespace PlayerScope.API.Models
         public class UserNetworkStatsDto
         {
             [JsonProperty("1")]
-            public int? UploadedPlayersCount { get; set; }
+            public int UploadedPlayersCount { get; set; } = 0;
             [JsonProperty("2")]
-            public int? UploadedPlayerInfoCount { get; set; }
+            public int UploadedPlayerInfoCount { get; set; } = 0;
             [JsonProperty("3")]
-            public int? UploadedRetainersCount { get; set; }
+            public int UploadedRetainersCount { get; set; } = 0;
             [JsonProperty("4")]
-            public int? UploadedRetainerInfoCount { get; set; }
+            public int UploadedRetainerInfoCount { get; set; } = 0;
             [JsonProperty("5")]
-            public int? FetchedPlayerInfoCount { get; set; }
+            public int FetchedPlayerInfoCount { get; set; } = 0;
             [JsonProperty("6")]
-            public int? SearchedNamesCount { get; set; }
+            public int SearchedNamesCount { get; set; } = 0;
             [JsonProperty("7")]
-            public int? LastSyncedTime { get; set; }
+            public int LastSyncedTime { get; set; } = 0;
         }
         public enum Roles
         {

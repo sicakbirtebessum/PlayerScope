@@ -20,7 +20,7 @@ namespace PlayerScope.API.Models
     public class PlayerDetailed
     {
         [JsonProperty("F")]
-        public int[]? Flags { get; set; }
+        public int[] Flags { get; set; } = [];
         [JsonProperty("1")]
         public long LocalContentId { get; set; }
         [JsonProperty("2")]
@@ -28,18 +28,28 @@ namespace PlayerScope.API.Models
         [JsonProperty("3")]
         public List<PlayerCustomizationHistoryDto> PlayerCustomizationHistories { get; set; } = new List<PlayerCustomizationHistoryDto>();
         [JsonProperty("4")]
-        public PlayerLastSeenDto? PlayerLastSeenInfo { get; set; }
+        public List<PlayerTerritoryHistoryDto> TerritoryHistory { get; set; } = new List<PlayerTerritoryHistoryDto>();
         [JsonProperty("5")]
-        public PlayerLodestoneDto? PlayerLodestone { get; set; }
+        public PlayerLodestoneDto? PlayerLodestone { get; set; } = null;
         [JsonProperty("6")]
         public List<PlayerNameHistoryDto> PlayerNameHistories { get; set; } = new List<PlayerNameHistoryDto>();
         [JsonProperty("7")]
-        public ICollection<PlayerWorldHistoryDto> PlayerWorldHistories { get; set; } = new List<PlayerWorldHistoryDto>();
+        public List<PlayerWorldHistoryDto> PlayerWorldHistories { get; set; } = new List<PlayerWorldHistoryDto>();
         [JsonProperty("8")]
-        public ICollection<RetainerDto> Retainers { get; set; } = new List<RetainerDto>();
+        public List<RetainerDto> Retainers { get; set; } = new List<RetainerDto>();
         [JsonProperty("9")]
-        public ICollection<PlayerDetailedInfoAltCharDto> PlayerAltCharacters { get; set; } = new List<PlayerDetailedInfoAltCharDto>();
-
+        public List<PlayerDetailedInfoAltCharDto> PlayerAltCharacters { get; set; } = new List<PlayerDetailedInfoAltCharDto>();
+        [JsonProperty("0")]
+        public PlayerProfileVisitInfoDto? ProfileVisitInfo { get; set; } = null;
+        public class PlayerProfileVisitInfoDto
+        {
+            [JsonProperty("1")]
+            public int? ProfileTotalVisitCount { get; set; } = 0;
+            [JsonProperty("2")]
+            public int? LastProfileVisitDate { get; set; } = 0;
+            [JsonProperty("3")]
+            public int? UniqueVisitorCount { get; set; } = 0;
+        }
         public class PlayerCustomizationHistoryDto
         {
             [JsonProperty("1")]
@@ -86,6 +96,7 @@ namespace PlayerScope.API.Models
             public string Message { get; set; }
             public Vector4 Color { get; set; }
         }
+
         public static void UpdateFlagMessages()
         {
             PlayerFlagsDict[PlayerFlagKey.IsBot].Message = Loc.DtPlayerFlagsBotMessage;
@@ -93,6 +104,7 @@ namespace PlayerScope.API.Models
             PlayerFlagsDict[PlayerFlagKey.IsPrivate].Message = Loc.DtPlayerFlagsPrivateMessage;
             PlayerFlagsDict[PlayerFlagKey.IsSelfPrivate].Message = Loc.DtPlayerFlagsSelfPrivateMessage;
         }
+
         public static Dictionary<PlayerFlagKey, FlagInfo> PlayerFlagsDict = new Dictionary<PlayerFlagKey, FlagInfo>
         {
             { PlayerFlagKey.IsBot, new FlagInfo { Icon = FontAwesomeIcon.ExclamationTriangle, Message = Loc.DtPlayerFlagsBotMessage, Color = KnownColor.IndianRed.Vector() } },
@@ -101,27 +113,18 @@ namespace PlayerScope.API.Models
             { PlayerFlagKey.IsSelfPrivate, new FlagInfo { Icon = FontAwesomeIcon.Lock, Message =  Loc.DtPlayerFlagsSelfPrivateMessage, Color = ImGuiColors.HealerGreen } },
         };
 
-        public class PlayerLastSeenDto
+        public class PlayerTerritoryHistoryDto
         {
             [JsonProperty("1")]
-            public short? WorldId { get; set; }
+            public short? TerritoryId { get; set; }
             [JsonProperty("2")]
-            public int? CreatedAt { get; set; }
+            public string? PlayerPos { get; set; }
             [JsonProperty("3")]
-            public List<PlayerTerritoryHistoryDto> TerritoryHistory { get; set; } = new List<PlayerTerritoryHistoryDto>();
-            public class PlayerTerritoryHistoryDto
-            {
-                [JsonProperty("1")]
-                public short? TerritoryId { get; set; }
-                [JsonProperty("2")]
-                public string? PlayerPos { get; set; }
-                [JsonProperty("3")]
-                public short? WorldId { get; set; }
-                [JsonProperty("4")]
-                public int? FirstSeenAt { get; set; }
-                [JsonProperty("5")]
-                public int? LastSeenAt { get; set; }
-            }
+            public short? WorldId { get; set; }
+            [JsonProperty("4")]
+            public int? FirstSeenAt { get; set; }
+            [JsonProperty("5")]
+            public int? LastSeenAt { get; set; }
         }
 
         public class PlayerLodestoneDto

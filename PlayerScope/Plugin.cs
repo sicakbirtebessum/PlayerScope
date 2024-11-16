@@ -29,8 +29,8 @@ public sealed class Plugin : IDalamudPlugin
     private readonly string _sqliteConnectionString;
     public static ServiceProvider? _serviceProvider;
     private readonly ICommandManager _commandManager;
-    internal static IContextMenu _contextMenu { get; set; } = null!;
-    internal static IDataManager _dataManager { get; set; } = null!;
+    [PluginService] internal static IContextMenu ContextMenu { get; private set; } = null!;
+    internal static IDataManager DataManager { get; set; } = null!;
     internal static IGameGui _gameGui { get; set; } = null!;
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     internal static Plugin Instance { get; private set; } = null!;
@@ -105,9 +105,9 @@ public sealed class Plugin : IDalamudPlugin
 
         _pluginInterface = pluginInterface;
         _commandManager = commandManager;
-        _contextMenu = contextMenu;
+
         Handlers.ContextMenu.Enable();
-        _dataManager = dataManager;
+        DataManager = dataManager;
         _gameGui = gameGui;
 
         ws = new();

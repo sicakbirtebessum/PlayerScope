@@ -14,8 +14,9 @@ using Dalamud.Game.Network.Structures;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
+using FFXIVClientStructs.FFXIV.Common.Lua;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -75,7 +76,7 @@ internal sealed class PersistenceContext
 
         ReloadCache();
 
-        Territories = Plugin._dataManager.GetExcelSheet<TerritoryType>().ToList();
+        Territories = Plugin.DataManager.GetExcelSheet<TerritoryType>().ToList();
 
         _cancellationTokenSource = new CancellationTokenSource();
         _ = PostPlayerAndRetainerData(_cancellationTokenSource.Token);
@@ -411,7 +412,7 @@ internal sealed class PersistenceContext
 
     public static uint? GetCurrentWorld()
     {
-        uint currentWorld = _clientState.LocalPlayer?.CurrentWorld.Id ?? 0;
+        uint currentWorld = _clientState.LocalPlayer?.CurrentWorld.RowId ?? 0;
         if (currentWorld == 0)
             return null;
         return currentWorld;
@@ -419,7 +420,7 @@ internal sealed class PersistenceContext
 
     public static string GetCharacterNameOnCurrentWorld(string retainerName)
     {
-        uint currentWorld = _clientState.LocalPlayer?.CurrentWorld.Id ?? 0;
+        uint currentWorld = _clientState.LocalPlayer?.CurrentWorld.RowId ?? 0;
         if (currentWorld == 0)
             return string.Empty;
         
