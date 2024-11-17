@@ -57,7 +57,7 @@ namespace PlayerScope
             return "Unknown";
         }
 
-        public static World GetWorld(uint worldId)
+        public static World? GetWorld(uint worldId)
         {
             var worldSheet = Plugin.DataManager.GetExcelSheet<World>();
             if (worldSheet.TryGetRow(worldId, out var world))
@@ -65,12 +65,17 @@ namespace PlayerScope
                 return world;
             }
 
-            return world;
+            return null;
         }
 
-        public static string GetRegionCode(World world)
+        public static string GetRegionCode(World? world)
         {
-            return world.DataCenter.ValueNullable?.Region switch
+            if (world == null)
+            {
+                return string.Empty;
+            }
+
+            return world.Value.DataCenter.ValueNullable?.Region switch
             {
                 1 => "JP",
                 2 => "NA",
@@ -82,17 +87,24 @@ namespace PlayerScope
 
         public static bool IsWorldValid(uint worldId)
         {
-            return IsWorldValid(GetWorld(worldId));
+            var world = GetWorld(worldId);
+            return IsWorldValid(world);
         }
 
-        public static bool IsWorldValid(World world)
+        public static bool IsWorldValid(World? world)
         {
-            if (world.Name.IsEmpty || GetRegionCode(world) == string.Empty)
+            if (world == null || world.Value.Name.IsEmpty)
             {
                 return false;
             }
 
-            return char.IsUpper(world.Name.ToString()[0]);
+            var regionCode = GetRegionCode(world);
+            if (string.IsNullOrEmpty(regionCode))
+            {
+                return false;
+            }
+
+            return char.IsUpper(world.Value.Name.ToString()[0]);
         }
 
         public static void TextCopy(Vector4 col, string text)
@@ -313,12 +325,9 @@ namespace PlayerScope
         public static void HeaderProfileVisitInfoText(PlayerDetailed.PlayerProfileVisitInfoDto visitInfo)
         {
             ImGuiHelpers.ScaledDummy(5.0f);
-
             Util.TextWrapped(string.Format(Loc.DtCharacterVisitInfo, Tools.ToTimeSinceString((int)visitInfo.LastProfileVisitDate), visitInfo.ProfileTotalVisitCount, visitInfo.UniqueVisitorCount));
-
             ImGuiHelpers.ScaledDummy(5.0f);
             ImGui.Separator();
-            ImGuiHelpers.ScaledDummy(5.0f);
         }
 
         public static string GenerateRandomKey(int length = 20)

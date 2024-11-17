@@ -47,7 +47,7 @@ namespace PlayerScope.GUI
     public class DetailsWindow : Window, IDisposable
     {
         private const string WindowId = "###PlayerScopeDetails";
-        public DetailsWindow() : base(WindowId, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+        public DetailsWindow() : base(WindowId, ImGuiWindowFlags.None)
         {
             if (_instance == null)
             {
@@ -442,11 +442,6 @@ namespace PlayerScope.GUI
         {
             var player = _LastPlayerDetailedInfo.Player;
 
-            if (player.ProfileVisitInfo != null)
-            {
-                Util.HeaderProfileVisitInfoText(player.ProfileVisitInfo);
-            }
-
             if (player.Flags.Length > 0)
             {
                 foreach (var flagValue in player.Flags)
@@ -464,7 +459,11 @@ namespace PlayerScope.GUI
 
                 ImGuiHelpers.ScaledDummy(5.0f);
                 ImGui.Separator();
-                ImGuiHelpers.ScaledDummy(5.0f);
+            }
+
+            if (player.ProfileVisitInfo != null && player.ProfileVisitInfo.ProfileTotalVisitCount != 0)
+            {
+                Util.HeaderProfileVisitInfoText(player.ProfileVisitInfo);
             }
 
             ImGui.BeginGroup();
@@ -748,7 +747,7 @@ namespace PlayerScope.GUI
 
                     ImGui.BeginGroup();
 
-                    if (ImGui.BeginTable($"_Retainers", DetailedPlayerRetainerTableColumn.Length, ImGuiTableFlags.BordersInner | ImGuiTableFlags.ScrollY))
+                    if (ImGui.BeginTable($"_Retainers", DetailedPlayerRetainerTableColumn.Length, ImGuiTableFlags.BordersInner)) //| ImGuiTableFlags.ScrollY))
                     {
                         foreach (var t in DetailedPlayerRetainerTableColumn)
                         {

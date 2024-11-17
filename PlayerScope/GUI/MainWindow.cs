@@ -784,7 +784,7 @@ namespace PlayerScope.GUI
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorld(server.Key).DataCenter.Value.Name.ToString()); //DataCenter column
+                            ImGui.Text(Util.GetWorld(server.Key).Value.DataCenter.Value.Name.ToString()); //DataCenter column
 
                             ImGui.TableNextColumn();
 
