@@ -13,9 +13,8 @@ using Dalamud.Memory;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
-using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
+using Lumina.Excel.Sheets;
 using Lumina.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -87,7 +86,7 @@ internal sealed class ObjectTableHandler : IDisposable
                     HomeWorldId = bc->HomeWorld,
                     CurrentWorldId = bc->CurrentWorld,
                     TerritoryId = (short)PersistenceContext._clientState.TerritoryType,
-                    PlayerPos = Util.Vector3ToString(obj.GetMapCoordinates()),
+                    PlayerPos = Utils.Vector3ToString(obj.GetMapCoordinates()),
                     Customization = PersistenceContext.AnamnesisFound ? null : new PlayerCustomization
                     {
                         BodyType = Customization.BodyType,

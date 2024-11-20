@@ -29,7 +29,7 @@ using static Lumina.Models.Materials.Texture;
 
 namespace PlayerScope
 {
-    public class Util
+    public static class Utils
     {
         public static void DrawHelp(bool AtTheEnd,string helpMessage)
         {
@@ -196,7 +196,7 @@ namespace PlayerScope
         public static void TextWrapped(Vector4? col, string s)
         {
             ImGui.PushTextWrapPos(0);
-            Util.Text(col, s);
+            Text(col, s);
             ImGui.PopTextWrapPos();
         }
 
@@ -218,7 +218,7 @@ namespace PlayerScope
                 if (s.StartsWith(Loc.ApiError))
                     textColor = ImGuiColors.DalamudRed;
 
-                Util.Text(textColor, s);
+                Text(textColor, s);
                 ImGui.PopTextWrapPos();
             }
         }
@@ -227,7 +227,7 @@ namespace PlayerScope
             if (!string.IsNullOrWhiteSpace(s))
             {
                 ImGui.PushTextWrapPos(0);
-                Util.Text(textColor, s);
+                Text(textColor, s);
                 ImGui.PopTextWrapPos();
             }
         }
@@ -241,9 +241,9 @@ namespace PlayerScope
                 if (s.StartsWith(Loc.ApiError))
                     textColor = ImGuiColors.DalamudRed;
                 if (!string.IsNullOrWhiteSpace(ping))
-                    Util.Text(textColor, $"{s} ({ping})");
+                    Text(textColor, $"{s} ({ping})");
                 else
-                    Util.Text(textColor, s);
+                    Text(textColor, s);
                 ImGui.PopTextWrapPos();
             }
         }
@@ -325,7 +325,7 @@ namespace PlayerScope
         public static void HeaderProfileVisitInfoText(PlayerDetailed.PlayerProfileVisitInfoDto visitInfo)
         {
             ImGuiHelpers.ScaledDummy(5.0f);
-            Util.TextWrapped(string.Format(Loc.DtCharacterVisitInfo, Tools.ToTimeSinceString((int)visitInfo.LastProfileVisitDate), visitInfo.ProfileTotalVisitCount, visitInfo.UniqueVisitorCount));
+            TextWrapped(string.Format(Loc.DtCharacterVisitInfo, Tools.ToTimeSinceString((int)visitInfo.LastProfileVisitDate), visitInfo.ProfileTotalVisitCount, visitInfo.UniqueVisitorCount));
             ImGuiHelpers.ScaledDummy(5.0f);
             ImGui.Separator();
         }

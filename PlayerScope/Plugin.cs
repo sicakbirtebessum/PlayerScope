@@ -97,7 +97,7 @@ public sealed class Plugin : IDalamudPlugin
 
         if (Configuration.FreshInstall && string.IsNullOrWhiteSpace(Configuration.Key))
         {
-            Configuration.FreshInstall = false; Configuration.Key = Util.GenerateRandomKey();
+            Configuration.FreshInstall = false; Configuration.Key = Utils.GenerateRandomKey();
             pluginInterface.SavePluginConfig(Configuration);
         }
 

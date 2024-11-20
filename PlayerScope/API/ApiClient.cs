@@ -48,7 +48,7 @@ namespace PlayerScope.API
             {
                 IsCheckingServerStatus = true;
 
-                var request = new RestRequest($"server").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"server").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 var response = await _restClient.ExecuteGetAsync(request).ConfigureAwait(false);
                 long pingValue = -1;
                 
@@ -89,7 +89,7 @@ namespace PlayerScope.API
             string Message = string.Empty;
             try
             {
-                var request = new RestRequest($"server/stats").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"server/stats").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 var response = await _restClient.ExecuteGetAsync(request).ConfigureAwait(false);
 
                 if (response.IsSuccessful)
@@ -127,7 +127,7 @@ namespace PlayerScope.API
             string Message = string.Empty;
             try
             {
-                var request = new RestRequest($"players").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"players").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 if (!string.IsNullOrWhiteSpace(query.Name))
                     request.AddQueryParameter("Name", query.Name, true);
                 if (!string.IsNullOrWhiteSpace(query.LocalContentId.ToString()))
@@ -173,7 +173,7 @@ namespace PlayerScope.API
             string Message = string.Empty;
             try
             {
-                var request = new RestRequest($"players/{id}").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"players/{id}").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 var response = await _restClient.ExecuteGetAsync(request).ConfigureAwait(false);
 
                 if (response.IsSuccessful)
@@ -202,7 +202,7 @@ namespace PlayerScope.API
         {
             try
             {
-                var request = new RestRequest($"players").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"players").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 request.AddJsonBody(players);
                 var response = await _restClient.ExecutePostAsync(request).ConfigureAwait(false);
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -222,7 +222,7 @@ namespace PlayerScope.API
             string Message = string.Empty;
             try
             {
-                var request = new RestRequest($"retainers").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language); ;
+                var request = new RestRequest($"retainers").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language); ;
                 if (!string.IsNullOrWhiteSpace(query.Name))
                     request.AddQueryParameter("Name", query.Name, true);
                 if (!string.IsNullOrWhiteSpace(query.Cursor.ToString()))
@@ -263,7 +263,7 @@ namespace PlayerScope.API
         {
             try
             {
-                var request = new RestRequest($"retainers").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"retainers").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 request.AddJsonBody(retainers);
                 var response = await _restClient.ExecutePostAsync(request).ConfigureAwait(false);
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -293,7 +293,7 @@ namespace PlayerScope.API
                 string data = System.Convert.ToBase64String(bytes);
                 authUrl = Config.BaseUrl.Replace("v1/", "Auth/DiscordAuth?") + data;
 
-                Util.TryOpenURI(new Uri(authUrl));
+                Utils.TryOpenURI(new Uri(authUrl));
 
                 var response = await _httpClient.GetAsync($"{Config.BaseUrl.Replace("v1/", "")}waitforlogin?data={data}", HttpCompletionOption.ResponseHeadersRead);
                 using (var stream = await response.Content.ReadAsStreamAsync())
@@ -363,7 +363,7 @@ namespace PlayerScope.API
             string Message = string.Empty;
             try
             {
-                var request = new RestRequest($"users/update").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"users/update").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 request.AddJsonBody(config);
                 var response = await _restClient.ExecutePostAsync(request).ConfigureAwait(true);
 
@@ -391,7 +391,7 @@ namespace PlayerScope.API
             string Message = string.Empty;
             try
             {
-                var request = new RestRequest($"users/me").AddHeader("api-key", Token).AddHeader("V", Util.clientVer).AddHeader("L", Config.Language);
+                var request = new RestRequest($"users/me").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
                 var response = await _restClient.ExecuteGetAsync(request).ConfigureAwait(true);
 
                 if (response.IsSuccessful)

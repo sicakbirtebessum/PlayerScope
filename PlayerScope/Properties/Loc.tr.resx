@@ -795,4 +795,7 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="DtCharacterVisitInfo" xml:space="preserve">
     <value>Toplam {1} kez, {2} farkli üye tarafindan ziyaret edildi. [Son ziyaret: {0}]</value>
   </data>
+  <data name="MnOpenAdventurerPlate" xml:space="preserve">
+    <value>Adventurer Plate'i Aç</value>
+  </data>
 </root>

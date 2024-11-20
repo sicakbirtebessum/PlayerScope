@@ -795,4 +795,7 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   <data name="DtCharacterVisitInfo" xml:space="preserve">
     <value>Total visits: {1} from {2} unique users. [Last visit: {0}]</value>
   </data>
+  <data name="MnOpenAdventurerPlate" xml:space="preserve">
+    <value>Open Adventurer Plate</value>
+  </data>
 </root>

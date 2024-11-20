@@ -10,9 +10,11 @@ using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Microsoft.Extensions.Logging;
 using PlayerScope.API.Models;
 using PlayerScope.Database;
+using static FFXIVClientStructs.FFXIV.Client.UI.Info.InfoProxyCommonList.CharacterData;
 
 namespace PlayerScope.Handlers;
 
@@ -50,7 +52,7 @@ internal sealed unsafe class GameHooks : IDisposable
         gameInteropProvider.InitializeFromAttributes(this);
         CharacterNameResultHook.Enable();
         SocialListResultHook.Enable();
-
+       
         _logger.LogDebug("Game hooks initialized");
     }
 
@@ -112,7 +114,7 @@ internal sealed unsafe class GameHooks : IDisposable
                     continue;
                 
                 ushort? homeWorldId = player.HomeWorldID != 0 && player.HomeWorldID != 65535 ? player.HomeWorldID : null;
-
+                
                 var mapping = new PlayerMapping
                 {
                     ContentId = player.ContentId,
@@ -195,6 +197,14 @@ internal sealed unsafe class GameHooks : IDisposable
         /// </summary>
         [FieldOffset(0x18)] public readonly ulong AccountId;
 
+        [FieldOffset(0x24)] public ushort TerritoryId;
+        [FieldOffset(0x28)] public GrandCompany GrandCompanyId;
+        [FieldOffset(0x29)] public Language ClientLanguage;
+        [FieldOffset(0x2A)] public LanguageMask Languages;
+        [FieldOffset(0x2B)] public byte HasSearchComment;
+        [FieldOffset(0x30)] public ulong OnlineStatusBytes;
+        [FieldOffset(0x38)] public byte CurrentJobId;
+        [FieldOffset(0x3A)] public ushort CurrentJobLevel;
         [FieldOffset(0x42)] public ushort HomeWorldID;
 
         /// <summary>

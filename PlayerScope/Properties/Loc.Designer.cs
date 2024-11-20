@@ -828,6 +828,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Open Adventurer Plate benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnOpenAdventurerPlate {
+            get {
+                return ResourceManager.GetString("MnOpenAdventurerPlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Open Main Menu benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnOpenMainMenu {

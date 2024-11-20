@@ -32,16 +32,12 @@ using static System.Net.Mime.MediaTypeNames;
 using Dalamud.Interface.Components;
 using Dalamud.Interface;
 using Dalamud.Utility;
-using static FFXIVClientStructs.FFXIV.Client.Game.InventoryManager.Delegates;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Dalamud.Interface.Utility.Raii;
 using System.Drawing;
 using PlayerScope.Models;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using PlayerScope.Properties;
 using static PlayerScope.API.Models.PlayerDetailed;
-using Dalamud.Interface.Style;
-using Lumina.Excel.Sheets;
 namespace PlayerScope.GUI
 {
     public class DetailsWindow : Window, IDisposable
@@ -248,12 +244,26 @@ namespace PlayerScope.GUI
 
                     if (ImGuiComponents.IconButtonWithText(_ButtonIcon, AddToFavoriteText))
                     {
-                        var player = _LastPlayerDetailedInfo.Player; var playerName = _LastPlayerDetailedInfo.Player.PlayerNameHistories.Count > 0 ? _LastPlayerDetailedInfo.Player.PlayerNameHistories.LastOrDefault().Name : "(NO-NAME)";
+                        var player = _LastPlayerDetailedInfo.Player;
+
+                        var playerName = player.PlayerNameHistories != null && player.PlayerNameHistories.Count > 0
+                            ? player.PlayerNameHistories.LastOrDefault()?.Name ?? "(NO-NAME)"
+                            : "(NO-NAME)";
+
                         ulong? accountId = player.AccountId != null ? (ulong)player.AccountId : null;
                         if (bFavoritesContainPlayer)
+                        {
                             Config.FavoritedPlayer.Remove(player.LocalContentId, out _);
+                        }
                         else
-                            Config.FavoritedPlayer.GetOrAdd(player.LocalContentId, new Configuration.CachedFavoritedPlayer { AccountId = accountId, Name = playerName });
+                        {
+                            Config.FavoritedPlayer.GetOrAdd(player.LocalContentId, new Configuration.CachedFavoritedPlayer
+                            {
+                                AccountId = accountId,
+                                Name = playerName
+                            });
+                        }
+
                         Config.Save();
                     }
 
@@ -385,7 +395,7 @@ namespace PlayerScope.GUI
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text($"{Util.GetWorldName(retainer.WorldId)}"); // Servername column
+                            ImGui.Text($"{Utils.GetWorldName(retainer.WorldId)}"); // Servername column
 
                             ImGui.TableNextColumn();
 
@@ -452,7 +462,7 @@ namespace PlayerScope.GUI
 
                         if (PlayerFlagsDict.TryGetValue(flagKey, out var flagInfo))
                         {
-                            Util.HeaderWarningText(flagInfo.Color, flagInfo.Icon, flagInfo.Message);
+                            Utils.HeaderWarningText(flagInfo.Color, flagInfo.Icon, flagInfo.Message);
                         }
                     }
                 }
@@ -463,7 +473,7 @@ namespace PlayerScope.GUI
 
             if (player.ProfileVisitInfo != null && player.ProfileVisitInfo.ProfileTotalVisitCount != 0)
             {
-                Util.HeaderProfileVisitInfoText(player.ProfileVisitInfo);
+                Utils.HeaderProfileVisitInfoText(player.ProfileVisitInfo);
             }
 
             ImGui.BeginGroup();
@@ -488,14 +498,18 @@ namespace PlayerScope.GUI
 
                 ImGui.EndTable();
             }
-            
+
             if (player.TerritoryHistory.Count > 0)
             {
-                TerritoryType lastTerritory = PersistenceContext.Instance.Territories.Where(a => a.RowId == player.TerritoryHistory.FirstOrDefault()?.TerritoryId).FirstOrDefault();
-                if (player.TerritoryHistory.FirstOrDefault() != null)
+                var firstTerritoryHistory = player.TerritoryHistory.FirstOrDefault();
+                if (firstTerritoryHistory != null)
                 {
+                    var lastTerritory = PersistenceContext.Instance.Territories
+                        .FirstOrDefault(a => a.RowId == firstTerritoryHistory.TerritoryId);
+
                     ImGui.Text(Loc.DtCharacterLastSeenIn);
                     ImGui.SameLine();
+
                     if (ImGui.BeginTable($"_Lastseen", DetailedPlayerLastSeenZoneTableColumn.Length, ImGuiTableFlags.BordersInner))
                     {
                         foreach (var t in DetailedPlayerLastSeenZoneTableColumn)
@@ -507,17 +521,38 @@ namespace PlayerScope.GUI
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
-                        Util.DrawHelp(false, $"{lastTerritory.PlaceName.Value.Name.ToString()} | {lastTerritory.PlaceNameRegion.Value.Name.ToString()}");
-                        ImGui.Text(lastTerritory.PlaceName.Value.Name.ToString()); //Zone Name column
+                        // Zone Name column
+                        if (lastTerritory.PlaceName.ValueNullable != null)
+                        {
+                            var zoneName = lastTerritory.PlaceName.Value.Name.ToString();
+                            var regionName = lastTerritory.PlaceNameRegion.Value.Name.ToString() ?? "---";
+
+                            Utils.DrawHelp(false, $"{zoneName} | {regionName}");
+                            ImGui.Text(zoneName);
+                        }
+                        else
+                            ImGui.Text("---");
 
                         ImGui.TableNextColumn();
 
-                        ImGui.Text(Util.GetWorldName((uint)player.TerritoryHistory.FirstOrDefault().WorldId)); //World column
+                        // World column
+                        var worldName = firstTerritoryHistory.WorldId != null
+                            ? Utils.GetWorldName((uint)firstTerritoryHistory.WorldId)
+                            : "---";
+                        ImGui.Text(worldName);
 
                         ImGui.TableNextColumn();
 
-                        var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(player.TerritoryHistory.FirstOrDefault().LastSeenAt)} ({Tools.ToTimeSinceString((int)player.TerritoryHistory.FirstOrDefault().LastSeenAt)})" : Tools.ToTimeSinceString((int)player.TerritoryHistory.FirstOrDefault().LastSeenAt);
-                        ImGui.Text(AddedAtDate); //Added At column
+                        // LastSeenAt Column
+                        if (firstTerritoryHistory.LastSeenAt > 0)
+                        {
+                            var addedAtDate = Config.bShowDetailedDate
+                                ? $"{Tools.UnixTimeConverter(firstTerritoryHistory.LastSeenAt)} ({Tools.ToTimeSinceString((int)firstTerritoryHistory.LastSeenAt)})"
+                                : Tools.ToTimeSinceString((int)firstTerritoryHistory.LastSeenAt);
+                            ImGui.Text(addedAtDate); 
+                        }
+                        else
+                            ImGui.Text("---");
 
                         ImGui.EndTable();
                     }
@@ -589,7 +624,7 @@ namespace PlayerScope.GUI
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
-                        ImGui.Text(Util.GetWorldName((uint)world.WorldId)); //World Name
+                        ImGui.Text(Utils.GetWorldName((uint)world.WorldId)); //World Name
 
                         ImGui.TableNextColumn();
 
@@ -646,7 +681,7 @@ namespace PlayerScope.GUI
                         ImGui.TableNextColumn();
 
                         if (!string.IsNullOrWhiteSpace(altChar.WorldId.ToString()))
-                            ImGui.Text(Util.GetWorldName(((uint)altChar.WorldId))); //World
+                            ImGui.Text(Utils.GetWorldName(((uint)altChar.WorldId))); //World
                         else
                             ImGui.Text("---");
 
@@ -674,7 +709,7 @@ namespace PlayerScope.GUI
                 {
                     if (_seeExtraDetailsOfRetainer != null)
                     {
-                        if (_seeExtraDetailsOfRetainer.Names.Count > 0)
+                        if (_seeExtraDetailsOfRetainer.Names != null && _seeExtraDetailsOfRetainer.Names.Count > 0)
                         {
                             ImGuiHelpers.ScaledDummy(5.0f);
                             ImGui.Separator();
@@ -682,7 +717,7 @@ namespace PlayerScope.GUI
 
                             ImGui.BeginGroup();
 
-                            ImGui.Text(Loc.DtNameHistory); 
+                            ImGui.Text(Loc.DtNameHistory);
                             ImGui.SameLine();
 
                             if (ImGui.BeginTable($"_RetainerNames", DetailedRetainerNamesTableColumn.Length, ImGuiTableFlags.BordersInner))
@@ -698,12 +733,14 @@ namespace PlayerScope.GUI
                                     ImGui.TableNextRow();
                                     ImGui.TableNextColumn();
 
-                                    ImGui.Text(name.Name); // Name
+                                    ImGui.Text(name?.Name ?? "---");
 
                                     ImGui.TableNextColumn();
 
-                                    var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(name.CreatedAt)} ({Tools.ToTimeSinceString((int)name.CreatedAt)})" : Tools.ToTimeSinceString((int)name.CreatedAt);
-                                    ImGui.Text(AddedAtDate); //Added At column
+                                    var AddedAtDate = Config.bShowDetailedDate
+                                        ? $"{Tools.UnixTimeConverter(name?.CreatedAt ?? 0)} ({Tools.ToTimeSinceString((int)(name?.CreatedAt ?? 0))})"
+                                        : Tools.ToTimeSinceString((int)(name?.CreatedAt ?? 0));
+                                    ImGui.Text(AddedAtDate); // Added At column
                                 }
                                 ImGui.EndTable();
                             }
@@ -712,11 +749,11 @@ namespace PlayerScope.GUI
 
                         ImGui.SameLine();
 
-                        if (_seeExtraDetailsOfRetainer.Worlds.Count > 0)
+                        if (_seeExtraDetailsOfRetainer.Worlds != null && _seeExtraDetailsOfRetainer.Worlds.Count > 0)
                         {
                             ImGui.BeginGroup();
 
-                            ImGui.Text(Loc.DtHomeworldHistory); 
+                            ImGui.Text(Loc.DtHomeworldHistory);
                             ImGui.SameLine();
 
                             if (ImGui.BeginTable($"_RetainerWorlds", DetailedPlayerWorldsTableColumn.Length, ImGuiTableFlags.BordersInner))
@@ -732,12 +769,14 @@ namespace PlayerScope.GUI
                                     ImGui.TableNextRow();
                                     ImGui.TableNextColumn();
 
-                                    ImGui.Text(Util.GetWorldName((uint)world.WorldId)); //World Name
+                                    ImGui.Text(Utils.GetWorldName((uint)(world?.WorldId ?? 0)));
 
                                     ImGui.TableNextColumn();
 
-                                    var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(world.CreatedAt)} ({Tools.ToTimeSinceString((int)world.CreatedAt)})" : Tools.ToTimeSinceString((int)world.CreatedAt);
-                                    ImGui.Text(AddedAtDate); //Added At column
+                                    var AddedAtDate = Config.bShowDetailedDate
+                                        ? $"{Tools.UnixTimeConverter(world?.CreatedAt ?? 0)} ({Tools.ToTimeSinceString((int)(world?.CreatedAt ?? 0))})"
+                                        : Tools.ToTimeSinceString((int)(world?.CreatedAt ?? 0));
+                                    ImGui.Text(AddedAtDate); // Added At column
                                 }
                                 ImGui.EndTable();
                             }
@@ -747,7 +786,7 @@ namespace PlayerScope.GUI
 
                     ImGui.BeginGroup();
 
-                    if (ImGui.BeginTable($"_Retainers", DetailedPlayerRetainerTableColumn.Length, ImGuiTableFlags.BordersInner)) //| ImGuiTableFlags.ScrollY))
+                    if (ImGui.BeginTable($"_Retainers", DetailedPlayerRetainerTableColumn.Length, ImGuiTableFlags.BordersInner))
                     {
                         foreach (var t in DetailedPlayerRetainerTableColumn)
                         {
@@ -761,62 +800,74 @@ namespace PlayerScope.GUI
                             ImGui.TableNextRow();
                             ImGui.TableNextColumn();
 
-                            if (retainer.Names.Count > 1 || retainer.Worlds.Count > 1)
+                            var retainerLastName = retainer?.Names?.LastOrDefault()?.Name ?? "---";
+                            var retainerLastWorld = retainer?.Worlds?.LastOrDefault();
+                            var retainerLastWorldName = retainerLastWorld != null
+                                ? Utils.GetWorldName((uint)(retainerLastWorld?.WorldId ?? 0))
+                                : "---";
+
+                            if ((retainer?.Names?.Count ?? 0) > 1 || (retainer?.Worlds?.Count ?? 0) > 1 && ImGui.Button(Loc.DtRetainerInfo + $"##{index}"))
                             {
-                                if (ImGui.Button(Loc.DtRetainerInfo + $"##{index}"))
-                                {
-                                    _seeExtraDetailsOfRetainer = retainer;
-                                }
+                                _seeExtraDetailsOfRetainer = retainer;
+
                                 ImGui.SameLine();
                             }
 
-                            ImGui.Text(retainer.Names.LastOrDefault().Name); // Name
+                            // Name Column
+                            ImGui.Text(retainerLastName); 
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorldName((uint)retainer.Worlds.LastOrDefault().WorldId)); // World
+                            // World Column
+                            ImGui.Text(retainerLastWorldName); 
 
                             ImGui.TableNextColumn();
 
-                            if (retainer.LastSeen != 0)
+                            // Last Seen column
+                            string lastSeenDate;
+                            if (retainer?.LastSeen != 0)
                             {
-                                var LastSeenDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(retainer.LastSeen)} ({Tools.ToTimeSinceString((int)retainer.LastSeen)})" : Tools.ToTimeSinceString((int)retainer.LastSeen);
-                                ImGui.Text(LastSeenDate); //Last Seen column
+                                lastSeenDate = Config.bShowDetailedDate
+                                    ? $"{Tools.UnixTimeConverter(retainer.LastSeen)} ({Tools.ToTimeSinceString((int)retainer.LastSeen)})"
+                                    : Tools.ToTimeSinceString((int)retainer.LastSeen);
                             }
                             else
                             {
-                                var LastSeenDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(retainer.Names.FirstOrDefault().CreatedAt)} ({Tools.ToTimeSinceString((int)retainer.Names.FirstOrDefault().CreatedAt)})" : Tools.ToTimeSinceString((int)retainer.Names.FirstOrDefault().CreatedAt);
-                                ImGui.Text(LastSeenDate); //Last Seen column
+                                var firstCreatedAt = retainer?.Names?.FirstOrDefault()?.CreatedAt ?? 0;
+                                lastSeenDate = Config.bShowDetailedDate
+                                    ? $"{Tools.UnixTimeConverter(firstCreatedAt)} ({Tools.ToTimeSinceString((int)firstCreatedAt)})"
+                                    : Tools.ToTimeSinceString((int)firstCreatedAt);
                             }
+                            ImGui.Text(lastSeenDate);
 
                             ImGui.TableNextColumn();
 
-                            var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(retainer.Names.First().CreatedAt)} ({Tools.ToTimeSinceString((int)retainer.Names.First().CreatedAt)})" : Tools.ToTimeSinceString((int)retainer.Names.First().CreatedAt);
-                            ImGui.Text(AddedAtDate); //Added At column
+                            // Added At column
+                            var addedAtDate = retainer?.Names?.FirstOrDefault()?.CreatedAt ?? 0;
+                            var addedAtText = Config.bShowDetailedDate
+                                ? $"{Tools.UnixTimeConverter(addedAtDate)} ({Tools.ToTimeSinceString((int)addedAtDate)})"
+                                : Tools.ToTimeSinceString((int)addedAtDate);
+                            ImGui.Text(addedAtText);
 
                             ImGui.TableNextColumn();
 
-                            var _GetAltCharAsOwner = _LastPlayerDetailedInfo.Player.PlayerAltCharacters.FirstOrDefault(a => a.LocalContentId == retainer.OwnerLocalContentId);
-                            string? RetainerOwnerName = _GetAltCharAsOwner != null ? _GetAltCharAsOwner.Name : _LastPlayerDetailedInfo.Player.PlayerNameHistories.LastOrDefault()?.Name;
-
-                            if (!string.IsNullOrWhiteSpace(RetainerOwnerName))
-                            {
-                                ImGui.Text(RetainerOwnerName); // OwnerName
-                            }
-                            else
-                            {
-                                ImGui.Text("---");
-                            }
+                            // OwnerName
+                            var retainerOwner = _LastPlayerDetailedInfo.Player?.PlayerAltCharacters
+                                                ?.FirstOrDefault(a => a.LocalContentId == retainer?.OwnerLocalContentId);
+                            string retainerOwnerName = retainerOwner?.Name
+                                ?? _LastPlayerDetailedInfo.Player?.PlayerNameHistories?.LastOrDefault()?.Name
+                                ?? "---";
+                            ImGui.Text(retainerOwnerName);
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(retainer.LocalContentId.ToString()); // CId
+                            // LocalContentId Column
+                            ImGui.Text(retainer?.LocalContentId.ToString() ?? "---");
 
                             index++;
                         }
-                        ImGui.EndTable();
                     }
-                    
+                    ImGui.EndTable();
                     ImGui.EndGroup();
                 }
             }
@@ -829,7 +880,6 @@ namespace PlayerScope.GUI
             if (player.TerritoryHistory.Count > 0)
             {
                 ImGui.Text(string.Format(Loc.DtLocationHistoryResultsAreDisplayed, player.TerritoryHistory.Count));
-                
                 ImGui.SameLine();
 
                 ImGuiHelpers.ScaledDummy(5.0f);
@@ -845,6 +895,7 @@ namespace PlayerScope.GUI
                         ImGui.TableSetupColumn(t, ImGuiTableColumnFlags.WidthFixed);
                     }
                     ImGui.TableHeadersRow();
+
                     var index = 0;
 
                     foreach (var territory in player.TerritoryHistory)
@@ -852,12 +903,13 @@ namespace PlayerScope.GUI
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn();
 
-                        var getTerritory = PersistenceContext.Instance.Territories.Where(a => a.RowId == territory.TerritoryId).FirstOrDefault();
+                        var getTerritory = PersistenceContext.Instance.Territories.FirstOrDefault(a => a.RowId == territory.TerritoryId);
 
                         if (ImGui.Button(Loc.DtMapButton + $"##{index}"))
                         {
-                            var playerPos = Util.Vector3FromString(territory.PlayerPos);
-                            var _territory = PersistenceContext.Instance.Territories.First(row => row.RowId == player.TerritoryHistory[index].TerritoryId);
+                            var playerPos = Utils.Vector3FromString(territory.PlayerPos);
+                            var _territory = PersistenceContext.Instance.Territories.FirstOrDefault(row => row.RowId == player.TerritoryHistory[index].TerritoryId);
+
                             var mapLink = new MapLinkPayload(
                                 _territory.RowId,
                                 _territory.Map.Value.RowId,
@@ -868,17 +920,28 @@ namespace PlayerScope.GUI
                         }
                         ImGui.SameLine();
 
-                        Util.DrawHelp(false, $"{getTerritory.PlaceName.Value.Name.ToString()} | {getTerritory.PlaceNameRegion.Value.Name.ToString()}");
-                        ImGui.Text(getTerritory.PlaceName.Value.Name.ToString());
+                        if (getTerritory.PlaceName.ValueNullable != null)
+                        {
+                            var zoneName = getTerritory.PlaceName.Value.Name.ToString();
+                            var regionName = getTerritory.PlaceNameRegion.Value.Name.ToString() ?? "---";
+
+                            Utils.DrawHelp(false, $"{zoneName} | {regionName}");
+                            ImGui.Text(zoneName);
+                        }
+                        else
+                            ImGui.Text("---");
 
                         ImGui.TableNextColumn();
 
-                        ImGui.Text(Util.GetWorldName((uint)territory.WorldId)); //World Name
+                        //WorldName Column
+                        var worldName = territory.WorldId != null ? Utils.GetWorldName((uint)territory.WorldId) : "---";
+                        ImGui.Text(worldName); 
 
                         ImGui.TableNextColumn();
 
+                        //Added At column
                         var FirstSeenDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(territory.FirstSeenAt)} ({Tools.ToTimeSinceString((int)territory.FirstSeenAt)})" : Tools.ToTimeSinceString((int)territory.FirstSeenAt);
-                        ImGui.Text(FirstSeenDate); //Added At column
+                        ImGui.Text(FirstSeenDate); 
 
                         ImGui.TableNextColumn();
 
@@ -887,18 +950,17 @@ namespace PlayerScope.GUI
 
                         ImGui.TableNextColumn();
 
-                        int hours;
-                        int minutes;
-                        int seconds;
+                        //Duration column
+                        var durationSeconds = (int)(territory.LastSeenAt - territory.FirstSeenAt);
+                        if (durationSeconds > 0)
+                        {
+                            var hours = durationSeconds / 3600;
+                            var minutes = (durationSeconds % 3600) / 60;
+                            var seconds = durationSeconds % 60;
 
-                        seconds = (int)territory.LastSeenAt - (int)territory.FirstSeenAt;
-                        hours = (int)(Math.Floor((double)(seconds / 3600)));
-                        seconds = seconds % 3600;
-                        minutes = (int)(Math.Floor((double)(seconds / 60)));
-                        seconds = seconds % 60;
-                        string time = hours + ":" + minutes + ":" + seconds;
-
-                        ImGui.Text(time); //Duration column
+                            var duration = $"{hours:D2}:{minutes:D2}:{seconds:D2}";
+                            ImGui.Text(duration);
+                        }
 
                         index++;
                     }
@@ -937,13 +999,13 @@ namespace PlayerScope.GUI
 
                     if (Race.SplitRace().Gender == Gender.Male)
                     {
-                        Util.IconText(ImGuiColors.ParsedBlue, FontAwesomeIcon.Mars);
+                        Utils.IconText(ImGuiColors.ParsedBlue, FontAwesomeIcon.Mars);
                         ImGui.SameLine();
                         ImGui.Text($"{Race.SplitRace().Gender.ToName()} {Race.ToRaceName()} | {Race.ToSubRaceName()}"); //SubRace Name
                     }
                     else
                     {
-                        Util.IconText(ImGuiColors.ParsedPink, FontAwesomeIcon.Venus);
+                        Utils.IconText(ImGuiColors.ParsedPink, FontAwesomeIcon.Venus);
                         ImGui.SameLine();
                         ImGui.Text($"{Race.SplitRace().Gender.ToName()} {Race.ToRaceName()} | {Race.ToSubRaceName()}"); //SubRace Name
                     }
@@ -979,8 +1041,6 @@ namespace PlayerScope.GUI
             
             ImGui.EndGroup();
         }
-
-        List<KeyValuePair<ulong, (CachedPlayer, List<Database.Retainer>)>> FetchedAccounts = new();
 
         public static void GetAllRetainersofAllAccounts(ulong PlayerContentId)
         {

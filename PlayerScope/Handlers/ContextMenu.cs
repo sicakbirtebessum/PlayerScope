@@ -46,7 +46,7 @@ public class ContextMenu
             case "CrossWorldLinkshell":
             case "ContentMemberList": // Eureka/Bozja/...
             case "BeginnerChatList":
-                return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.RowId);
+                return menuTargetDefault.TargetName != string.Empty && Utils.IsWorldValid(menuTargetDefault.TargetHomeWorld.RowId);
             case "BlackList":
             case "MuteList":
                 return menuTargetDefault.TargetName != string.Empty;

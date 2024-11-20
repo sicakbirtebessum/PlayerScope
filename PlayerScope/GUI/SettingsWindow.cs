@@ -148,7 +148,6 @@ namespace PlayerScope.GUI
         uint _worldId = 0;
         long _contentId = 0;
         int _accountId = 0;
-        string _key = string.Empty;
 
         public Configuration Config = Plugin.Instance.Configuration;
         ApiClient _client = ApiClient.Instance;
@@ -287,7 +286,7 @@ namespace PlayerScope.GUI
             ServerStatusGui();
             using (ImRaii.Disabled(bIsNetworkProcessing || _client._ServerStatus != "ONLINE"))
             {
-                Util.ColoredTextWrapped(ImGuiColors.ParsedPink, Loc.AgCrowsourcedDescription);
+                Utils.ColoredTextWrapped(ImGuiColors.ParsedPink, Loc.AgCrowsourcedDescription);
                 DrawSection(Loc.AgServerBasedFeatures, [ Loc.AgFeature1, Loc.AgFeature2, Loc.AgFeature3, Loc.AgFeature4, Loc.AgFeature5, Loc.AgFeature6 ], true);
 
                 ImGui.Spacing();
@@ -296,7 +295,7 @@ namespace PlayerScope.GUI
 
                 ImGui.Separator();
                 ImGui.Spacing();
-                Util.TextWrapped(Loc.AgDoYouAccept);
+                Utils.TextWrapped(Loc.AgDoYouAccept);
 
                 using (var textColor = ImRaii.PushColor(ImGuiCol.Text, KnownColor.IndianRed.Vector()))
                 using (var textColor1 = ImRaii.PushColor(ImGuiCol.CheckMark, KnownColor.Green.Vector()))
@@ -332,7 +331,7 @@ namespace PlayerScope.GUI
                 if (Config.AppRoleId < (int)User.Roles.Member)
                 {
                     ImGui.TextColored(ImGuiColors.DPSRed, $"{GetEnumDisplayName((User.Roles)Config.AppRoleId)}");
-                    Util.DrawHelp(true, Loc.StRoleDescriptionNonVerified);
+                    Utils.DrawHelp(true, Loc.StRoleDescriptionNonVerified);
                 }
                 else
                 {
@@ -341,7 +340,7 @@ namespace PlayerScope.GUI
 
                     ImGui.Text(Loc.StPermissions); ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.HealerGreen, Loc.StSendAndReceiveData);
-                    Util.DrawHelp(true, Loc.StAuthorizeDescription);
+                    Utils.DrawHelp(true, Loc.StAuthorizeDescription);
                 }
 
                 if (ImGui.CollapsingHeader(Loc.StShowMyIds))
@@ -349,35 +348,35 @@ namespace PlayerScope.GUI
                     ImGui.Text("Account Id:");
                     ImGui.SameLine();
                    
-                    Util.TextCopy(ImGuiColors.TankBlue, Config.AccountId.ToString());
-                    Util.SetHoverTooltip(Loc.StClickToCopyAccountId);
+                    Utils.TextCopy(ImGuiColors.TankBlue, Config.AccountId.ToString());
+                    Utils.SetHoverTooltip(Loc.StClickToCopyAccountId);
 
                     ImGui.SameLine();
 
                     ImGui.Text("LocalContent Id: ");
                     ImGui.SameLine();
-                    Util.TextCopy(ImGuiColors.TankBlue, Config.ContentId.ToString());
-                    Util.SetHoverTooltip(Loc.StClickToCopyContentId);
+                    Utils.TextCopy(ImGuiColors.TankBlue, Config.ContentId.ToString());
+                    Utils.SetHoverTooltip(Loc.StClickToCopyContentId);
                 }
 
                 if (ImGui.CollapsingHeader(Loc.StMyContributions, ImGuiTreeNodeFlags.DefaultOpen))
                 {
-                    Util.DrawHelp(false, Loc.StUploadedCharactersHint);
+                    Utils.DrawHelp(false, Loc.StUploadedCharactersHint);
                     ImGui.Text(Loc.StUploadedCharacters);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, Config.UploadedPlayersCount.ToString());
 
-                    Util.DrawHelp(false, Loc.StUploadedCharacterInfoHint);
+                    Utils.DrawHelp(false, Loc.StUploadedCharacterInfoHint);
                     ImGui.Text(Loc.StUploadedCharacterInfo);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, Config.UploadedPlayerInfoCount.ToString());
 
-                    Util.DrawHelp(false, Loc.StUploadedRetainersHint);
+                    Utils.DrawHelp(false, Loc.StUploadedRetainersHint);
                     ImGui.Text(Loc.StUploadedRetainers);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, Config.UploadedRetainersCount.ToString());
                    
-                    Util.DrawHelp(false, Loc.StUploadedRetainerInfoHint);
+                    Utils.DrawHelp(false, Loc.StUploadedRetainerInfoHint);
                     ImGui.Text(Loc.StUploadedRetainerInfo);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, Config.UploadedRetainerInfoCount.ToString());
@@ -385,12 +384,12 @@ namespace PlayerScope.GUI
                     ImGui.Separator();
                     //ImGuiHelpers.ScaledDummy(4.0f);
 
-                    Util.DrawHelp(false, Loc.StFetchedCharactersHint);
+                    Utils.DrawHelp(false, Loc.StFetchedCharactersHint);
                     ImGui.Text(Loc.StFetchedCharacter);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, Config.FetchedPlayerInfoCount.ToString());
 
-                    Util.DrawHelp(false, Loc.StSearchedNamesHint);
+                    Utils.DrawHelp(false, Loc.StSearchedNamesHint);
                     ImGui.Text(Loc.StSearchedNames);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, Config.SearchedNamesCount.ToString());
@@ -402,12 +401,12 @@ namespace PlayerScope.GUI
                     if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Sync, Loc.StRefreshProfileInfo))
                         RefreshUserProfileInfo();
 
-                Util.SetHoverTooltip(Loc.StRefreshProfileInfoHint);
+                Utils.SetHoverTooltip(Loc.StRefreshProfileInfoHint);
 
                 if (!string.IsNullOrWhiteSpace(LastNetworkMessage))
                 {
                     ImGui.SameLine();
-                    Util.ColoredErrorTextWrapped($"{LastNetworkMessage} ({DateTimeOffset.FromUnixTimeSeconds(LastNetworkMessageTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)LastNetworkMessageTime)})");
+                    Utils.ColoredErrorTextWrapped($"{LastNetworkMessage} ({DateTimeOffset.FromUnixTimeSeconds(LastNetworkMessageTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)LastNetworkMessageTime)})");
                 }
             }
             else
@@ -453,7 +452,7 @@ namespace PlayerScope.GUI
                                     UserLocalContentId = _contentId,
                                     Name = _playerName,
                                     ClientId = Config.Key,
-                                    Version = Util.clientVer
+                                    Version = Utils.clientVer
                                 }).ConfigureAwait(false).GetAwaiter().GetResult();
 
                                 LastRegistrationWindowMessage = request.Message;
@@ -473,22 +472,22 @@ namespace PlayerScope.GUI
 
                         ImGui.NewLine();
 
-                        Util.TextWrapped(Loc.StDidntTheBrowserOpen);
+                        Utils.TextWrapped(Loc.StDidntTheBrowserOpen);
 
                         ImGui.SameLine();
-                        if (Util.ButtonCopy(Loc.StCopyTheLink, _client.authUrl))
+                        if (Utils.ButtonCopy(Loc.StCopyTheLink, _client.authUrl))
                         {
                             isAuthLinkCopied = true;
                         }
                         ImGui.SameLine();
 
-                        Util.TextWrapped(Loc.StPasteItInBrowser);
+                        Utils.TextWrapped(Loc.StPasteItInBrowser);
 
                         if (isAuthLinkCopied)
-                            Util.ColoredTextWrapped(ImGuiColors.ParsedGold, Loc.StLinkCopied);
+                            Utils.ColoredTextWrapped(ImGuiColors.ParsedGold, Loc.StLinkCopied);
                     }
 
-                    Util.ColoredErrorTextWrapped(LastRegistrationWindowMessage);
+                    Utils.ColoredErrorTextWrapped(LastRegistrationWindowMessage);
                 }
                 else
                 {
@@ -523,7 +522,7 @@ namespace PlayerScope.GUI
             if (!string.IsNullOrWhiteSpace(_LastServerStatsMessage))
             {
                 ImGui.SameLine();
-                Util.ColoredErrorTextWrapped($"{_LastServerStatsMessage} ({DateTimeOffset.FromUnixTimeSeconds(_LastServerStatsRefreshTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)_LastServerStatsRefreshTime)})");
+                Utils.ColoredErrorTextWrapped($"{_LastServerStatsMessage} ({DateTimeOffset.FromUnixTimeSeconds(_LastServerStatsRefreshTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)_LastServerStatsRefreshTime)})");
             }
 
             ImGui.NewLine();
@@ -587,12 +586,12 @@ namespace PlayerScope.GUI
                 }
             }
            
-            Util.SetHoverTooltip(Loc.StSyncCharacterAndRetainerFromServerTooltip);
+            Utils.SetHoverTooltip(Loc.StSyncCharacterAndRetainerFromServerTooltip);
 
             if (_syncDatabaseButtonCondition)
             {
                 var syncAgainTime = Config.LastSyncedTime + 300;
-                using (ImRaii.Disabled()) { Util.TextWrapped($"{Loc.StCanSyncAgainTime} {Tools.TimeFromNow((int)syncAgainTime)}"); }
+                using (ImRaii.Disabled()) { Utils.TextWrapped($"{Loc.StCanSyncAgainTime} {Tools.TimeFromNow((int)syncAgainTime)}"); }
             }
 
             if (IsSyncingPlayers || IsSyncingRetainers)
@@ -607,12 +606,12 @@ namespace PlayerScope.GUI
                     _LastCursor = 0;
                 }
 
-                Util.CompletionProgressBar(_playersFetchedFromServer.Count + _retainersFetchedFromServer.Count,
+                Utils.CompletionProgressBar(_playersFetchedFromServer.Count + _retainersFetchedFromServer.Count,
                     (_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount)
                     + (_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount));
             }
                 
-            Util.ShowColoredMessage(_SyncMessage);
+            Utils.ShowColoredMessage(_SyncMessage);
         }
 
         private ConcurrentDictionary<long, UserCharacters> _localUserCharacters = new();
@@ -680,7 +679,7 @@ namespace PlayerScope.GUI
                                 ImGui.TextUnformatted($"{FontAwesomeIcon.Lock.ToIconString()}");
                                 using (ImRaii.PushFont(UiBuilder.DefaultFont))
                                 {
-                                    Util.SetHoverTooltip(Loc.StThisCharacterIsPrivate);
+                                    Utils.SetHoverTooltip(Loc.StThisCharacterIsPrivate);
                                     ImGui.SameLine();
                                 }
                             }
@@ -697,7 +696,7 @@ namespace PlayerScope.GUI
                                 ImGui.TextUnformatted($"{FontAwesomeIcon.UnlockAlt.ToIconString()}");
                                 using (ImRaii.PushFont(UiBuilder.DefaultFont))
                                 {
-                                    Util.SetHoverTooltip(Loc.StSomeDetailsThisCharacterAreHidden);
+                                    Utils.SetHoverTooltip(Loc.StSomeDetailsThisCharacterAreHidden);
                                     ImGui.SameLine();
                                 }
                             }
@@ -719,7 +718,7 @@ namespace PlayerScope.GUI
                         if (visitCount > 0)
                         {
                             var lastVisitDateString = $"{Tools.UnixTimeConverter(character.ProfileVisitInfo.LastProfileVisitDate)} ({Tools.ToTimeSinceString((int)character.ProfileVisitInfo.LastProfileVisitDate)})";
-                            Util.ColoredTextWrapped(ImGuiColors.ParsedBlue, $"{Loc.StSomeoneVisitedYourProfile} {lastVisitDateString}");
+                            Utils.ColoredTextWrapped(ImGuiColors.ParsedBlue, $"{Loc.StSomeoneVisitedYourProfile} {lastVisitDateString}");
                         }
                         if (character.Privacy != null)
                         {
@@ -730,7 +729,7 @@ namespace PlayerScope.GUI
                                     onChange(value);
                                     editedCharactersPrivacy.Add(character.LocalContentId);
                                 }
-                                Util.SetHoverTooltip(tooltip);
+                                Utils.SetHoverTooltip(tooltip);
                             }
 
                             PrivacyCheckbox(Loc.StPrivacyHideFullProfile, ref _bHideFullProfile,
@@ -802,7 +801,7 @@ namespace PlayerScope.GUI
                         isPrivacySettingsChanged = false;
                         editedCharactersPrivacy.Clear();
                     }
-                Util.SetHoverTooltip(Loc.StSaveConfigTooltip);
+                Utils.SetHoverTooltip(Loc.StSaveConfigTooltip);
 
                 ImGui.SameLine();
 
@@ -810,11 +809,11 @@ namespace PlayerScope.GUI
                     if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Sync, Loc.StRefreshProfileInfo))
                         RefreshUserProfileInfo(); 
 
-                Util.SetHoverTooltip(Loc.StRefreshProfileInfoHint);
+                Utils.SetHoverTooltip(Loc.StRefreshProfileInfoHint);
 
                 if (!string.IsNullOrWhiteSpace(LastNetworkMessage))
                 {
-                    Util.ColoredErrorTextWrapped($"{LastNetworkMessage} ({DateTimeOffset.FromUnixTimeSeconds(LastNetworkMessageTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)LastNetworkMessageTime)})");
+                    Utils.ColoredErrorTextWrapped($"{LastNetworkMessage} ({DateTimeOffset.FromUnixTimeSeconds(LastNetworkMessageTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)LastNetworkMessageTime)})");
                 }
             }
         }
@@ -830,7 +829,7 @@ namespace PlayerScope.GUI
                 }
 
                 if (wrapped)
-                    Util.TextWrapped(title);
+                    Utils.TextWrapped(title);
                 else
                     ImGui.TextUnformatted(title);
 
@@ -848,7 +847,7 @@ namespace PlayerScope.GUI
                 ImGui.Bullet();
                 ImGui.SameLine();
                 if (wrapped)
-                    Util.TextWrapped(point);
+                    Utils.TextWrapped(point);
                 else
                     ImGui.TextUnformatted(point);
             }
@@ -1077,8 +1076,6 @@ namespace PlayerScope.GUI
             return (null, string.Empty);
         }
 
-        int TablePlayerMaxLimit = 50;
-        
         string? _serverIpAdressField = null;
         bool bShowServerIpAdressTextField;
         public void ServerStatusGui()
@@ -1138,16 +1135,16 @@ namespace PlayerScope.GUI
             ImGui.SameLine();
             if (!string.IsNullOrWhiteSpace(_client._ServerStatus))
             {
-                Util.TextWrapped(ImGuiColors.DalamudWhite, Loc.StServerStatus); ImGui.SameLine();
+                Utils.TextWrapped(ImGuiColors.DalamudWhite, Loc.StServerStatus); ImGui.SameLine();
                 if (_client._ServerStatus == "ONLINE")
                 {
-                    Util.TextWrapped(ImGuiColors.HealerGreen, Loc.StOnline); ImGui.SameLine();
-                    Util.TextWrapped(ImGuiColors.DalamudWhite, "Ping:"); ImGui.SameLine();
-                    Util.TextWrapped(ImGuiColors.HealerGreen, $"{_client._LastPingValue}");
+                    Utils.TextWrapped(ImGuiColors.HealerGreen, Loc.StOnline); ImGui.SameLine();
+                    Utils.TextWrapped(ImGuiColors.DalamudWhite, "Ping:"); ImGui.SameLine();
+                    Utils.TextWrapped(ImGuiColors.HealerGreen, $"{_client._LastPingValue}");
                 }
                 else
                 {
-                    Util.TextWrapped(ImGuiColors.DalamudRed, _client._ServerStatus.ToString());
+                    Utils.TextWrapped(ImGuiColors.DalamudRed, _client._ServerStatus.ToString());
                 }
             }
 
