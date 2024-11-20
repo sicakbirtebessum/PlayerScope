@@ -31,6 +31,7 @@ using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using PlayerScope.Database;
 using Microsoft.EntityFrameworkCore;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 namespace PlayerScope.GUI
 {
@@ -162,6 +163,18 @@ namespace PlayerScope.GUI
         {
             _TotalPlayers_Value = PersistenceContext._playerCache.Count;
             _TotalRetainers_Value = PersistenceContext._retainerCache.Count;
+        }
+
+        unsafe void OpenAdventurePlate(ulong ContentId)
+        {
+            try
+            {
+                AgentCharaCard.Instance()->OpenCharaCard(ContentId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
 
         public override void Draw()
@@ -386,14 +399,14 @@ namespace PlayerScope.GUI
             {
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth(100);
-                Util.ColoredErrorTextWrapped(_LastPlayerSearchResult.Message);
+                Utils.ColoredErrorTextWrapped(_LastPlayerSearchResult.Message);
             }
 
             if (!string.IsNullOrWhiteSpace(_LastRetainerSearchResult.Message))
             {
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth(100);
-                Util.ColoredErrorTextWrapped(_LastRetainerSearchResult.Message);
+                Utils.ColoredErrorTextWrapped(_LastRetainerSearchResult.Message);
             }
 
             if (bShowFilters)
@@ -455,9 +468,9 @@ namespace PlayerScope.GUI
                                     ImGui.Text(player.Name);
 
                                     if (highlightAsBot)
-                                        Util.SetHoverTooltip(Loc.MnPlayerIdentifiedAsBot);
+                                        Utils.SetHoverTooltip(Loc.MnPlayerIdentifiedAsBot);
                                     else if (highlightAsGM)
-                                        Util.SetHoverTooltip(Loc.MnPlayerIdentifiedAsGM);
+                                        Utils.SetHoverTooltip(Loc.MnPlayerIdentifiedAsGM);
                                 }
                             }
                             else
@@ -469,7 +482,7 @@ namespace PlayerScope.GUI
 
                             if (player.WorldId != null)
                             {
-                                ImGui.Text(Util.GetWorldName((uint)player.WorldId));
+                                ImGui.Text(Utils.GetWorldName((uint)player.WorldId));
                             }
                             else
                             {
@@ -504,6 +517,14 @@ namespace PlayerScope.GUI
                                 ImGui.SameLine();
                             }
                             ImGui.Text(localContentId.ToString());
+
+                            ImGui.SameLine();
+
+                            if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Panorama, "Adv. Plate" + $"##AdvPlate_{index}"))
+                            {
+                                OpenAdventurePlate((ulong)localContentId);
+                            }
+                            Utils.SetHoverTooltip(Loc.MnOpenAdventurerPlate);
 
                             index++;
                         }
@@ -561,15 +582,15 @@ namespace PlayerScope.GUI
                             {
                                 if (ImGui.Button("c" + $"##RetainerWorldName_{index}"))
                                 {
-                                    ImGui.SetClipboardText(Util.GetWorldName(retainer.WorldId));
+                                    ImGui.SetClipboardText(Utils.GetWorldName(retainer.WorldId));
                                 }
                                 ImGui.SameLine();
                             }
-                            ImGui.Text(Util.GetWorldName(retainer.WorldId));
+                            ImGui.Text(Utils.GetWorldName(retainer.WorldId));
 
                             ImGui.TableNextColumn(); //Created At column
 
-                            var _CreatedAt = Tools.UnixTimeConverter(retainer.CreatedAt).ToString();
+                            var _CreatedAt = Tools.ToTimeSinceString(retainer.CreatedAt).ToString();
                             ImGui.Text(_CreatedAt);
 
                             ImGui.TableNextColumn(); //OwnerContentId column
@@ -708,7 +729,7 @@ namespace PlayerScope.GUI
         {
             if (!Config.LoggedIn || string.IsNullOrWhiteSpace(Config.Key))
             {
-                Util.ShowColoredMessage(Loc.MnErrorYouAreNotConnected);
+                Utils.ShowColoredMessage(Loc.MnErrorYouAreNotConnected);
                 ImGui.SameLine();
                 if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Lock, Loc.MnOpenSettingsMenutoconnect))
                 {
@@ -717,7 +738,7 @@ namespace PlayerScope.GUI
             }
             else
             {
-                Util.ShowColoredMessage(Loc.MnYouAreConnected);
+                Utils.ShowColoredMessage(Loc.MnYouAreConnected);
                 ImGui.SameLine();
                 if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.LockOpen, Loc.MnOpenSettingsMenu))
                 {
@@ -780,15 +801,15 @@ namespace PlayerScope.GUI
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorldName(server.Key)); // Servername column
+                            ImGui.Text(Utils.GetWorldName(server.Key)); // Servername column
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(Util.GetWorld(server.Key).Value.DataCenter.Value.Name.ToString()); //DataCenter column
+                            ImGui.Text(Utils.GetWorld(server.Key).Value.DataCenter.Value.Name.ToString()); //DataCenter column
 
                             ImGui.TableNextColumn();
 
-                            ImGui.Text(server.Value.Count().ToString()); //Retainer Count column
+                            ImGui.Text(server.Value.Count.ToString()); //Retainer Count column
 
                             ImGui.TableNextColumn();
 
@@ -865,17 +886,17 @@ namespace PlayerScope.GUI
             ImGui.PushID($"OpenFolder_{dbPath.Name}");
             if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.ExternalLinkAlt, Loc.MnDatabaseOpenFolder))
             {
-                Util.OpenFolder(Path.GetDirectoryName(dbPath.FullName));
+                Utils.OpenFolder(Path.GetDirectoryName(dbPath.FullName));
             }
             ImGui.PopID();
 
-            var sizeText = isPendingDeletion ? $"{Util.BytesToString(dbSize)} - {Loc.MnDatabasePendingDeletion}" : Util.BytesToString(dbSize);
-            Util.TextWrapped($"{Loc.MnDatabaseSize} {sizeText}");
-            Util.SetHoverTooltip(Util.BytesToString(dbSize));
+            var sizeText = isPendingDeletion ? $"{Utils.BytesToString(dbSize)} - {Loc.MnDatabasePendingDeletion}" : Utils.BytesToString(dbSize);
+            Utils.TextWrapped($"{Loc.MnDatabaseSize} {sizeText}");
+            Utils.SetHoverTooltip(Utils.BytesToString(dbSize));
 
-            var logSizeText = isPendingDeletion ? $"{Util.BytesToString(dbLogSize)} - {Loc.MnDatabasePendingDeletion}" : Util.BytesToString(dbLogSize);
-            Util.TextWrapped($"{Loc.MnDatabaseLogSize} {logSizeText}");
-            Util.SetHoverTooltip(Util.BytesToString(dbLogSize));
+            var logSizeText = isPendingDeletion ? $"{Utils.BytesToString(dbLogSize)} - {Loc.MnDatabasePendingDeletion}" : Utils.BytesToString(dbLogSize);
+            Utils.TextWrapped($"{Loc.MnDatabaseLogSize} {logSizeText}");
+            Utils.SetHoverTooltip(Utils.BytesToString(dbLogSize));
         }
 
         void DisplayLegacyDatabaseInfo(string folderName, string dbFileName, string headerText)
@@ -927,28 +948,28 @@ namespace PlayerScope.GUI
                     File.Delete(configPath);
                 }
 
-                Util.AddNotification(Loc.MnDatabaseSuccessfullyDeletedNotification, NotificationType.Info);
+                Utils.AddNotification(Loc.MnDatabaseSuccessfullyDeletedNotification, NotificationType.Info);
             }
             catch (Exception ex)
             {
-                Util.AddNotification($"Failed to delete database: {ex.Message}", NotificationType.Error);
+                Utils.AddNotification($"Failed to delete database: {ex.Message}", NotificationType.Error);
             }
         }
 
         void DisplayPathInfo(string path)
         {
-            Util.TextWrapped(path);
+            Utils.TextWrapped(path);
             if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
             {
                 ImGui.SetClipboardText(path);
-                Util.AddNotification(Loc.MnDatabaseFilePathCopied, NotificationType.Info);
+                Utils.AddNotification(Loc.MnDatabaseFilePathCopied, NotificationType.Info);
             }
-            Util.SetHoverTooltip(Loc.MnDatabaseCopyFilePath);
+            Utils.SetHoverTooltip(Loc.MnDatabaseCopyFilePath);
         }
 
         void DisplayDeleteDatabaseButton()
         {
-            if (Util.CtrlShiftButton(FontAwesomeIcon.Trash, Loc.MnDatabaseDeleteData, Loc.MnDatabaseDeleteDataTooltip))
+            if (Utils.CtrlShiftButton(FontAwesomeIcon.Trash, Loc.MnDatabaseDeleteData, Loc.MnDatabaseDeleteDataTooltip))
             {
                 using var scope = _serviceProvider.CreateScope();
                 using var dbContext = scope.ServiceProvider.GetRequiredService<RetainerTrackContext>();
@@ -964,7 +985,7 @@ namespace PlayerScope.GUI
                 dbContext.SaveChanges();
                 IsDatabasePendingDeletion = true;
                 DatabaseLastRefreshTicks = 0;
-                Util.AddNotification(Loc.MnDatabaseSuccessfullyDeletedNotification, NotificationType.Info);
+                Utils.AddNotification(Loc.MnDatabaseSuccessfullyDeletedNotification, NotificationType.Info);
             }
         }
 
