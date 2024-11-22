@@ -117,6 +117,41 @@ namespace PlayerScope.API
                 return (null, Message);
             }
         }
+
+        public (ServerPlayerAndRetainerStatsDto Stats, string Message) LastPlayerAndRetainerCountStats = new();
+        public async Task<(ServerPlayerAndRetainerStatsDto PlayerAndRetainerStats, string Message)> GetPlayerAndRetainerCountStats()
+        {
+            string Message = string.Empty;
+            try
+            {
+                var request = new RestRequest($"server/stats/players-retainers").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
+                var response = await _restClient.ExecuteGetAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessful)
+                {
+                    var _JsonResponse = JsonConvert.DeserializeObject<ServerPlayerAndRetainerStatsDto>(response.Content!);
+                    if (_JsonResponse != null)
+                    {
+                        Message = Loc.ApiStatsRefreshed;
+                        LastPlayerAndRetainerCountStats = (_JsonResponse, Message);
+                        return (_JsonResponse, Message);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(response.Content))
+                    Message = $"{Loc.ApiError} {response.Content}";
+                else if (response.StatusCode == 0)
+                    Message = $"{Loc.ApiError} {Loc.ApiServiceUnavailable}";
+                else
+                    Message = $"{Loc.ApiError} {response.StatusCode.ToString()}";
+
+                return (null, Message);
+            }
+            catch (Exception ex)
+            {
+                Message = $"{Loc.ApiError} {ex.Message}";
+                return (null, Message);
+            }
+        }
         //---Players---//
         //public ConcurrentDictionary<long, PlayerDto> _LastPlayerSearchResults = new ConcurrentDictionary<long, PlayerDto>();
         //public ConcurrentDictionary<long, PlayerDetailed> _LastPlayerByIdSearchResults = new ConcurrentDictionary<long, PlayerDetailed>();

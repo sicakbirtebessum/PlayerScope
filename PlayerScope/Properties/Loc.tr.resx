@@ -238,6 +238,9 @@ Devam etmek için lütfen bir karakterle giris yap.</value>
   <data name="StRetainerCount" xml:space="preserve">
     <value>Retainer Sayisi:</value>
   </data>
+  <data name="StRetainerCountColumn" xml:space="preserve">
+    <value>Retainer Sayisi</value>
+  </data>
   <data name="StUserCount" xml:space="preserve">
     <value>Kullanici Sayisi:</value>
   </data>
@@ -797,5 +800,41 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   </data>
   <data name="MnOpenAdventurerPlate" xml:space="preserve">
     <value>Adventurer Plate'i Aç</value>
+  </data>
+  <data name="StHomeWorldName" xml:space="preserve">
+    <value>Anadünya Ismi</value>
+  </data>
+  <data name="StCharacterCountColumn" xml:space="preserve">
+    <value>Karakter Sayisi</value>
+  </data>
+  <data name="StRefreshDatabaseWorldCount" xml:space="preserve">
+    <value>Sunucu Dünya Istatistiklerini Yenile</value>
+  </data>
+  <data name="UtilsJP" xml:space="preserve">
+    <value>Japonya</value>
+  </data>
+  <data name="UtilsNA" xml:space="preserve">
+    <value>Kuzey Amerika</value>
+  </data>
+  <data name="UtilsEU" xml:space="preserve">
+    <value>Avrupa</value>
+  </data>
+  <data name="UtilsOCE" xml:space="preserve">
+    <value>Okyanusya</value>
+  </data>
+  <data name="StCharacterAndRetainerSummary" xml:space="preserve">
+    <value>Karakter ve Retainer Dagilimi</value>
+  </data>
+  <data name="StGeneralStats" xml:space="preserve">
+    <value>Genel Istatistikler</value>
+  </data>
+  <data name="StOptions" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="StCharacterAndRetainerWorldCountMsg" xml:space="preserve">
+    <value>Buradaki bilgiler, Karakterlerin ve Retainerlarin en son kaydedilen Anadünya kaydina dayanmaktadir. Anadünya kaydi olmayan hiçbir Karakter bu sayilara etki etmeyecek.</value>
+  </data>
+  <data name="StTotalCount" xml:space="preserve">
+    <value>Toplam Sayi</value>
   </data>
 </root>

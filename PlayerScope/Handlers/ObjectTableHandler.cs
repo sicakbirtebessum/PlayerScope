@@ -50,7 +50,7 @@ internal sealed class ObjectTableHandler : IDisposable
     private unsafe void FrameworkUpdate(IFramework framework)
     {
         long now = Environment.TickCount64;
-        if (!_clientState.IsLoggedIn || now - _lastUpdate < 10_000) //_clientState.IsPvPExcludingDen
+        if (!_clientState.IsLoggedIn || now - _lastUpdate < Plugin.Instance.Configuration.ObjectTableRefreshInterval)
             return;
 
         _lastUpdate = now;
@@ -113,8 +113,9 @@ internal sealed class ObjectTableHandler : IDisposable
 
         if (playerRequests.Count > 0)
             PersistenceContext.AddPlayerUploadData(playerRequests);
-
+    #if DEBUG
         _logger.LogTrace("ObjectTable handling for {Count} players took {TimeMs}", playerMappings.Count, TimeSpan.FromMilliseconds(Environment.TickCount64 - now));
+    #endif
     }
 
     public void Dispose()

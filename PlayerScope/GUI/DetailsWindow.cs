@@ -905,19 +905,23 @@ namespace PlayerScope.GUI
 
                         var getTerritory = PersistenceContext.Instance.Territories.FirstOrDefault(a => a.RowId == territory.TerritoryId);
 
-                        if (ImGui.Button(Loc.DtMapButton + $"##{index}"))
+                        using (ImRaii.Disabled(territory.PlayerPos == null))
                         {
-                            var playerPos = Utils.Vector3FromString(territory.PlayerPos);
-                            var _territory = PersistenceContext.Instance.Territories.FirstOrDefault(row => row.RowId == player.TerritoryHistory[index].TerritoryId);
+                            if (ImGui.Button(Loc.DtMapButton + $"##{index}"))
+                            {
+                                var playerPos = Utils.Vector3FromString(territory.PlayerPos);
+                                var _territory = PersistenceContext.Instance.Territories.FirstOrDefault(row => row.RowId == player.TerritoryHistory[index].TerritoryId);
 
-                            var mapLink = new MapLinkPayload(
-                                _territory.RowId,
-                                _territory.Map.Value.RowId,
-                                playerPos.X,
-                                playerPos.Y
-                            );
-                            Plugin._gameGui.OpenMapWithMapLink(mapLink);
+                                var mapLink = new MapLinkPayload(
+                                    _territory.RowId,
+                                    _territory.Map.Value.RowId,
+                                    playerPos.X,
+                                    playerPos.Y
+                                );
+                                Plugin._gameGui.OpenMapWithMapLink(mapLink);
+                            }
                         }
+
                         ImGui.SameLine();
 
                         if (getTerritory.PlaceName.ValueNullable != null)

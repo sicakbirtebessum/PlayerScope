@@ -84,6 +84,22 @@ namespace PlayerScope
                 _ => string.Empty,
             };
         }
+        public static string GetRegionLongName(World? world)
+        {
+            if (world == null)
+            {
+                return string.Empty;
+            }
+
+            return world.Value.DataCenter.ValueNullable?.Region switch
+            {
+                1 => Loc.UtilsJP,
+                2 => Loc.UtilsNA,
+                3 => Loc.UtilsEU,
+                4 => Loc.UtilsOCE,
+                _ => string.Empty,
+            };
+        }
 
         public static bool IsWorldValid(uint worldId)
         {

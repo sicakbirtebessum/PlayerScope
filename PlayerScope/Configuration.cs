@@ -35,6 +35,7 @@ namespace PlayerScope
         public bool bShowDetailedDate { get; set; } = false;
         public LanguageEnum Language { get; set; }
         public bool AgreementAccepted { get; set; } = false;
+        public int ObjectTableRefreshInterval { get; set; } = 5_000;
 
         public class CachedFavoritedPlayer
         {

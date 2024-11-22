@@ -11,6 +11,7 @@ using Dalamud.Utility;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using Microsoft.Extensions.Logging;
 using PlayerScope.API.Models;
 using PlayerScope.Database;
@@ -112,9 +113,9 @@ internal sealed unsafe class GameHooks : IDisposable
             {
                 if (player.ContentId == 0)
                     continue;
-                
+
                 ushort? homeWorldId = player.HomeWorldID != 0 && player.HomeWorldID != 65535 ? player.HomeWorldID : null;
-                
+
                 var mapping = new PlayerMapping
                 {
                     ContentId = player.ContentId,
@@ -133,6 +134,7 @@ internal sealed unsafe class GameHooks : IDisposable
                         AccountId = (int?)mapping.AccountId,
                         HomeWorldId = mapping.WorldId,
                         CurrentWorldId = (ushort?)PersistenceContext.GetCurrentWorld(),
+                        TerritoryId = (short)player.TerritoryId,
                         CreatedAt = Tools.UnixTime,
                     });
                 }

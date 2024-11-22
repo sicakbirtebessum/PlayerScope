@@ -238,6 +238,9 @@ Please login with a character to continue.</value>
   <data name="StRetainerCount" xml:space="preserve">
     <value>Retainer Count:</value>
   </data>
+  <data name="StRetainerCountColumn" xml:space="preserve">
+    <value>Retainer Count</value>
+  </data>
   <data name="StUserCount" xml:space="preserve">
     <value>User Count:</value>
   </data>
@@ -797,5 +800,41 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   </data>
   <data name="MnOpenAdventurerPlate" xml:space="preserve">
     <value>Open Adventurer Plate</value>
+  </data>
+  <data name="StHomeWorldName" xml:space="preserve">
+    <value>Home World Name</value>
+  </data>
+  <data name="StCharacterCountColumn" xml:space="preserve">
+    <value>Character Count</value>
+  </data>
+  <data name="StRefreshDatabaseWorldCount" xml:space="preserve">
+    <value>Refresh World Count Stats</value>
+  </data>
+  <data name="UtilsJP" xml:space="preserve">
+    <value>Japan</value>
+  </data>
+  <data name="UtilsNA" xml:space="preserve">
+    <value>North America</value>
+  </data>
+  <data name="UtilsEU" xml:space="preserve">
+    <value>Europe</value>
+  </data>
+  <data name="UtilsOCE" xml:space="preserve">
+    <value>Oceania</value>
+  </data>
+  <data name="StCharacterAndRetainerSummary" xml:space="preserve">
+    <value>Character and Retainer Summary</value>
+  </data>
+  <data name="StGeneralStats" xml:space="preserve">
+    <value>General Stats</value>
+  </data>
+  <data name="StOptions" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="StCharacterAndRetainerWorldCountMsg" xml:space="preserve">
+    <value>The information here is based on the last recorded Home World of Characters and Retainers. Any Character without a Home World record will not affect these numbers.</value>
+  </data>
+  <data name="StTotalCount" xml:space="preserve">
+    <value>Total Count</value>
   </data>
 </root>

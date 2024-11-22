@@ -1071,11 +1071,38 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Character and Retainer Summary benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StCharacterAndRetainerSummary {
+            get {
+                return ResourceManager.GetString("StCharacterAndRetainerSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The information here is based on the last recorded Home World of Characters and Retainers. Any Character without a Home World record will not affect these numbers. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StCharacterAndRetainerWorldCountMsg {
+            get {
+                return ResourceManager.GetString("StCharacterAndRetainerWorldCountMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Character Count: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StCharacterCount {
             get {
                 return ResourceManager.GetString("StCharacterCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Character Count benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StCharacterCountColumn {
+            get {
+                return ResourceManager.GetString("StCharacterCountColumn", resourceCulture);
             }
         }
         
@@ -1261,11 +1288,29 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   General Stats benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StGeneralStats {
+            get {
+                return ResourceManager.GetString("StGeneralStats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Home World: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StHomeWorld {
             get {
                 return ResourceManager.GetString("StHomeWorld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Home World Name benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StHomeWorldName {
+            get {
+                return ResourceManager.GetString("StHomeWorldName", resourceCulture);
             }
         }
         
@@ -1338,6 +1383,15 @@ namespace PlayerScope.Properties {
         internal static string StOnline {
             get {
                 return ResourceManager.GetString("StOnline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Options benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StOptions {
+            get {
+                return ResourceManager.GetString("StOptions", resourceCulture);
             }
         }
         
@@ -1487,6 +1541,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Refresh World Count Stats benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StRefreshDatabaseWorldCount {
+            get {
+                return ResourceManager.GetString("StRefreshDatabaseWorldCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Refresh Profile Info benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StRefreshProfileInfo {
@@ -1519,6 +1582,15 @@ namespace PlayerScope.Properties {
         internal static string StRetainerCount {
             get {
                 return ResourceManager.GetString("StRetainerCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Retainer Count benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StRetainerCountColumn {
+            get {
+                return ResourceManager.GetString("StRetainerCountColumn", resourceCulture);
             }
         }
         
@@ -1804,6 +1876,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Total Count benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StTotalCount {
+            get {
+                return ResourceManager.GetString("StTotalCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Total Visit Count: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StTotalVisitCount {
@@ -2082,6 +2163,42 @@ namespace PlayerScope.Properties {
         internal static string ToolsYears {
             get {
                 return ResourceManager.GetString("ToolsYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Europe benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilsEU {
+            get {
+                return ResourceManager.GetString("UtilsEU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Japan benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilsJP {
+            get {
+                return ResourceManager.GetString("UtilsJP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   North America benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilsNA {
+            get {
+                return ResourceManager.GetString("UtilsNA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Oceania benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilsOCE {
+            get {
+                return ResourceManager.GetString("UtilsOCE", resourceCulture);
             }
         }
     }
