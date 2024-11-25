@@ -4,15 +4,15 @@
     "Author": "SicakBirTebessüm",
     "Punchline": "Track players and retainers. (Crowdsourced)",
     "Description": "Keeps track of players and who a retainer belongs to. Alt characters can also be tracked if they have been seen before.\n--Currently only for whitelisted players.",
-    "AssemblyVersion": "1.0.5.3",
+    "AssemblyVersion": "1.0.5.4",
     "InternalName": "PlayerScope",
     "RepoUrl": "https://github.com/sicakbirtebessum/PlayerScope",
     "IconUrl": "https://raw.githubusercontent.com/sicakbirtebessum/PlayerScope/master/icon.png",
-    "DownloadLinkInstall": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.3/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.3/latest.zip",
+    "DownloadLinkInstall": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.4/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.4/latest.zip",
     "DalamudApiLevel": 11,
-    "LastUpdate": 1732274285,
-    "Changelog": "- A new tab has been added to display the distribution of Characters and Retainers across different Worlds\n- The 'Settings' tab is now available (currently only for debugging purposes)\n- You can now send a character's location directly from any list (Before, they had to be near the plugin user)\n- An 'Adv. Plate' button has been added next to the results in the PlayerSearch window.",
+    "LastUpdate": 1732542976,
+    "Changelog": "- World filter\n- Many UI improvements\n- See github for more changelogs",
     "Tags": [ "player", "search", "retainer", "track", "account" ]
   }
 ]

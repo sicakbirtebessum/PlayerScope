@@ -115,7 +115,7 @@ namespace PlayerScope.GUI.MainWindowTab
             {
                 ImGui.TableSetupColumn(Loc.WsWorldName, ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableSetupColumn("Id", ImGuiTableColumnFlags.WidthFixed, 50);
-                ImGui.TableSetupColumn(Loc.WsSelect, ImGuiTableColumnFlags.WidthFixed, 50);
+                ImGui.TableSetupColumn(Loc.WsSelect, ImGuiTableColumnFlags.WidthFixed, 100);
                 ImGui.TableHeadersRow();
 
                 foreach (var world in worlds)
