@@ -39,6 +39,7 @@ public sealed class Plugin : IDalamudPlugin
     public GUI.SettingsWindow ConfigWindow;
     public GUI.MainWindow MainWindow;
     public GUI.DetailsWindow DetailsWindow;
+    public GUI.MainWindowTab.WorldSelectorWindow WorldSelectorWindow;
     internal WindowSystem ws;
     internal IDalamudPluginInterface _pluginInterface {  get; }
     public Plugin(
@@ -80,9 +81,10 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<PersistenceContext>();
         serviceCollection.AddSingleton<MarketBoardOfferingsHandler>();
         serviceCollection.AddSingleton<MarketBoardUiHandler>();
+        serviceCollection.AddSingleton<CWLSHandler>();
         serviceCollection.AddSingleton<ObjectTableHandler>();
         serviceCollection.AddSingleton<GameHooks>();
-
+        
         Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         if (string.IsNullOrWhiteSpace(Configuration.Language.ToString()))
@@ -114,9 +116,11 @@ public sealed class Plugin : IDalamudPlugin
         MainWindow = new();
         DetailsWindow = new();
         ConfigWindow = new();
+        WorldSelectorWindow = new();
         ws.AddWindow(MainWindow);
         ws.AddWindow(DetailsWindow);
         ws.AddWindow(ConfigWindow);
+        ws.AddWindow(WorldSelectorWindow);
 
         pluginInterface.UiBuilder.Draw += ws.Draw;
 
@@ -162,6 +166,7 @@ public sealed class Plugin : IDalamudPlugin
     {
         serviceProvider.GetRequiredService<MarketBoardOfferingsHandler>();
         serviceProvider.GetRequiredService<MarketBoardUiHandler>();
+        serviceProvider.GetRequiredService<CWLSHandler>();
         serviceProvider.GetRequiredService<ObjectTableHandler>();
         serviceProvider.GetRequiredService<GameHooks>();
     }

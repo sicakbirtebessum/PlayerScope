@@ -23,9 +23,6 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using static FFXIVClientStructs.FFXIV.Component.GUI.AtkFontManager;
-using static Lumina.Models.Materials.Texture;
 
 namespace PlayerScope
 {
@@ -423,5 +420,114 @@ namespace PlayerScope
                 AddNotification("Failed to open the link in the browser, please report this issue", NotificationType.Error);
             }
         }
+
+        public static void SetupTableColumns(string[] columns)
+        {
+            foreach (var column in columns)
+            {
+                ImGui.TableSetupColumn(column, ImGuiTableColumnFlags.WidthFixed);
+            }
+            ImGui.TableHeadersRow();
+        }
+
+        /// <summary>
+        /// Displays the world information in the ImGui table.
+        /// </summary>
+        /// <param name="worldId">The ID of the world to resolve.</param>
+        /// <param name="helpText">Whether to display the detailed help text.</param>
+        public static void DisplayWorldInfo(uint? worldId, bool helpText = true)
+        {
+            if (!worldId.HasValue)
+            {
+                ImGui.Text("---");
+                return;
+            }
+
+            var world = Utils.GetWorld((uint)worldId);
+            if (world != null)
+            {
+                if (helpText)
+                {
+                    Utils.DrawHelp(false, $"Region: {Utils.GetRegionCode(world.Value)}\nDataCenter: {world.Value.DataCenter.Value.Name}\nWorld: {world.Value.Name}");
+                }
+
+                ImGui.Text(world.Value.Name.ExtractText());
+            }
+            else
+            {
+                ImGui.Text("---");
+            }
+        }
+
+        /// <summary>
+        /// Displays a text with a copy button when "Ctrl" key is pressed.
+        /// </summary>
+        /// <param name="clipboardText">The text to copy to the clipboard.</param>
+        /// <param name="buttonId">The unique ID for the copy button.</param>
+        public static void CopyButton(string clipboardText, string buttonId)
+        {
+            if (ImGui.IsKeyDown(ImGuiKey.LeftCtrl))
+            {
+                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Copy, $"##{buttonId}", new System.Numerics.Vector2(23, 22)))
+                {
+                    ImGui.SetClipboardText(clipboardText);
+                }
+                SetHoverTooltip(Loc.UtilsCopyText);
+                ImGui.SameLine();
+            }
+        }
+
+        public static void WarningIconWithTooltip(string tooltipText)
+        {
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudWhite))
+            {
+                ImGui.TextUnformatted($"{FontAwesomeIcon.Exclamation.ToIconString()}");
+                using (ImRaii.PushFont(UiBuilder.DefaultFont))
+                {
+                    SetHoverTooltip(tooltipText);
+                }
+            }
+            ImGui.SameLine();
+        }
+
+        public static long[] ExternalDbTimestamps = new long[]
+            {
+                0,
+                1716465600,
+                1716465601,
+                1716465602,
+                1716465603,
+                1716465604,
+                1716465605,
+                1716465606,
+                1723032000,
+                1723982400,
+                1724068800,
+                1724068810,
+                1724328000,
+                1724414400,
+                1725451200,
+                1725624000,
+                1725710400,
+                1726228800,
+                1726488000,
+                1726920000,
+                1727006400,
+                1727179215,
+                1727265600,
+                1727265602, // -
+                1727265603,
+                1727265604,
+                1727265605,
+                1727265606,
+                1727265607,
+                1727265608,
+                1727265609,
+                1727265610,
+                1727265611,
+                1727265612,
+                1727265613,
+            };
     }
 }

@@ -13,6 +13,7 @@ using FFXIVClientStructs.FFXIV.Common.Math;
 using PlayerScope.Handlers;
 using FFXIVClientStructs.FFXIV.Common.Lua;
 using PlayerScope.Properties;
+using Lumina.Excel.Sheets;
 
 namespace PlayerScope
 {
@@ -80,13 +81,11 @@ namespace PlayerScope
         {
             return DateTimeOffset.FromUnixTimeSeconds((int)unixTime).ToLocalTime().DateTime.ToString();
         }
-        public static string GetTerritoryName(ushort territoryId)
-        {
-            var territory = PersistenceContext.Instance.Territories.First(row => row.RowId == territoryId);
-            var territoryName = territory.PlaceName.Value.Name;
-            var territoryRegion = territory.PlaceNameRegion.Value.Name;
-            return $"{territoryName}, {territoryRegion}";
-        }
 
+        public static TerritoryType? GetTerritory(ushort territoryId) => new ExcelResolver<TerritoryType>(territoryId).GameData;
+
+        public static string GetTerritoryName(ushort territoryId) =>
+            new ExcelResolver<TerritoryType>(territoryId).GameData is { PlaceName.Value.Name: var name, PlaceNameRegion.Value.Name: var region }
+            ? $"{name}, {region}" : "[Unknown]";
     }
 }

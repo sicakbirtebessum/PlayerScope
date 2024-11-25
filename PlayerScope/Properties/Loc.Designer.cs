@@ -323,6 +323,16 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   This record was retrieved from a different database,
+        ///and the exact addition date is not clearly determined. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtDatabaseRecordAddedTimeUnavailable {
+            get {
+                return ResourceManager.GetString("DtDatabaseRecordAddedTimeUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Duration benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtDuration {
@@ -539,6 +549,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Show Alt Characters benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtShowAltCharacters {
+            get {
+                return ResourceManager.GetString("DtShowAltCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Showing results for: benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtShowingResultsFor {
@@ -747,6 +766,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Database Stats benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnDatabaseStats {
+            get {
+                return ResourceManager.GetString("MnDatabaseStats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   All data have been successfully deleted. benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnDatabaseSuccessfullyDeletedNotification {
@@ -765,6 +793,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Error: At least 2 letters! benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnErrorBadSearchQueryAtLeastLetters {
+            get {
+                return ResourceManager.GetString("MnErrorBadSearchQueryAtLeastLetters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Error: You are not connected to server. benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnErrorYouAreNotConnected {
@@ -779,6 +816,15 @@ namespace PlayerScope.Properties {
         internal static string MnFilterMatchAnyPartOfName {
             get {
                 return ResourceManager.GetString("MnFilterMatchAnyPartOfName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Filters benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnFilters {
+            get {
+                return ResourceManager.GetString("MnFilters", resourceCulture);
             }
         }
         
@@ -936,11 +982,29 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Search by World benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnSearchByWorld {
+            get {
+                return ResourceManager.GetString("MnSearchByWorld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Searching... benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnSearching {
             get {
                 return ResourceManager.GetString("MnSearching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Selected Worlds:  benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnSelectedWorlds {
+            get {
+                return ResourceManager.GetString("MnSelectedWorlds", resourceCulture);
             }
         }
         
@@ -986,6 +1050,15 @@ namespace PlayerScope.Properties {
         internal static string MnTabSearchCharacterAndRetainer {
             get {
                 return ResourceManager.GetString("MnTabSearchCharacterAndRetainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Server Stats benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnTabServerStats {
+            get {
+                return ResourceManager.GetString("MnTabServerStats", resourceCulture);
             }
         }
         
@@ -1157,6 +1230,15 @@ namespace PlayerScope.Properties {
         internal static string StClickToCopyContentId {
             get {
                 return ResourceManager.GetString("StClickToCopyContentId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Config saved benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StConfigSaved {
+            get {
+                return ResourceManager.GetString("StConfigSaved", resourceCulture);
             }
         }
         
@@ -1342,7 +1424,7 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   Load Details benzeri yerelleştirilmiş bir dize arar.
+        ///   Show Details benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StLoadDetails {
             get {
@@ -1519,6 +1601,24 @@ namespace PlayerScope.Properties {
         internal static string StPrivacyHideRetainersTooltip {
             get {
                 return ResourceManager.GetString("StPrivacyHideRetainersTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Set all my characters to private benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StPrivacySetAllPrivate {
+            get {
+                return ResourceManager.GetString("StPrivacySetAllPrivate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Set all my characters to public benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StPrivacySetAllPublic {
+            get {
+                return ResourceManager.GetString("StPrivacySetAllPublic", resourceCulture);
             }
         }
         
@@ -2005,6 +2105,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   World Selector benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TitleWorldSelectorWindow {
+            get {
+                return ResourceManager.GetString("TitleWorldSelectorWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   about {0} {1} from now benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string ToolsAboutFromNow {
@@ -2167,6 +2276,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Copy text benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilsCopyText {
+            get {
+                return ResourceManager.GetString("UtilsCopyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Europe benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string UtilsEU {
@@ -2199,6 +2317,42 @@ namespace PlayerScope.Properties {
         internal static string UtilsOCE {
             get {
                 return ResourceManager.GetString("UtilsOCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Clear All benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string WsClearAll {
+            get {
+                return ResourceManager.GetString("WsClearAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Close Window benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string WsCloseWindow {
+            get {
+                return ResourceManager.GetString("WsCloseWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Select benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string WsSelect {
+            get {
+                return ResourceManager.GetString("WsSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   World Name benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string WsWorldName {
+            get {
+                return ResourceManager.GetString("WsWorldName", resourceCulture);
             }
         }
     }

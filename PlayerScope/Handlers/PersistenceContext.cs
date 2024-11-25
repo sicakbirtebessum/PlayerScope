@@ -60,8 +60,6 @@ internal sealed class PersistenceContext
         }
     }
 
-    public List<TerritoryType> Territories;
-
     public PersistenceContext(ILogger<PersistenceContext> logger, IClientState clientState,
         IServiceProvider serviceProvider, IDataManager data)
     {
@@ -75,8 +73,6 @@ internal sealed class PersistenceContext
         _serviceProvider = serviceProvider;
 
         ReloadCache();
-
-        Territories = Plugin.DataManager.GetExcelSheet<TerritoryType>().ToList();
 
         _cancellationTokenSource = new CancellationTokenSource();
         _ = PostPlayerAndRetainerData(_cancellationTokenSource.Token);

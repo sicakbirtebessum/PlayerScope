@@ -379,6 +379,9 @@ Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni b
   <data name="StSaveConfig" xml:space="preserve">
     <value>Ayarlari Kaydet</value>
   </data>
+  <data name="StConfigSaved" xml:space="preserve">
+    <value>Ayarlar kaydedildi</value>
+  </data>
   <data name="StSaveConfigTooltip" xml:space="preserve">
     <value>Ayarlari sunucuya kaydet.</value>
   </data>
@@ -521,6 +524,9 @@ Tiklayabilmek için CTRL+Shift tuslarina basili tut.</value>
   <data name="MnTabLocalStats" xml:space="preserve">
     <value>Yerel Istatistikler</value>
   </data>
+  <data name="MnTabServerStats" xml:space="preserve">
+    <value>Sunucu Istatistikleri</value>
+  </data>
   <data name="MnTabSearchCharacterAndRetainer" xml:space="preserve">
     <value>Karakter veya Retainer Ara</value>
   </data>
@@ -559,6 +565,9 @@ Tiklayabilmek için CTRL+Shift tuslarina basili tut.</value>
   </data>
   <data name="MnErrorBadSearchQuery" xml:space="preserve">
     <value>Hata: Geçersiz arama sorgusu</value>
+  </data>
+  <data name="MnErrorBadSearchQueryAtLeastLetters" xml:space="preserve">
+    <value>Hata: En az 2 harf!</value>
   </data>
   <data name="MnErrorYouAreNotConnected" xml:space="preserve">
     <value>Hata: Sunucuya bagli degilsin.</value>
@@ -738,6 +747,9 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="DtShowRetainers" xml:space="preserve">
     <value>Retainerlari Göster</value>
   </data>
+  <data name="DtShowAltCharacters" xml:space="preserve">
+    <value>Alt Hesaplari Göster</value>
+  </data>
   <data name="DtRetainerInfo" xml:space="preserve">
     <value>Bilgi-&gt;</value>
   </data>
@@ -767,6 +779,9 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   </data>
   <data name="StCopyTheLink" xml:space="preserve">
     <value>Linki kopyala</value>
+  </data>
+  <data name="UtilsCopyText" xml:space="preserve">
+    <value>Metni kopyala</value>
   </data>
   <data name="StPasteItInBrowser" xml:space="preserve">
     <value>ve tarayici adres çubuguna yapistir.</value>
@@ -804,6 +819,12 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="StHomeWorldName" xml:space="preserve">
     <value>Anadünya Ismi</value>
   </data>
+  <data name="WsWorldName" xml:space="preserve">
+    <value>Dünya Ismi</value>
+  </data>
+  <data name="WsSelect" xml:space="preserve">
+    <value>Seç</value>
+  </data>
   <data name="StCharacterCountColumn" xml:space="preserve">
     <value>Karakter Sayisi</value>
   </data>
@@ -836,5 +857,36 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   </data>
   <data name="StTotalCount" xml:space="preserve">
     <value>Toplam Sayi</value>
+  </data>
+  <data name="StPrivacySetAllPrivate" xml:space="preserve">
+    <value>Tüm karakterlerimi gizle hale getir</value>
+  </data>
+  <data name="StPrivacySetAllPublic" xml:space="preserve">
+    <value>Tüm karakterlerimi herkese açik yap</value>
+  </data>
+  <data name="DtDatabaseRecordAddedTimeUnavailable" xml:space="preserve">
+    <value>Bu kayit, farkli bir veritabanindan alindi
+ve asil eklenme tarihi tam olarak belirli degil.</value>
+  </data>
+  <data name="TitleWorldSelectorWindow" xml:space="preserve">
+    <value>Dünya Seçici</value>
+  </data>
+  <data name="MnSearchByWorld" xml:space="preserve">
+    <value>Dünyaya Göre Ara</value>
+  </data>
+  <data name="MnSelectedWorlds" xml:space="preserve">
+    <value>Seçilen Dünyalar:</value>
+  </data>
+  <data name="WsClearAll" xml:space="preserve">
+    <value>Hepsini Temizle</value>
+  </data>
+  <data name="MnDatabaseStats" xml:space="preserve">
+    <value>Veritabani Istatistigi</value>
+  </data>
+  <data name="WsCloseWindow" xml:space="preserve">
+    <value>Pencereyi Kapat</value>
+  </data>
+  <data name="MnFilters" xml:space="preserve">
+    <value>Filtreler</value>
   </data>
 </root>

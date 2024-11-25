@@ -316,7 +316,7 @@ If you're doing this for the first time, it may take approximately one minute.</
     <value>Stop Fetching</value>
   </data>
   <data name="StLoadDetails" xml:space="preserve">
-    <value>Load Details</value>
+    <value>Show Details</value>
   </data>
   <data name="StConfigurePrivacyOfChars" xml:space="preserve">
     <value>You can configure the privacy settings of your characters in this tab.</value>
@@ -378,6 +378,9 @@ However, if they have seen you before, they can find you by searching in the Loc
   </data>
   <data name="StSaveConfig" xml:space="preserve">
     <value>Save Config</value>
+  </data>
+  <data name="StConfigSaved" xml:space="preserve">
+    <value>Config saved</value>
   </data>
   <data name="StSaveConfigTooltip" xml:space="preserve">
     <value>Save your configuration to server.</value>
@@ -521,6 +524,9 @@ Hold down the CTRL+Shift keys to enable clicking.</value>
   <data name="MnTabLocalStats" xml:space="preserve">
     <value>Local Stats</value>
   </data>
+  <data name="MnTabServerStats" xml:space="preserve">
+    <value>Server Stats</value>
+  </data>
   <data name="MnTabSearchCharacterAndRetainer" xml:space="preserve">
     <value>Search Characters &amp; Retainers</value>
   </data>
@@ -559,6 +565,9 @@ Hold down the CTRL+Shift keys to enable clicking.</value>
   </data>
   <data name="MnErrorBadSearchQuery" xml:space="preserve">
     <value>Error: Bad search query</value>
+  </data>
+  <data name="MnErrorBadSearchQueryAtLeastLetters" xml:space="preserve">
+    <value>Error: At least 2 letters!</value>
   </data>
   <data name="MnErrorYouAreNotConnected" xml:space="preserve">
     <value>Error: You are not connected to server.</value>
@@ -738,6 +747,9 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   <data name="DtShowRetainers" xml:space="preserve">
     <value>Show Retainers</value>
   </data>
+  <data name="DtShowAltCharacters" xml:space="preserve">
+    <value>Show Alt Characters</value>
+  </data>
   <data name="DtRetainerInfo" xml:space="preserve">
     <value>Info-&gt;</value>
   </data>
@@ -767,6 +779,9 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   </data>
   <data name="StCopyTheLink" xml:space="preserve">
     <value>Copy the link</value>
+  </data>
+  <data name="UtilsCopyText" xml:space="preserve">
+    <value>Copy text</value>
   </data>
   <data name="StPasteItInBrowser" xml:space="preserve">
     <value>and paste it into your browser.</value>
@@ -804,6 +819,12 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   <data name="StHomeWorldName" xml:space="preserve">
     <value>Home World Name</value>
   </data>
+  <data name="WsWorldName" xml:space="preserve">
+    <value>World Name</value>
+  </data>
+  <data name="WsSelect" xml:space="preserve">
+    <value>Select</value>
+  </data>
   <data name="StCharacterCountColumn" xml:space="preserve">
     <value>Character Count</value>
   </data>
@@ -836,5 +857,36 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   </data>
   <data name="StTotalCount" xml:space="preserve">
     <value>Total Count</value>
+  </data>
+  <data name="StPrivacySetAllPrivate" xml:space="preserve">
+    <value>Set all my characters to private</value>
+  </data>
+  <data name="StPrivacySetAllPublic" xml:space="preserve">
+    <value>Set all my characters to public</value>
+  </data>
+  <data name="DtDatabaseRecordAddedTimeUnavailable" xml:space="preserve">
+    <value>This record was retrieved from a different database,
+and the exact addition date is not clearly determined.</value>
+  </data>
+  <data name="TitleWorldSelectorWindow" xml:space="preserve">
+    <value>World Selector</value>
+  </data>
+  <data name="MnSearchByWorld" xml:space="preserve">
+    <value>Search by World</value>
+  </data>
+  <data name="MnSelectedWorlds" xml:space="preserve">
+    <value>Selected Worlds: </value>
+  </data>
+  <data name="WsClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="MnDatabaseStats" xml:space="preserve">
+    <value>Database Stats</value>
+  </data>
+  <data name="WsCloseWindow" xml:space="preserve">
+    <value>Close Window</value>
+  </data>
+  <data name="MnFilters" xml:space="preserve">
+    <value>Filters</value>
   </data>
 </root>

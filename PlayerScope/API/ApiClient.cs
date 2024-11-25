@@ -171,8 +171,13 @@ namespace PlayerScope.API
                     request.AddQueryParameter("Cursor", query.Cursor.ToString(), true);
                 if (!string.IsNullOrWhiteSpace(query.IsFetching.ToString()))
                     request.AddQueryParameter("IsFetching", query.IsFetching.ToString(), true);
-                if (!string.IsNullOrWhiteSpace(query.F_WorldId.ToString()))
-                    request.AddQueryParameter("F_WorldId", query.F_WorldId.ToString(), true);
+
+                if (query.F_WorldIds != null && query.F_WorldIds.Any())
+                {
+                    var worldIds = string.Join(",", query.F_WorldIds);
+                    request.AddQueryParameter("F_WorldIds", worldIds);
+                }
+
                 if (!string.IsNullOrWhiteSpace(query.F_MatchAnyPartOfName.ToString()))
                     request.AddQueryParameter("F_MatchAnyPartOfName", query.F_MatchAnyPartOfName.ToString(), true);
 
@@ -264,8 +269,13 @@ namespace PlayerScope.API
                     request.AddQueryParameter("Cursor", query.Cursor.ToString(), true);
                 if (!string.IsNullOrWhiteSpace(query.IsFetching.ToString()))
                     request.AddQueryParameter("IsFetching", query.IsFetching.ToString(), true);
-                if (!string.IsNullOrWhiteSpace(query.F_WorldId.ToString()))
-                    request.AddQueryParameter("F_WorldId", query.F_WorldId.ToString(), true);
+
+                if (query.F_WorldIds != null && query.F_WorldIds.Any())
+                {
+                    var worldIds = string.Join(",", query.F_WorldIds);
+                    request.AddQueryParameter("F_WorldIds", worldIds);
+                }
+
                 if (!string.IsNullOrWhiteSpace(query.F_MatchAnyPartOfName.ToString()))
                     request.AddQueryParameter("F_MatchAnyPartOfName", query.F_MatchAnyPartOfName.ToString(), true);
 
@@ -393,7 +403,7 @@ namespace PlayerScope.API
                 return (null, Message);
             }
         }
-        public async Task<string> UserUpdate(UserUpdateDto config)
+        public async Task<(User? User, string Message)> UserUpdate(UserUpdateDto config)
         {
             string Message = string.Empty;
             try
@@ -404,7 +414,12 @@ namespace PlayerScope.API
 
                 if (response.IsSuccessful && !string.IsNullOrWhiteSpace(response.Content))
                 {
-                    return response.Content;
+                    var _JsonResponse = JsonConvert.DeserializeObject<User>(response.Content!);
+                    if (_JsonResponse != null)
+                    {
+                        Message = Loc.StConfigSaved;
+                        return (_JsonResponse, Message);
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(response.Content))
                     Message = $"{Loc.ApiError} {response.Content}";
@@ -413,12 +428,12 @@ namespace PlayerScope.API
                 else
                     Message = $"{Loc.ApiError} {response.StatusCode.ToString()}";
 
-                return Message;
+                return (null, Message);
             }
             catch (Exception ex)
             {
                 Message = $"{Loc.ApiError} {ex.Message}";
-                return Message;
+                return (null, Message);
             }
         }
         public async Task<(User? User, string Message)> UserRefreshMyInfo()

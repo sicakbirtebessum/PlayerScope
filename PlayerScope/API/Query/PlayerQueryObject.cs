@@ -13,7 +13,7 @@ namespace PlayerScope.API.Query
         public string? Name { get; set; } = null;
         public int Cursor { get; set; } = 0;
         public bool IsFetching { get; set; }
-        public short? F_WorldId { get; set; } = null;
+        public List<short> F_WorldIds { get; set; } = new List<short>();
         public bool? F_MatchAnyPartOfName { get; set; } = false;
     }
 }

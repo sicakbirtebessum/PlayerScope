@@ -52,6 +52,7 @@ using static PlayerScope.GUI.MainWindow;
 using static System.Net.Mime.MediaTypeNames;
 using Lumina.Excel.Sheets;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using PlayerScope.GUI.MainWindowTab;
 
 namespace PlayerScope.GUI
 {
@@ -78,13 +79,7 @@ namespace PlayerScope.GUI
                 ShowTooltip = () => ImGui.SetTooltip(Loc.MnOpenMainMenu),
             });
         }
-        public void LanguageChanged()
-        {
-            PlayerAndRetainersWorldStatsColumn = new string[]
-            {
-            Loc.StHomeWorldName, Loc.StCharacterCountColumn, Loc.StRetainerCountColumn
-            };
-        }
+
         private static SettingsWindow _instance = null;
         public static SettingsWindow Instance
         {
@@ -132,21 +127,18 @@ namespace PlayerScope.GUI
                 {
                     var bChar = (BattleChara*)localCharacter.Address;
 
-                    if (_playerName != $"{bChar->NameString}")
+                    if (_contentId != (long)bChar->ContentId)
                     {
-                        if (string.IsNullOrWhiteSpace(_playerName) || string.IsNullOrWhiteSpace(_worldName))
-                        {
-                            var homeWorld = PersistenceContext._clientState.LocalPlayer?.HomeWorld;
-                            _playerName = $"{bChar->NameString}";
-                            _worldName = homeWorld.Value.Value.Name.ExtractText();
-                            _worldId = homeWorld.Value.RowId;
-                            _accountId = (int)bChar->AccountId;
-                            _contentId = (long)bChar->ContentId;
+                        var homeWorld = PersistenceContext._clientState.LocalPlayer?.HomeWorld;
+                        _playerName = $"{bChar->NameString}";
+                        _worldName = homeWorld.Value.Value.Name.ExtractText();
+                        _worldId = homeWorld.Value.RowId;
+                        _accountId = (int)bChar->AccountId;
+                        _contentId = (long)bChar->ContentId;
 
-                            Config.ContentId = _contentId;
-                            Config.AccountId = _accountId;
-                            Config.Username = _playerName;
-                        }
+                        Config.ContentId = _contentId;
+                        Config.AccountId = _accountId;
+                        Config.Username = _playerName;
                     }
                 }
             }
@@ -249,28 +241,23 @@ namespace PlayerScope.GUI
                     }
                     using (ImRaii.Disabled(!Config.LoggedIn))
                     {
-                        using (var tabItem = ImRaii.TabItem(Loc.StTabServerStatsAndSync))
-                        {
-                            if (tabItem)
-                            {
-                                DrawServerStatsTab();
-                            }
-                        }
-
-                        using (var tabItem = ImRaii.TabItem(Loc.StTabMyCharactersAndPrivacy))
+                        string tabTitle = _localUserCharacters.Count > 0
+                        ? $"{Loc.StTabMyCharactersAndPrivacy} ({_localUserCharacters.Count})"
+                        : Loc.StTabMyCharactersAndPrivacy;
+                        using (var tabItem = ImRaii.TabItem(tabTitle))
                         {
                             if (tabItem)
                             {
                                 DrawMyCharactersTab();
                             }
                         }
+                    }
 
-                        using (var tabItem = ImRaii.TabItem(Loc.StOptions))
+                    using (var tabItem = ImRaii.TabItem(Loc.StOptions))
+                    {
+                        if (tabItem)
                         {
-                            if (tabItem)
-                            {
-                                DrawOptionsTab();
-                            }
+                            DrawOptionsTab();
                         }
                     }
                 }
@@ -431,10 +418,12 @@ namespace PlayerScope.GUI
             {
                 if (PersistenceContext._clientState is { IsLoggedIn: true, LocalContentId: > 0 })
                 {
-                    if (string.IsNullOrWhiteSpace(_playerName) || string.IsNullOrWhiteSpace(_contentId.ToString()) || string.IsNullOrWhiteSpace(_accountId.ToString()))
+                    if (_contentId == 0 || _accountId == 0 || string.IsNullOrWhiteSpace(_playerName) ||
+                        _contentId != (long)PersistenceContext._clientState.LocalContentId)
                     {
                         CheckLocalPlayer();
                     }
+
                     ImGui.Text(Loc.StCharacterName);
                     ImGui.SameLine();
                     ImGui.TextColored(ImGuiColors.TankBlue, _playerName);
@@ -514,277 +503,9 @@ namespace PlayerScope.GUI
             }
         }
         bool isAuthLinkCopied;
-        bool IsRefreshStatsRequestSent = false;
-        bool IsRefreshStatsRequestSentForPlayerAndRetainer;
-        public string _LastServerStatsMessage = string.Empty;
-        private int _LastServerStatsRefreshTime = 0;
-        public string LastPlayerAndRetainerWorldStatsMessage = string.Empty;
-        private int _lastPlayerAndRetainerWorldRefreshTime = 0;
 
-        private async void DrawServerStatsTab()
-        {
-            using (var tabBar = ImRaii.TabBar("ServerDbTabs"))
-            {
-                if (tabBar)
-                {
-                    using (var tabItem = ImRaii.TabItem(Loc.StGeneralStats))
-                    {
-                        if (tabItem)
-                        {
-                            DrawGeneralStats();
-                        }
-                    }
-                    using (var tabItem = ImRaii.TabItem(Loc.StCharacterAndRetainerSummary))
-                    {
-                        if (tabItem)
-                        {
-                            DrawCharacterAndRetainerStats();
-                        }
-                    }
-                }
-            }
-        }
-        private string[] PlayerAndRetainersWorldStatsColumn = new string[]
-        {
-            Loc.StHomeWorldName, Loc.StCharacterCountColumn, Loc.StRetainerCountColumn
-        };
-        private void DrawGeneralStats()
-        {
-            if (_client._LastServerStats.ServerStats == null)
-            {
-                IsRefreshStatsRequestSent = true;
-                CheckServerStats();
-            }
+        
 
-            ImGuiHelpers.ScaledDummy(5.0f);
-            ImGui.Separator();
-            ImGuiHelpers.ScaledDummy(5.0f);
-
-            //ImGui.TextColored(ImGuiColors.ParsedGold, Loc.StServerDatabaseStats);
-
-            long _refreshButtonCondition = _client._LastServerStats.ServerStats != null ? _client._LastServerStats.ServerStats.LastUpdate : 0;
-            using (ImRaii.Disabled(bIsNetworkProcessing || Tools.UnixTime - _refreshButtonCondition < 20))
-            {
-                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.SyncAlt, Loc.StRefreshServerStats))
-                {
-                    CheckServerStats();
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(_LastServerStatsMessage))
-            {
-                ImGui.SameLine();
-                Utils.ColoredErrorTextWrapped($"{_LastServerStatsMessage} ({DateTimeOffset.FromUnixTimeSeconds(_LastServerStatsRefreshTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)_LastServerStatsRefreshTime)})");
-            }
-
-            ImGui.NewLine();
-
-            ImGui.Text(Loc.StCharacterCount);
-            ImGui.SameLine();
-
-            if (_client._LastServerStats.ServerStats != null)
-            {
-                ImGui.TextColored(ImGuiColors.HealerGreen, $"{_client._LastServerStats.ServerStats.TotalPlayerCount.ToString()}");
-
-                if (_client._LastServerStats.ServerStats.TotalPrivatePlayerCount > 0)
-                {
-                    ImGui.SameLine();
-                    ImGui.TextColored(ImGuiColors.DalamudGrey, $" (+{_client._LastServerStats.ServerStats.TotalPrivatePlayerCount} {Loc.StPrivateCharacters})");
-                }
-            }
-            else
-                ImGui.TextColored(ImGuiColors.DalamudRed, "...");
-
-            ImGui.Text(Loc.StRetainerCount);
-            ImGui.SameLine();
-
-            if (_client._LastServerStats.ServerStats != null)
-            {
-                ImGui.TextColored(ImGuiColors.HealerGreen, $"{_client._LastServerStats.ServerStats.TotalRetainerCount.ToString()}");
-
-                if (_client._LastServerStats.ServerStats.TotalPrivateRetainerCount > 0)
-                {
-                    ImGui.SameLine();
-                    ImGui.TextColored(ImGuiColors.DalamudGrey, $" (+{_client._LastServerStats.ServerStats.TotalPrivateRetainerCount} {Loc.StPrivateRetainers})");
-                }
-            }
-            else
-                ImGui.TextColored(ImGuiColors.DalamudRed, "...");
-
-            ImGui.Text(Loc.StUserCount); ImGui.SameLine();
-            if (_client._LastServerStats.ServerStats != null)
-                ImGui.TextColored(ImGuiColors.HealerGreen, $"{_client._LastServerStats.ServerStats.TotalUserCount.ToString()}");
-            else
-                ImGui.TextColored(ImGuiColors.DalamudRed, "...");
-
-            ImGui.Text(Loc.StLastUpdatedOn);
-            ImGui.SameLine();
-
-            if (_client._LastServerStats.ServerStats != null)
-                ImGui.TextColored(ImGuiColors.HealerGreen, $"{Tools.UnixTimeConverter((int)_client._LastServerStats.ServerStats.LastUpdate)}");
-            else
-                ImGui.TextColored(ImGuiColors.DalamudRed, "...");
-
-            ImGui.NewLine();
-
-            bool _syncDatabaseButtonCondition = Config.LastSyncedTime != null ? Tools.UnixTime - Config.LastSyncedTime < 300 : true;
-            using (ImRaii.Disabled(bIsNetworkProcessing || IsSyncingPlayers || IsSyncingRetainers || IsDbRefreshing || _client._LastServerStats.ServerStats == null || _syncDatabaseButtonCondition)) // 5 minutes
-            {
-                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.UserFriends, Loc.StSyncCharacterAndRetainerFromServer))
-                {
-                    IsSyncingPlayers = true;
-                    _cancellationToken = new CancellationTokenSource();
-                    var syncPlayers = SyncPlayersWithLocalDb(_cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
-                }
-            }
-
-            Utils.SetHoverTooltip(Loc.StSyncCharacterAndRetainerFromServerTooltip);
-
-            if (_syncDatabaseButtonCondition)
-            {
-                var syncAgainTime = Config.LastSyncedTime + 300;
-                using (ImRaii.Disabled()) { Utils.TextWrapped($"{Loc.StCanSyncAgainTime} {Tools.TimeFromNow((int)syncAgainTime)}"); }
-            }
-
-            if (IsSyncingPlayers || IsSyncingRetainers)
-            {
-                ImGui.SameLine();
-                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Stop, Loc.StStopFetching))
-                {
-                    _SyncMessage = string.Empty;
-                    _cancellationToken.Cancel();
-                    _playersFetchedFromServer.Clear();
-                    _retainersFetchedFromServer.Clear();
-                    _LastCursor = 0;
-                }
-
-                Utils.CompletionProgressBar(_playersFetchedFromServer.Count + _retainersFetchedFromServer.Count,
-                    (_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount)
-                    + (_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount));
-            }
-
-            Utils.ShowColoredMessage(_SyncMessage);
-        }
-        private bool bPlayerAndRetainerWorldsConverted;
-        private void DrawCharacterAndRetainerStats()
-        {
-            if (_client.LastPlayerAndRetainerCountStats.Stats == null) //!IsRefreshStatsRequestSentForPlayerAndRetainer && 
-            {
-                IsRefreshStatsRequestSentForPlayerAndRetainer = true;
-                CheckPlayerAndRetainerStats();
-            }
-
-            ImGuiHelpers.ScaledDummy(5.0f);
-            ImGui.Separator();
-            ImGuiHelpers.ScaledDummy(5.0f);
-
-            using (ImRaii.Disabled(bIsNetworkProcessing))
-            {
-                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Sync, Loc.StRefreshDatabaseWorldCount))
-                {
-                    bPlayerAndRetainerWorldsConverted = false;
-                    CheckPlayerAndRetainerStats();
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(LastPlayerAndRetainerWorldStatsMessage))
-            {
-                ImGui.SameLine();
-                Utils.ColoredErrorTextWrapped($"{LastPlayerAndRetainerWorldStatsMessage} ({DateTimeOffset.FromUnixTimeSeconds(_lastPlayerAndRetainerWorldRefreshTime).LocalDateTime.ToLocalTime().ToLongTimeString()} - {Tools.ToTimeSinceString((int)_lastPlayerAndRetainerWorldRefreshTime)})");
-            }
-
-            ImGui.NewLine();
-
-            Utils.TextWrapped(Loc.StCharacterAndRetainerWorldCountMsg);
-
-            ImGui.NewLine();
-
-            if (_client.LastPlayerAndRetainerCountStats.Stats == null) 
-                return;
-
-            if (!bPlayerAndRetainerWorldsConverted)
-                ConvertLastPlayerAndRetainerWorlds();
-
-            if (ConvertedPlayerAndRetainerWorldCounts.IsEmpty) 
-                return;
-
-            foreach (var playerRegionGroup in ConvertedPlayerAndRetainerWorldCounts
-                .GroupBy(WorldCount => Utils.GetRegionLongName(WorldCount.Key))
-                .OrderByDescending(group => group.Sum(playerWorld => playerWorld.Value.PlayerCount))) // Region
-            {
-                int regionPlayerCount = playerRegionGroup.Sum(playerWorld => playerWorld.Value.PlayerCount);
-                string regionHeaderString = $"{playerRegionGroup.Key} ({regionPlayerCount.ToString("N0")})";
-
-                using (var tabBar = ImRaii.TabBar("ServerDbTabs"))
-                {
-                    if (tabBar)
-                    {
-                        using (var regionTabItem = ImRaii.TabItem(regionHeaderString))
-                        {
-                            if (regionTabItem)
-                            {
-                                foreach (var dataCenter in playerRegionGroup
-                                .GroupBy(r => r.Key.DataCenter.Value.Name)
-                                .OrderBy(group => group.Key.ExtractText())) // DataCenter
-                                {
-                                    string dataCenterHeaderString = $"{dataCenter.Key} ({dataCenter.Sum(r => r.Value.PlayerCount).ToString("N0")} | {dataCenter.Sum(r => r.Value.RetainerCount).ToString("N0")})";
-                                    if (ImGui.CollapsingHeader(dataCenterHeaderString))
-                                    {
-                                        using (var displaytable = ImRaii.Table("displaytable", PlayerAndRetainersWorldStatsColumn.Length, ImGuiTableFlags.BordersInner))
-                                        {
-                                            if (displaytable)
-                                            {
-                                                foreach (var t in PlayerAndRetainersWorldStatsColumn)
-                                                {
-                                                    ImGui.TableSetupColumn(t, ImGuiTableColumnFlags.WidthFixed);
-                                                }
-
-                                                ImGui.TableHeadersRow();
-                                                var index = 0;
-
-                                                foreach (var world in dataCenter
-                                               .GroupBy(r => r.Key.Name)
-                                               .OrderBy(group => group.Key.ExtractText())) // World
-                                                {
-                                                    ImGui.TableNextRow();
-                                                    ImGui.TableNextColumn(); // World column
-
-                                                    ImGui.Text(world.Key.ExtractText());
-
-                                                    ImGui.TableNextColumn(); // PlayerCount column
-
-                                                    ImGui.Text(world.Sum(r => r.Value.PlayerCount).ToString("N0"));
-
-                                                    ImGui.TableNextColumn(); // RetainerCount column
-
-                                                    ImGui.Text(world.Sum(r => r.Value.RetainerCount).ToString("N0"));
-
-                                                    index++;
-                                                }
-
-                                                ImGui.TableNextRow();
-                                                ImGui.TableNextColumn(); // World column
-
-                                                ImGui.Text(Loc.StTotalCount);
-
-                                                ImGui.TableNextColumn(); // PlayerCount column
-
-                                                ImGui.Text(dataCenter.Sum(r => r.Value.PlayerCount).ToString("N0"));
-
-                                                ImGui.TableNextColumn(); // RetainerCount column
-
-                                                ImGui.Text(dataCenter.Sum(r => r.Value.RetainerCount).ToString("N0"));
-                                            }
-                                        }
-                                    }
-                                    ImGuiHelpers.ScaledDummy(10.0f);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
         int Option_ObjRefreshInterval;
         private void DrawOptionsTab()
         {
@@ -795,40 +516,7 @@ namespace PlayerScope.GUI
                 Config.Save();
             }
         }
-        private ConcurrentDictionary<World, (int PlayerCount, int RetainerCount, long LastUpdated)> ConvertedPlayerAndRetainerWorldCounts = new();
-
-        private void ConvertLastPlayerAndRetainerWorlds()
-        {
-            if (_client.LastPlayerAndRetainerCountStats.Stats == null)
-                return;
-
-            var stats = _client.LastPlayerAndRetainerCountStats.Stats;
-            foreach (var playerWorldStat in stats.PlayerWorldStats)
-            {
-                var world = Utils.GetWorld((uint)playerWorldStat.WorldId);
-                if (world == null)
-                    continue;
-
-                ConvertedPlayerAndRetainerWorldCounts.AddOrUpdate((World)world,
-                    _ => (playerWorldStat.Count, 0, stats.LastUpdate),
-                    // If exists
-                    (_, existing) => (playerWorldStat.Count, existing.RetainerCount, stats.LastUpdate));
-            }
-
-            foreach (var retainerWorldStat in stats.RetainerWorldStats)
-            {
-                var world = Utils.GetWorld((uint)retainerWorldStat.WorldId);
-                if (world == null)
-                    continue;
-
-                ConvertedPlayerAndRetainerWorldCounts.AddOrUpdate((World)world,
-                    _ => (0, retainerWorldStat.Count, stats.LastUpdate),
-                    // If exists
-                    (_, existing) => (existing.PlayerCount, retainerWorldStat.Count, stats.LastUpdate));
-            }
-
-            bPlayerAndRetainerWorldsConverted = true;
-        }
+        
         
         private ConcurrentDictionary<long, UserCharacters> _localUserCharacters = new();
         public class UserCharacters
@@ -838,7 +526,6 @@ namespace PlayerScope.GUI
         }
 
         private HashSet<long?> editedCharactersPrivacy = new();
-        private bool isPrivacySettingsChanged;
 
         private async void DrawMyCharactersTab()
         {
@@ -856,18 +543,49 @@ namespace PlayerScope.GUI
 
             if (LastUserInfo != null && LastUserInfo.Characters != null && LastUserInfo.Characters.Count > 0 && !_localUserCharacters.IsEmpty)
             {
+                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Lock, Loc.StPrivacySetAllPrivate))
+                {
+                    foreach (var character in LastUserInfo.Characters)
+                    {
+                        if (_localUserCharacters.TryGetValue((long)character.LocalContentId, out var localChara))
+                        {
+                            localChara.Privacy.HideFullProfile = true;
+                            localChara.Privacy.HideTerritoryInfo = true;
+                            localChara.Privacy.HideCustomizations = true;
+                            localChara.Privacy.HideInSearchResults = true;
+                            localChara.Privacy.HideRetainersInfo = true;
+                            localChara.Privacy.HideAltCharacters = true;
+
+                            editedCharactersPrivacy.Add(character.LocalContentId);
+                        }
+                    }
+                }
+
+                ImGui.SameLine();
+
+                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Globe, Loc.StPrivacySetAllPublic))
+                {
+                    foreach (var character in LastUserInfo.Characters)
+                    {
+                        if (_localUserCharacters.TryGetValue((long)character.LocalContentId, out var localChara))
+                        {
+                            localChara.Privacy.HideFullProfile = false;
+                            localChara.Privacy.HideTerritoryInfo = false;
+                            localChara.Privacy.HideCustomizations = false;
+                            localChara.Privacy.HideInSearchResults = false;
+                            localChara.Privacy.HideRetainersInfo = false;
+                            localChara.Privacy.HideAltCharacters = false;
+
+                            editedCharactersPrivacy.Add(character.LocalContentId);
+                        }
+                    }
+                }
+
+                ImGui.Spacing();
+
                 var index = 0;
                 foreach (var character in LastUserInfo.Characters)
                 {
-                    using (ImRaii.Disabled(DetailsWindow.Instance._LastMessage == Loc.DtLoading))
-                        if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
-                        {
-                            DetailsWindow.Instance.IsOpen = true;
-                            DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)character.LocalContentId, true);
-                        }
-
-                    ImGui.SameLine();
-
                     if (!_localUserCharacters.TryGetValue((long)character.LocalContentId, out var _getLocalChara))
                     {
                         continue;
@@ -880,6 +598,15 @@ namespace PlayerScope.GUI
                     bool _bHideInSearchResults = privacy.HideInSearchResults;
                     bool _bHideRetainersInfo = privacy.HideRetainersInfo;
                     bool _bHideAltCharacters = privacy.HideAltCharacters;
+
+                    using (ImRaii.Disabled(DetailsWindow.Instance._LastMessage == Loc.DtLoading))
+                        if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
+                        {
+                            DetailsWindow.Instance.IsOpen = true;
+                            DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)character.LocalContentId, true);
+                        }
+
+                    ImGui.SameLine();
 
                     if (LastUserCharactersPrivacySettings != null
                          && index < LastUserCharactersPrivacySettings.Count
@@ -917,7 +644,6 @@ namespace PlayerScope.GUI
                         }
                     }
 
-
                     var charName = !string.IsNullOrWhiteSpace(character.Name) ? character.Name : Loc.StNameNotFound;
                     var headerText = $"{charName}";
 
@@ -927,7 +653,7 @@ namespace PlayerScope.GUI
                         headerText += $" | {Loc.StTotalVisitCount} {visitCount}";
                     }
 
-                    if (ImGui.CollapsingHeader($"{headerText}"))
+                    if (ImGui.CollapsingHeader($"{headerText}##Character{index}"))
                     {
                         if (visitCount > 0)
                         {
@@ -1007,12 +733,17 @@ namespace PlayerScope.GUI
                             bIsNetworkProcessing = true;
                             
                             var response = _client.UserUpdate(new UserUpdateDto { Characters = updateCharacters }).ConfigureAwait(false).GetAwaiter().GetResult();
-                            LastNetworkMessage = response;
+                            LastNetworkMessage = response.Message;
                             bIsNetworkProcessing = false;
-                            RefreshUserProfileInfo();
+
+                            if (response.User != null)
+                            {
+                                SaveUserResultToConfig(response.User);
+                            }
+
+                            LastNetworkMessageTime = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
                         });
 
-                        isPrivacySettingsChanged = false;
                         editedCharactersPrivacy.Clear();
                     }
                 Utils.SetHoverTooltip(Loc.StSaveConfigTooltip);
@@ -1072,7 +803,6 @@ namespace PlayerScope.GUI
             _ = Task.Run(async () =>
             {
                 bIsNetworkProcessing = true;
-                //var request = _client.UserRefreshMyInfo().ConfigureAwait(false).GetAwaiter().GetResult();
                 var request = await _client.UserRefreshMyInfo();
                 LastNetworkMessage = request.Message;
                 bIsNetworkProcessing = false;
@@ -1083,229 +813,6 @@ namespace PlayerScope.GUI
 
                 LastNetworkMessageTime = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             });
-        }
-
-        private CancellationTokenSource _cancellationToken;
-
-        private (FontAwesomeIcon Icon, string Text) HourGlass()
-        {
-            int i = DateTime.Now.Second;
-            if (i % 2 == 0)
-            {
-                return (FontAwesomeIcon.HourglassStart, "..");
-            }
-            else
-            {
-                return (FontAwesomeIcon.HourglassHalf, "...");
-            }
-        }
-
-        bool IsSyncingPlayers;
-        bool IsSyncingRetainers;
-        string _SyncMessage = string.Empty;
-        public int _LastCursor = 0;
-        public ConcurrentDictionary<long, PlayerDto> _playersFetchedFromServer = new ConcurrentDictionary<long, PlayerDto>();
-        public ConcurrentDictionary<long, RetainerDto> _retainersFetchedFromServer = new ConcurrentDictionary<long, RetainerDto>();
-
-        public async Task<bool> SyncPlayersWithLocalDb(CancellationTokenSource cts)
-        {
-            _ = Task.Run(async () =>
-            {
-                IsSyncingPlayers = true;
-                try
-                {
-                    while (!cts.Token.IsCancellationRequested)
-                    {
-                        var query = new PlayerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-                        var request = await ApiClient.Instance.GetPlayers<PlayerDto>(query);
- 
-                        if (!cts.Token.IsCancellationRequested && request.Page != null && request.Page.Data != null)
-                        {
-
-                            foreach (var _data in request.Page.Data)
-                            {
-                                _playersFetchedFromServer[_data.LocalContentId] = _data;
-                            }
-
-                            _LastCursor = request.Page.LastCursor;
-                            _SyncMessage = $"{Loc.StFetchingCharacters} ({_playersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalPlayerCount - _client._LastServerStats.ServerStats.TotalPrivatePlayerCount})";
-
-                            if (request.Page.NextCount > 0)
-                            {
-                                await Task.Delay(1, cts.Token);
-                            }
-                            else
-                            {
-                                _LastCursor = 0;
-                                IsSyncingPlayers = false;
-                                IsSyncingRetainers = true;
-                                break;
-                            }
-
-                            await Task.Delay(1, cts.Token);
-                        }
-                        else
-                        {
-                            _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchCharacters;
-                            return false;
-                        }
-                    }
-                }
-                finally
-                {
-                    _LastCursor = 0;
-                    IsSyncingPlayers = false;
-                    _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchCharacters;
-                }
-                return await SyncRetainersWithLocalDb(cts);
-            });
-
-            return true;
-        }
-
-        public async Task<bool> SyncRetainersWithLocalDb(CancellationTokenSource cts)
-        {
-            _ = Task.Run(async () =>
-            {
-                IsSyncingRetainers = true;
-                _LastCursor = 0;
-
-                try
-                {
-                    while (!cts.Token.IsCancellationRequested)
-                    {
-                        var query = new RetainerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-                        var request = await ApiClient.Instance.GetRetainers<RetainerDto>(query);
-
-                        if (request.Page != null && request.Page.Data != null)
-                        {
-                            foreach (var _data in request.Page.Data)
-                            {
-                                _retainersFetchedFromServer[_data.LocalContentId] = _data;
-                            }
-
-                            _LastCursor = request.Page.LastCursor;
-                            _SyncMessage = $"{Loc.StFetchingRetainers} ({_retainersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount})";
-
-                            if (request.Page.NextCount > 0)
-                            {
-                                await Task.Delay(10, cts.Token);
-                            }
-                            else
-                            {
-                                _LastCursor = 0;
-                                break;
-                            }
-
-                            await Task.Delay(10, cts.Token);
-                        }
-                        else
-                        {
-                            _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchRetainers;
-                            IsSyncingRetainers = false;
-                        }
-                    }
-                }
-                finally
-                {
-                    IsSyncingRetainers = false;
-                    IsDbRefreshing = true;
-
-                    SyncWithLocalDB();
-                }
-            });
-
-            return true;
-        }
-
-        public bool IsDbRefreshing;
-
-        private async Task SyncWithLocalDB()
-        {
-            if (!_playersFetchedFromServer.Any() && !_retainersFetchedFromServer.Any())
-            {
-                IsDbRefreshing = false;
-                return;
-            }
-
-            var playerMappings = _playersFetchedFromServer.Select(p => new PlayerMapping
-            {
-                ContentId = (ulong)p.Key,
-                PlayerName = p.Value.Name,
-                AccountId = p.Value.AccountId.HasValue ? (ulong)p.Value.AccountId.Value : (ulong?)null,
-            }).ToList();
-
-            var retainerMappings = _retainersFetchedFromServer.Select(r => new Retainer
-            {
-                LocalContentId = (ulong)r.Key,
-                Name = r.Value.Name,
-                OwnerLocalContentId = (ulong)r.Value.OwnerLocalContentId,
-                WorldId = (ushort)r.Value.WorldId,
-            }).ToList();
-
-            try
-            {
-                _SyncMessage = "\n" + Loc.StSavingToLocalDb;
-
-                await Task.WhenAll(
-                    PersistenceContext.Instance.HandleContentIdMappingAsync(playerMappings),
-                    PersistenceContext.Instance.HandleMarketBoardPage(retainerMappings)
-                ).ConfigureAwait(false);
-
-                _SyncMessage = $"\n{Loc.StFetchingComplete}" +
-                               $"\n{Loc.StCharacters}: {_playersFetchedFromServer.Count}" +
-                               $"\n{Loc.StRetainers}: {_retainersFetchedFromServer.Count}";
-
-                _playersFetchedFromServer.Clear();
-                _retainersFetchedFromServer.Clear();
-            }
-            catch (Exception ex)
-            {
-                _SyncMessage = $"{Loc.ApiError} {Loc.StErrorWhileSavingToLocalDb}";
-            }
-            finally
-            {
-                IsDbRefreshing = false;
-                RefreshUserProfileInfo();
-            }
-        }
-
-        public (ServerStatsDto ServerStats, string Message) CheckServerStats()
-        {
-            if (!bIsNetworkProcessing)
-            {
-                _ = Task.Run(() =>
-                {
-                    bIsNetworkProcessing = true;
-
-                    var request = _client.CheckServerStats().ConfigureAwait(false).GetAwaiter().GetResult();
-                    _LastServerStatsMessage = request.Message;
-                    _LastServerStatsRefreshTime = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
-
-                    bIsNetworkProcessing = false;
-                    return request;
-                });
-            }
-            return (null, string.Empty);
-        }
-
-        public (ServerPlayerAndRetainerStatsDto Stats, string Message) CheckPlayerAndRetainerStats()
-        {
-            if (!bIsNetworkProcessing)
-            {
-                _ = Task.Run(() =>
-                {
-                    bIsNetworkProcessing = true;
-
-                    var request = _client.GetPlayerAndRetainerCountStats().ConfigureAwait(false).GetAwaiter().GetResult();
-                    LastPlayerAndRetainerWorldStatsMessage = request.Message;
-                    _lastPlayerAndRetainerWorldRefreshTime= (int)DateTimeOffset.Now.ToUnixTimeSeconds();
-
-                    bIsNetworkProcessing = false;
-                    return request;
-                });
-            }
-            return (null, string.Empty);
         }
 
         string? _serverIpAdressField = null;
@@ -1408,10 +915,13 @@ namespace PlayerScope.GUI
         private void OnLanguageChange()
         {
             WindowName = $"{Loc.TitleSettingsMenu}{WindowId}";
-            LanguageChanged();
             DetailsWindow.Instance.LanguageChanged();
             MainWindow.Instance.LanguageChanged();
             PlayerDetailed.UpdateFlagMessages();
+            if (WorldSelectorWindow.Instance != null)
+            {
+                WorldSelectorWindow.Instance.UpdateWindowTitle();
+            }
         }
         
         public void SetLanguage(Configuration.LanguageEnum lang)

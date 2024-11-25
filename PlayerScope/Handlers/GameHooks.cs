@@ -134,7 +134,7 @@ internal sealed unsafe class GameHooks : IDisposable
                         AccountId = (int?)mapping.AccountId,
                         HomeWorldId = mapping.WorldId,
                         CurrentWorldId = (ushort?)PersistenceContext.GetCurrentWorld(),
-                        TerritoryId = (short)player.TerritoryId,
+                        TerritoryId = player.TerritoryId == 0 ? (short?)null : (short)player.TerritoryId,
                         CreatedAt = Tools.UnixTime,
                     });
                 }
