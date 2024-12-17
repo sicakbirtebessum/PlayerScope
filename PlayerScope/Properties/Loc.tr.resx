@@ -315,14 +315,21 @@ gerekiyor. Bu islemi ilk kez yapiyorsan yaklasik 1 dakika sürebilir.</value>
   <data name="StStopFetching" xml:space="preserve">
     <value>Veri Çekmeyi Durdur</value>
   </data>
-  <data name="StLoadDetails" xml:space="preserve">
-    <value>Detaylari Aç</value>
-  </data>
   <data name="StConfigurePrivacyOfChars" xml:space="preserve">
     <value>Bu sekmede karakterlerinin gizlilik ayarlarini degistirebilirsin.</value>
   </data>
+  <data name="StThisTabDisplaysLodestoneProfiles" xml:space="preserve">
+    <value>Bu sekme, sahiplendigin Lodestone profillerini gösterir. Bu profillerle iliskili tüm karakterler otomatik olarak 'Karakterlerim' sekmesinde görünecektir.</value>
+  </data>
   <data name="StATotalOfCharsFound" xml:space="preserve">
     <value>Sana ait olan toplamda {0} karakter bulundu.</value>
+  </data>
+  <data name="StATotalOfLodestoneProfiles" xml:space="preserve">
+    <value>Sahiplendigin {0} Lodestone profili mevcut.</value>
+  </data>
+  <data name="LsPasteTheCodeIntoYourBio" xml:space="preserve">
+    <value>Profilini dogrulamak için asagidaki kodu Lodestone biyografine yapistir.
+Ardindan asagidaki 'Dogrula' butonuna tikla.</value>
   </data>
   <data name="StUploadedCharacterInfo" xml:space="preserve">
     <value>Aktarilan Oyuncu Bilgisi Sayisi:</value>
@@ -442,6 +449,12 @@ Ancak, seni daha önce görmüslerse, Yerel PC bölümünde arama yaparak seni b
   <data name="StTabMyCharactersAndPrivacy" xml:space="preserve">
     <value>Karakterlerim ve Gizlilik</value>
   </data>
+  <data name="StTabClaimedLodestoneProfiles" xml:space="preserve">
+    <value>Sahiplenilen Lodestone Profilleri</value>
+  </data>
+  <data name="StTabMyCharacters" xml:space="preserve">
+    <value>Karakterlerim</value>
+  </data>
   <data name="MnName" xml:space="preserve">
     <value>Isim</value>
   </data>
@@ -504,7 +517,7 @@ Tiklayabilmek için CTRL+Shift tuslarina basili tut.</value>
     <value>Veritabani log boyutu: </value>
   </data>
   <data name="MnAccountId" xml:space="preserve">
-    <value>Account Id</value>
+    <value>Hesap Id</value>
   </data>
   <data name="MnWorld" xml:space="preserve">
     <value>Dünya</value>
@@ -669,8 +682,8 @@ Tiklayabilmek için CTRL+Shift tuslarina basili tut.</value>
     <value>Etrafimdaki karakterlerin, oyuncu arama menüsündeki karakterlerin ve marketboard'a göz atarken
 gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</value>
   </data>
-  <data name="DtZoneName" xml:space="preserve">
-    <value>Bölge Adi</value>
+  <data name="DtLastSeenZoneName" xml:space="preserve">
+    <value>Son Görüldügü Bölge Adi</value>
   </data>
   <data name="DtCharacterName" xml:space="preserve">
     <value>Karakter Adi</value>
@@ -742,7 +755,7 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
     <value>Anadünya Geçmisi:</value>
   </data>
   <data name="DtAltCharacters" xml:space="preserve">
-    <value>Yan Karakterler:</value>
+    <value>Yan Karakterler</value>
   </data>
   <data name="DtShowRetainers" xml:space="preserve">
     <value>Retainerlari Göster</value>
@@ -864,6 +877,9 @@ gördügüm retainer'larin bilgilerinin sunucuya aktarilmasini kabul ediyorum.</
   <data name="StPrivacySetAllPublic" xml:space="preserve">
     <value>Tüm karakterlerimi herkese açik yap</value>
   </data>
+  <data name="StLodestone" xml:space="preserve">
+    <value>Lodestone</value>
+  </data>
   <data name="DtDatabaseRecordAddedTimeUnavailable" xml:space="preserve">
     <value>Bu kayit, farkli bir veritabanindan alindi
 ve asil eklenme tarihi tam olarak belirli degil.</value>
@@ -888,5 +904,221 @@ ve asil eklenme tarihi tam olarak belirli degil.</value>
   </data>
   <data name="MnFilters" xml:space="preserve">
     <value>Filtreler</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.RaidFights" xml:space="preserve">
+    <value>Raid Savaslari</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Town" xml:space="preserve">
+    <value>Kasaba</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.LeapOfFaith" xml:space="preserve">
+    <value>Leap of Faith</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.MaskedCarnival" xml:space="preserve">
+    <value>Maskeli Karnaval</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OceanFishing" xml:space="preserve">
+    <value>Okyanus Balikçiligi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.DiademV3" xml:space="preserve">
+    <value>Diadem v3</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Bozja" xml:space="preserve">
+    <value>Bozja</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OpenWorld" xml:space="preserve">
+    <value>Açik Dünya</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Inn" xml:space="preserve">
+    <value>Han</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Dungeon" xml:space="preserve">
+    <value>Zindan</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.JailArea" xml:space="preserve">
+    <value>Hapishane</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OpeningArea" xml:space="preserve">
+    <value>Baslangiç Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.FreeCompanyGarrison" xml:space="preserve">
+    <value>Free Company Kalesi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PalaceOfTheDead" xml:space="preserve">
+    <value>Ölüler Sarayi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.TreasureMapInstance" xml:space="preserve">
+    <value>Hazine Haritasi Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Raids" xml:space="preserve">
+    <value>Baskinlar</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.ChocoboSquare" xml:space="preserve">
+    <value>Chocobo Meydanı</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.ChocoboTutorial" xml:space="preserve">
+    <value>Chocobo Egitimi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Wedding" xml:space="preserve">
+    <value>Dügün</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.GoldSaucer" xml:space="preserve">
+    <value>Gold Saucer</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.DiademV1" xml:space="preserve">
+    <value>Diadem v1</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.DiademV2" xml:space="preserve">
+    <value>Diadem v2</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PrivateEventArea" xml:space="preserve">
+    <value>Özel Etkinlik Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Eureka" xml:space="preserve">
+    <value>Eureka</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.TheFeastCrystalTower" xml:space="preserve">
+    <value>The Feast Kristal Kulesi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.BeginnerTutorial" xml:space="preserve">
+    <value>Baslangiç Egitimi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PvPTheFeast" xml:space="preserve">
+    <value>PvP The Feast</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.MainStoryQuestEventArea" xml:space="preserve">
+    <value>Ana Hikaye Görevi Etkinlik Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.BeforeTrialDung" xml:space="preserve">
+    <value>Ön-Deneme Zindani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.AllianceRaid" xml:space="preserve">
+    <value>Ittifak Baskini</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OpenWorldInstanceBattle" xml:space="preserve">
+    <value>Açik Dünya Savas Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Trial" xml:space="preserve">
+    <value>Trial</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.EventTrial" xml:space="preserve">
+    <value>Trial Etkinligi</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.TheFeastArea" xml:space="preserve">
+    <value>The Feast Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.RaidPublicArea" xml:space="preserve">
+    <value>Raid Genel Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.HousingArea" xml:space="preserve">
+    <value>Konut Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PvP" xml:space="preserve">
+    <value>PvP</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.HousingPrivateArea" xml:space="preserve">
+    <value>Konut Özel Alani</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.MainStoryQuestPrivateArea" xml:space="preserve">
+    <value>Ana Hikaye Görevi Özel Alani</value>
+  </data>
+  <data name="UtilRegion" xml:space="preserve">
+    <value>Bölge</value>
+  </data>
+  <data name="UtilDataCenter" xml:space="preserve">
+    <value>DataCenter</value>
+  </data>
+  <data name="StClaimNewProfile" xml:space="preserve">
+    <value>Lodestone Profilini Sahiplen</value>
+  </data>
+  <data name="TitleClaimLodestoneWindow" xml:space="preserve">
+    <value>PlayerScope Lodestone Dogrulama</value>
+  </data>
+  <data name="LsColumnLodestone" xml:space="preserve">
+    <value>Lodestone</value>
+  </data>
+  <data name="LsColumnNameAndHomeWorld" xml:space="preserve">
+    <value>Isim ve Anadünya</value>
+  </data>
+  <data name="LsColumnLodestoneId" xml:space="preserve">
+    <value>Lodestone Id</value>
+  </data>
+  <data name="LsColumnVerificationStatus" xml:space="preserve">
+    <value>Dogrulama Durumu</value>
+  </data>
+  <data name="LsEnterYourLodestoneLink" xml:space="preserve">
+    <value>Lodestone profil baglantini yaz:</value>
+  </data>
+  <data name="LsLodestoneProfileLink" xml:space="preserve">
+    <value>Lodestone Profil Baglantisi</value>
+  </data>
+  <data name="LsNext" xml:space="preserve">
+    <value>Devam et</value>
+  </data>
+  <data name="LsCopyTheCode" xml:space="preserve">
+    <value>Kodu Kopyala</value>
+  </data>
+  <data name="LsCodeCopied" xml:space="preserve">
+    <value>Kod kopyalandi</value>
+  </data>
+  <data name="LsOpenBiographySettings" xml:space="preserve">
+    <value>Biyografi Ayarlarini Aç</value>
+  </data>
+  <data name="LsValidate" xml:space="preserve">
+    <value>Dogrula</value>
+  </data>
+  <data name="LsCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LsGoToMyCharactersMenu" xml:space="preserve">
+    <value>'Karakterlerim' menüsüne git</value>
+  </data>
+  <data name="StLodestoneVerifiedAt" xml:space="preserve">
+    <value>Dogrulanma Tarihi</value>
+  </data>
+  <data name="LsVerifyDifferentProfile" xml:space="preserve">
+    <value>Farkli Bir Hesap Dogrula</value>
+  </data>
+  <data name="UtilClickToViewFullImage" xml:space="preserve">
+    <value>Resmi tam boyutta görmek için tikla</value>
+  </data>
+  <data name="UtilClickToCloseTheImage" xml:space="preserve">
+    <value>Büyük resmi kapatmak için tikla</value>
+  </data>
+  <data name="AvatarOpenOnBrowser" xml:space="preserve">
+    <value>Tarayicida Aç</value>
+  </data>
+  <data name="AvatarResetSize" xml:space="preserve">
+    <value>Boyutu Sifirla</value>
+  </data>
+  <data name="AvatarResetZoom" xml:space="preserve">
+    <value>Yakinlastirmayi Sifirla</value>
+  </data>
+  <data name="DtOpenRightArrow" xml:space="preserve">
+    <value>Git</value>
+  </data>
+  <data name="MnAreYouSure" xml:space="preserve">
+    <value>Emin misin?</value>
+  </data>
+  <data name="MnYes" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="MnNo" xml:space="preserve">
+    <value>Hayir</value>
+  </data>
+  <data name="DtLodestoneId" xml:space="preserve">
+    <value>Lodestone Id</value>
+  </data>
+  <data name="MnSaveNote" xml:space="preserve">
+    <value>Notu Kaydet</value>
+  </data>
+  <data name="MnAddNote" xml:space="preserve">
+    <value>Not Ekle</value>
+  </data>
+  <data name="DtCharacterCreationDate" xml:space="preserve">
+    <value>Olusturulma Zamani</value>
+  </data>
+  <data name="StSettingsHideCharacterAvatars" xml:space="preserve">
+    <value>Karakter Avatarlarini Gizle</value>
   </data>
 </root>

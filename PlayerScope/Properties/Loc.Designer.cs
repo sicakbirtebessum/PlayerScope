@@ -242,6 +242,33 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Open on Browser benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string AvatarOpenOnBrowser {
+            get {
+                return ResourceManager.GetString("AvatarOpenOnBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Reset Size benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string AvatarResetSize {
+            get {
+                return ResourceManager.GetString("AvatarResetSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Reset Zoom benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string AvatarResetZoom {
+            get {
+                return ResourceManager.GetString("AvatarResetZoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Open UI benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string CmOpenUI {
@@ -260,7 +287,7 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   Alt Characters: benzeri yerelleştirilmiş bir dize arar.
+        ///   Alt Characters benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtAltCharacters {
             get {
@@ -274,6 +301,15 @@ namespace PlayerScope.Properties {
         internal static string DtBustSize {
             get {
                 return ResourceManager.GetString("DtBustSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Creation Date benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtCharacterCreationDate {
+            get {
+                return ResourceManager.GetString("DtCharacterCreationDate", resourceCulture);
             }
         }
         
@@ -387,6 +423,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Last Seen Zone Name benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtLastSeenZoneName {
+            get {
+                return ResourceManager.GetString("DtLastSeenZoneName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Loading... benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtLoading {
@@ -414,6 +459,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Lodestone Id benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtLodestoneId {
+            get {
+                return ResourceManager.GetString("DtLodestoneId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Map benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string DtMapButton {
@@ -437,6 +491,15 @@ namespace PlayerScope.Properties {
         internal static string DtNameHistory {
             get {
                 return ResourceManager.GetString("DtNameHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string DtOpenRightArrow {
+            get {
+                return ResourceManager.GetString("DtOpenRightArrow", resourceCulture);
             }
         }
         
@@ -585,11 +648,138 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   Zone Name benzeri yerelleştirilmiş bir dize arar.
+        ///   Cancel benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
-        internal static string DtZoneName {
+        internal static string LsCancel {
             get {
-                return ResourceManager.GetString("DtZoneName", resourceCulture);
+                return ResourceManager.GetString("LsCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Code copied benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsCodeCopied {
+            get {
+                return ResourceManager.GetString("LsCodeCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lodestone benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsColumnLodestone {
+            get {
+                return ResourceManager.GetString("LsColumnLodestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lodestone Id benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsColumnLodestoneId {
+            get {
+                return ResourceManager.GetString("LsColumnLodestoneId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Name and HomeWorld benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsColumnNameAndHomeWorld {
+            get {
+                return ResourceManager.GetString("LsColumnNameAndHomeWorld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Verification Status benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsColumnVerificationStatus {
+            get {
+                return ResourceManager.GetString("LsColumnVerificationStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Copy the Code benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsCopyTheCode {
+            get {
+                return ResourceManager.GetString("LsCopyTheCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Enter your Lodestone profile link: benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsEnterYourLodestoneLink {
+            get {
+                return ResourceManager.GetString("LsEnterYourLodestoneLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Go to &apos;My Characters&apos; menu benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsGoToMyCharactersMenu {
+            get {
+                return ResourceManager.GetString("LsGoToMyCharactersMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Lodestone Profile Link benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsLodestoneProfileLink {
+            get {
+                return ResourceManager.GetString("LsLodestoneProfileLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Next benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsNext {
+            get {
+                return ResourceManager.GetString("LsNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open Biography Settings benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsOpenBiographySettings {
+            get {
+                return ResourceManager.GetString("LsOpenBiographySettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Paste the code below into your Lodestone biography to verify your account.
+        ///Then, click the &apos;Verify&apos; button below. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsPasteTheCodeIntoYourBio {
+            get {
+                return ResourceManager.GetString("LsPasteTheCodeIntoYourBio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Validate benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsValidate {
+            get {
+                return ResourceManager.GetString("LsValidate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Verify a Different Profile benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string LsVerifyDifferentProfile {
+            get {
+                return ResourceManager.GetString("LsVerifyDifferentProfile", resourceCulture);
             }
         }
         
@@ -617,6 +807,24 @@ namespace PlayerScope.Properties {
         internal static string MnAddedAt {
             get {
                 return ResourceManager.GetString("MnAddedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Add Note benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnAddNote {
+            get {
+                return ResourceManager.GetString("MnAddNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Are you sure? benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnAreYouSure {
+            get {
+                return ResourceManager.GetString("MnAreYouSure", resourceCulture);
             }
         }
         
@@ -874,6 +1082,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   No benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnNo {
+            get {
+                return ResourceManager.GetString("MnNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Open Adventurer Plate benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnOpenAdventurerPlate {
@@ -969,6 +1186,15 @@ namespace PlayerScope.Properties {
         internal static string MnRetainerStatistics {
             get {
                 return ResourceManager.GetString("MnRetainerStatistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save Note benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnSaveNote {
+            get {
+                return ResourceManager.GetString("MnSaveNote", resourceCulture);
             }
         }
         
@@ -1099,6 +1325,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Yes benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string MnYes {
+            get {
+                return ResourceManager.GetString("MnYes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   You&apos;re connected to the server. You can synchronize player and retainer information. benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string MnYouAreConnected {
@@ -1113,6 +1348,15 @@ namespace PlayerScope.Properties {
         internal static string StATotalOfCharsFound {
             get {
                 return ResourceManager.GetString("StATotalOfCharsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   There are {0} Lodestone profiles that you have claimed. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StATotalOfLodestoneProfiles {
+            get {
+                return ResourceManager.GetString("StATotalOfLodestoneProfiles", resourceCulture);
             }
         }
         
@@ -1212,6 +1456,15 @@ namespace PlayerScope.Properties {
         internal static string StCheckServerStatus {
             get {
                 return ResourceManager.GetString("StCheckServerStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Claim Your Lodestone Profile benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StClaimNewProfile {
+            get {
+                return ResourceManager.GetString("StClaimNewProfile", resourceCulture);
             }
         }
         
@@ -1424,11 +1677,20 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
-        ///   Show Details benzeri yerelleştirilmiş bir dize arar.
+        ///   Lodestone benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
-        internal static string StLoadDetails {
+        internal static string StLodestone {
             get {
-                return ResourceManager.GetString("StLoadDetails", resourceCulture);
+                return ResourceManager.GetString("StLodestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Verified At benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StLodestoneVerifiedAt {
+            get {
+                return ResourceManager.GetString("StLodestoneVerifiedAt", resourceCulture);
             }
         }
         
@@ -1875,6 +2137,15 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Hide Character Avatars benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StSettingsHideCharacterAvatars {
+            get {
+                return ResourceManager.GetString("StSettingsHideCharacterAvatars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Show my ids benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StShowMyIds {
@@ -1940,6 +2211,24 @@ namespace PlayerScope.Properties {
         }
         
         /// <summary>
+        ///   Claimed Lodestone Profiles benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StTabClaimedLodestoneProfiles {
+            get {
+                return ResourceManager.GetString("StTabClaimedLodestoneProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   My Characters benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StTabMyCharacters {
+            get {
+                return ResourceManager.GetString("StTabMyCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   My Characters &amp; Privacy benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string StTabMyCharactersAndPrivacy {
@@ -1972,6 +2261,15 @@ namespace PlayerScope.Properties {
         internal static string StThisCharacterIsPrivate {
             get {
                 return ResourceManager.GetString("StThisCharacterIsPrivate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   This tab displays the Lodestone profiles you have claimed. All characters associated with these profiles will automatically appear in the My Characters tab. benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string StThisTabDisplaysLodestoneProfiles {
+            get {
+                return ResourceManager.GetString("StThisTabDisplaysLodestoneProfiles", resourceCulture);
             }
         }
         
@@ -2074,6 +2372,366 @@ namespace PlayerScope.Properties {
         internal static string StUserCount {
             get {
                 return ResourceManager.GetString("StUserCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Alliance Raid benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_AllianceRaid {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.AllianceRaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Pre Trial Dungeon benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_BeforeTrialDung {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.BeforeTrialDung", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Beginner Tutorial benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_BeginnerTutorial {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.BeginnerTutorial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Bozja benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Bozja {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Bozja", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Chocobo Square benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_ChocoboSquare {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.ChocoboSquare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Chocobo Tutorial benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_ChocoboTutorial {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.ChocoboTutorial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Diadem v1 benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_DiademV1 {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.DiademV1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Diadem v2 benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_DiademV2 {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.DiademV2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Diadem v3 benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_DiademV3 {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.DiademV3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Dungeon benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Dungeon {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Dungeon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Eureka benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Eureka {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Eureka", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Event Trial benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_EventTrial {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.EventTrial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Free Company Garrison benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_FreeCompanyGarrison {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.FreeCompanyGarrison", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Gold Saucer benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_GoldSaucer {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.GoldSaucer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   HousingArea benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_HousingArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.HousingArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Housing Private Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_HousingPrivateArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.HousingPrivateArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Inn benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Inn {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Inn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Jail Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_JailArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.JailArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Leap of Faith benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_LeapOfFaith {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.LeapOfFaith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   MSQ Event Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_MainStoryQuestEventArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.MainStoryQuestEventArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   MSQ Private Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_MainStoryQuestPrivateArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.MainStoryQuestPrivateArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Masked Carnival benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_MaskedCarnival {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.MaskedCarnival", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ocean Fishing benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_OceanFishing {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.OceanFishing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Opening Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_OpeningArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.OpeningArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open World benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_OpenWorld {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.OpenWorld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Open World Instance Battle benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_OpenWorldInstanceBattle {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.OpenWorldInstanceBattle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Palace of the Dead benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_PalaceOfTheDead {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.PalaceOfTheDead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Private Event Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_PrivateEventArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.PrivateEventArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PvP benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_PvP {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.PvP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PvP The Feast benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_PvPTheFeast {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.PvPTheFeast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Raid Fights benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_RaidFights {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.RaidFights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Raid Public Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_RaidPublicArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.RaidPublicArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Raids benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Raids {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Raids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The Feast Area benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_TheFeastArea {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.TheFeastArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The Feast Crystal Tower benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_TheFeastCrystalTower {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.TheFeastCrystalTower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Town benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Town {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Town", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Treasure Map Instance benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_TreasureMapInstance {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.TreasureMapInstance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Trial benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Trial {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Trial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Wedding benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TerritoryIntendedUseEnum_Wedding {
+            get {
+                return ResourceManager.GetString("TerritoryIntendedUseEnum.Wedding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PlayerScope Lodestone Verification benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string TitleClaimLodestoneWindow {
+            get {
+                return ResourceManager.GetString("TitleClaimLodestoneWindow", resourceCulture);
             }
         }
         
@@ -2272,6 +2930,42 @@ namespace PlayerScope.Properties {
         internal static string ToolsYears {
             get {
                 return ResourceManager.GetString("ToolsYears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Click to close the big image benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilClickToCloseTheImage {
+            get {
+                return ResourceManager.GetString("UtilClickToCloseTheImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Click to view the image in full size benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilClickToViewFullImage {
+            get {
+                return ResourceManager.GetString("UtilClickToViewFullImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   DataCenter benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilDataCenter {
+            get {
+                return ResourceManager.GetString("UtilDataCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Region benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string UtilRegion {
+            get {
+                return ResourceManager.GetString("UtilRegion", resourceCulture);
             }
         }
         

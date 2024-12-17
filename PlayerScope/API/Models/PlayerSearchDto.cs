@@ -17,5 +17,7 @@ namespace PlayerScope.API.Models
         public short? WorldId { get; set; }
         [JsonProperty("A")]
         public int? AccountId { get; set; }
+        [JsonProperty("B")]
+        public string? AvatarLink { get; set; }
     }
 }

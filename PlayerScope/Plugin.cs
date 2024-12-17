@@ -30,6 +30,7 @@ public sealed class Plugin : IDalamudPlugin
     public static ServiceProvider? _serviceProvider;
     private readonly ICommandManager _commandManager;
     [PluginService] internal static IContextMenu ContextMenu { get; private set; } = null!;
+    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     internal static IDataManager DataManager { get; set; } = null!;
     internal static IGameGui _gameGui { get; set; } = null!;
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
@@ -40,8 +41,12 @@ public sealed class Plugin : IDalamudPlugin
     public GUI.MainWindow MainWindow;
     public GUI.DetailsWindow DetailsWindow;
     public GUI.MainWindowTab.WorldSelectorWindow WorldSelectorWindow;
+    public GUI.ClaimLodestoneWindow ClaimLodestoneWindow;
+    public GUI.AvatarViewerWindow AvatarViewerWindow;
+
     internal WindowSystem ws;
     internal IDalamudPluginInterface _pluginInterface {  get; }
+    public static AvatarCacheManager AvatarCacheManager;
     public Plugin(
         IDalamudPluginInterface pluginInterface,
         IFramework framework,
@@ -56,7 +61,8 @@ public sealed class Plugin : IDalamudPlugin
         IObjectTable objectTable,
         IMarketBoard marketBoard,
         IPluginLog pluginLog,
-        IContextMenu contextMenu)
+        IContextMenu contextMenu,
+        ITextureProvider textureProvider)
     {
         Instance = this;
         ServiceCollection serviceCollection = new();
@@ -77,6 +83,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton(targetManager);
         serviceCollection.AddSingleton(objectTable);
         serviceCollection.AddSingleton(marketBoard);
+        serviceCollection.AddSingleton(textureProvider);
 
         serviceCollection.AddSingleton<PersistenceContext>();
         serviceCollection.AddSingleton<MarketBoardOfferingsHandler>();
@@ -115,12 +122,19 @@ public sealed class Plugin : IDalamudPlugin
         ws = new();
         MainWindow = new();
         DetailsWindow = new();
-        ConfigWindow = new();
         WorldSelectorWindow = new();
+        ClaimLodestoneWindow = new();
+        AvatarViewerWindow = new();
+        ConfigWindow = new();
+        
         ws.AddWindow(MainWindow);
         ws.AddWindow(DetailsWindow);
-        ws.AddWindow(ConfigWindow);
         ws.AddWindow(WorldSelectorWindow);
+        ws.AddWindow(ClaimLodestoneWindow);
+        ws.AddWindow(AvatarViewerWindow);
+        ws.AddWindow(ConfigWindow);
+        
+        AvatarCacheManager = new AvatarCacheManager();
 
         pluginInterface.UiBuilder.Draw += ws.Draw;
 
@@ -176,6 +190,12 @@ public sealed class Plugin : IDalamudPlugin
         _serviceProvider?.Dispose();
         Handlers.ContextMenu.Disable();
         PersistenceContext.StopUploads();
+        AvatarCacheManager.Dispose();
+
+        _pluginInterface.UiBuilder.Draw -= ws.Draw;
+        _pluginInterface.UiBuilder.OpenMainUi -= delegate { MainWindow.IsOpen = true; };
+        _pluginInterface.UiBuilder.OpenConfigUi -= ConfigWindow.Toggle;
+
         // ensure we're not keeping the file open longer than the plugin is loaded
         using (SqliteConnection sqliteConnection = new(_sqliteConnectionString))
             SqliteConnection.ClearPool(sqliteConnection);

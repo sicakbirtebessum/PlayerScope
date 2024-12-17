@@ -33,6 +33,7 @@ namespace PlayerScope
         public int? LastSyncedTime { get; set; }
         public ConcurrentDictionary<long, CachedFavoritedPlayer> FavoritedPlayer = new();
         public bool bShowDetailedDate { get; set; } = false;
+        public bool bHideCharacterAvatars { get; set; } = false;
         public LanguageEnum Language { get; set; }
         public bool AgreementAccepted { get; set; } = false;
         public int ObjectTableRefreshInterval { get; set; } = 5_000;
@@ -41,6 +42,7 @@ namespace PlayerScope
         {
             public required ulong? AccountId { get; init; }
             public required string Name { get; init; }
+            public string? Note { get; set; }
         }
         public enum LanguageEnum
         {

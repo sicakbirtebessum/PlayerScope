@@ -133,6 +133,8 @@ namespace PlayerScope.API.Models
             public int? LodestoneId { get; set; }
             [JsonProperty("2")]
             public int? CharacterCreationDate { get; set; }
+            [JsonProperty("3")]
+            public string? AvatarLink { get; set; }
         }
 
         public class PlayerDetailedInfoAltCharDto
@@ -145,6 +147,8 @@ namespace PlayerScope.API.Models
             public short? WorldId { get; set; }
             [JsonProperty("4")]
             public List<RetainerDto> Retainers { get; set; } = new List<RetainerDto>();
+            [JsonProperty("5")]
+            public string? AvatarLink { get; set; }
         }
 
         public class PlayerNameHistoryDto

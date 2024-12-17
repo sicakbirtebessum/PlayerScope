@@ -2,24 +2,16 @@
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.ImGuiNotification;
-using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using FFXIVClientStructs.FFXIV.Common.Lua;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
 using Lumina.Excel.Sheets;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 using PlayerScope.API.Models;
-using PlayerScope.Handlers;
 using PlayerScope.Properties;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -28,7 +20,7 @@ namespace PlayerScope
 {
     public static class Utils
     {
-        public static void DrawHelp(bool AtTheEnd,string helpMessage)
+        public static void DrawHelp(bool AtTheEnd, string helpMessage)
         {
             if (AtTheEnd)
             {
@@ -235,6 +227,7 @@ namespace PlayerScope
                 ImGui.PopTextWrapPos();
             }
         }
+
         public static void ColoredTextWrapped(Vector4? textColor, string s)
         {
             if (!string.IsNullOrWhiteSpace(s))
@@ -290,7 +283,7 @@ namespace PlayerScope
                 ImGui.TextColored(textColor, $"{Message}");
             }
         }
-        public static void ShowColoredMessage(string Message,string Ping)
+        public static void ShowColoredMessage(string Message, string Ping)
         {
             if (!string.IsNullOrWhiteSpace(Message))
             {
@@ -300,6 +293,7 @@ namespace PlayerScope
                 ImGui.TextColored(textColor, $"{Message} ({Ping})");
             }
         }
+
         public static void SetHoverTooltip(string tooltip)
         {
             if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
@@ -448,7 +442,7 @@ namespace PlayerScope
             {
                 if (helpText)
                 {
-                    Utils.DrawHelp(false, $"Region: {Utils.GetRegionCode(world.Value)}\nDataCenter: {world.Value.DataCenter.Value.Name}\nWorld: {world.Value.Name}");
+                    Utils.DrawHelp(false, $"{Loc.UtilRegion}: {Utils.GetRegionCode(world.Value)}\n{Loc.UtilDataCenter}: {world.Value.DataCenter.Value.Name}\n{Loc.MnWorld}: {world.Value.Name}");
                 }
 
                 ImGui.Text(world.Value.Name.ExtractText());
@@ -491,6 +485,20 @@ namespace PlayerScope
             ImGui.SameLine();
         }
 
+        public static void IconWithTooltip(FontAwesomeIcon icon, string tooltipText)
+        {
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudWhite))
+            {
+                ImGui.TextUnformatted($"{icon.ToIconString()}");
+                using (ImRaii.PushFont(UiBuilder.DefaultFont))
+                {
+                    SetHoverTooltip(tooltipText);
+                }
+            }
+            ImGui.SameLine();
+        }
+
         public static long[] ExternalDbTimestamps = new long[]
             {
                 0,
@@ -516,10 +524,10 @@ namespace PlayerScope
                 1727006400,
                 1727179215,
                 1727265600,
-                1727265602, // -
+                1727265602,
                 1727265603,
                 1727265604,
-                1727265605,
+                1727265605, //-
                 1727265606,
                 1727265607,
                 1727265608,
@@ -529,5 +537,37 @@ namespace PlayerScope
                 1727265612,
                 1727265613,
             };
+
+        /// <summary>
+        /// Returns a ISharedImmediateTexture for the appropriate icon.
+        /// </summary>
+        /// <param name="iconID">ID of the icon.</param>
+        public static ISharedImmediateTexture GetIcon(uint iconID)
+            => Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(iconID, false, true));
+
+        /// <summary>
+        /// Returns a ISharedImmediateTexture for the appropriate status.
+        /// </summary>
+        /// <param name="statusID">ID of the status.</param>
+        public static ISharedImmediateTexture GetTownIcon(uint townID)
+        {
+            var townList = Plugin.DataManager.GameData.Excel.GetSheet<Town>();
+            var town = townList.GetRow(townID);
+            return GetIcon((uint)town.Icon);
+        }
+
+        public static string lodestoneCharacterUrl = "https://na.finalfantasyxiv.com/lodestone/character/";
+        public static string lodestoneCharacterPrivacyUrl = "https://na.finalfantasyxiv.com/lodestone/my/setting/profile/";
+        private const string AvatarBaseUrl = "https://img2.finalfantasyxiv.com/f/";
+        public static string BlankAvatar = "0000_";
+        public static string GetAvatarUrl(string avatarLink, bool isLarge)
+        {
+            if (string.IsNullOrWhiteSpace(avatarLink))
+                avatarLink = BlankAvatar; // Blank image
+
+            var sizeSuffix = isLarge ? "fl0.jpg" : "fc0.jpg";
+            return $"{AvatarBaseUrl}{avatarLink}{sizeSuffix}";
+        }
+
     }
 }

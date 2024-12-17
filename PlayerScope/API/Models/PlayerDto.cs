@@ -16,5 +16,7 @@ namespace PlayerScope.API.Models
         public string Name { get; set; } = string.Empty;
         [JsonProperty("A")]
         public int? AccountId { get; set; }
+        [JsonProperty("B")]
+        public string? AvatarLink { get; set; }
     }
 }

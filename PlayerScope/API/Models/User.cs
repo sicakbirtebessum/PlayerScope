@@ -29,6 +29,8 @@ namespace PlayerScope.API.Models
         public List<UserCharacterDto> Characters { get; set; } = new List<UserCharacterDto>();
         [JsonProperty("6")]
         public UserNetworkStatsDto NetworkStats { get; set; } = new UserNetworkStatsDto();
+        [JsonProperty("7")]
+        public List<UserLodestoneCharacterDto> LodestoneCharacters { get; set; } = new List<UserLodestoneCharacterDto>();
         public class UserCharacterDto
         {
             [JsonProperty("1"), JsonPropertyName("1")]
@@ -46,6 +48,8 @@ namespace PlayerScope.API.Models
                 [JsonProperty("2"), JsonPropertyName("2")]
                 public int? LastProfileVisitDate { get; set; }
             }
+            [JsonProperty("5")]
+            public string? AvatarLink { get; set; }
         }
         public class CharacterPrivacySettingsDto
         {
@@ -80,6 +84,19 @@ namespace PlayerScope.API.Models
             [JsonProperty("7")]
             public int LastSyncedTime { get; set; } = 0;
         }
+
+        public class UserLodestoneCharacterDto()
+        {
+            [JsonProperty("1")]
+            public int LodestoneId { get; set; }
+            [JsonProperty("2")]
+            public string NameAndWorld { get; set; } = string.Empty;
+            [JsonProperty("3")]
+            public string AvatarLink { get; set; } = string.Empty;
+            [JsonProperty("4")]
+            public int VerifiedAt { get; set; } = 0;
+        }
+
         public enum Roles
         {
             Banned = -1,

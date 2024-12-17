@@ -315,14 +315,21 @@ If you're doing this for the first time, it may take approximately one minute.</
   <data name="StStopFetching" xml:space="preserve">
     <value>Stop Fetching</value>
   </data>
-  <data name="StLoadDetails" xml:space="preserve">
-    <value>Show Details</value>
-  </data>
   <data name="StConfigurePrivacyOfChars" xml:space="preserve">
     <value>You can configure the privacy settings of your characters in this tab.</value>
   </data>
+  <data name="StThisTabDisplaysLodestoneProfiles" xml:space="preserve">
+    <value>This tab displays the Lodestone profiles you have claimed. All characters associated with these profiles will automatically appear in the My Characters tab.</value>
+  </data>
   <data name="StATotalOfCharsFound" xml:space="preserve">
     <value>A total of {0} characters of yours were found.</value>
+  </data>
+  <data name="StATotalOfLodestoneProfiles" xml:space="preserve">
+    <value>There are {0} Lodestone profiles that you have claimed.</value>
+  </data>
+  <data name="LsPasteTheCodeIntoYourBio" xml:space="preserve">
+    <value>Paste the code below into your Lodestone biography to verify your account.
+Then, click the 'Verify' button below.</value>
   </data>
   <data name="StUploadedCharacterInfo" xml:space="preserve">
     <value>Uploaded Character Info Count:</value>
@@ -441,6 +448,12 @@ However, if they have seen you before, they can find you by searching in the Loc
   </data>
   <data name="StTabMyCharactersAndPrivacy" xml:space="preserve">
     <value>My Characters &amp; Privacy</value>
+  </data>
+  <data name="StTabClaimedLodestoneProfiles" xml:space="preserve">
+    <value>Claimed Lodestone Profiles</value>
+  </data>
+  <data name="StTabMyCharacters" xml:space="preserve">
+    <value>My Characters</value>
   </data>
   <data name="MnName" xml:space="preserve">
     <value>Name</value>
@@ -669,8 +682,8 @@ Hold down the CTRL+Shift keys to enable clicking.</value>
     <value>I agree that the information of characters around me, the characters on the player search menu
 and the retainers I see while browsing the marketboard will be uploaded to the server.</value>
   </data>
-  <data name="DtZoneName" xml:space="preserve">
-    <value>Zone Name</value>
+  <data name="DtLastSeenZoneName" xml:space="preserve">
+    <value>Last Seen Zone Name</value>
   </data>
   <data name="DtCharacterName" xml:space="preserve">
     <value>Character Name</value>
@@ -742,7 +755,7 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
     <value>HomeWorld History:</value>
   </data>
   <data name="DtAltCharacters" xml:space="preserve">
-    <value>Alt Characters:</value>
+    <value>Alt Characters</value>
   </data>
   <data name="DtShowRetainers" xml:space="preserve">
     <value>Show Retainers</value>
@@ -864,6 +877,9 @@ and the retainers I see while browsing the marketboard will be uploaded to the s
   <data name="StPrivacySetAllPublic" xml:space="preserve">
     <value>Set all my characters to public</value>
   </data>
+  <data name="StLodestone" xml:space="preserve">
+    <value>Lodestone</value>
+  </data>
   <data name="DtDatabaseRecordAddedTimeUnavailable" xml:space="preserve">
     <value>This record was retrieved from a different database,
 and the exact addition date is not clearly determined.</value>
@@ -888,5 +904,221 @@ and the exact addition date is not clearly determined.</value>
   </data>
   <data name="MnFilters" xml:space="preserve">
     <value>Filters</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.RaidFights" xml:space="preserve">
+    <value>Raid Fights</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Town" xml:space="preserve">
+    <value>Town</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.LeapOfFaith" xml:space="preserve">
+    <value>Leap of Faith</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.MaskedCarnival" xml:space="preserve">
+    <value>Masked Carnival</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OceanFishing" xml:space="preserve">
+    <value>Ocean Fishing</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.DiademV3" xml:space="preserve">
+    <value>Diadem v3</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Bozja" xml:space="preserve">
+    <value>Bozja</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OpenWorld" xml:space="preserve">
+    <value>Open World</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Inn" xml:space="preserve">
+    <value>Inn</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Dungeon" xml:space="preserve">
+    <value>Dungeon</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.JailArea" xml:space="preserve">
+    <value>Jail Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OpeningArea" xml:space="preserve">
+    <value>Opening Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.FreeCompanyGarrison" xml:space="preserve">
+    <value>Free Company Garrison</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PalaceOfTheDead" xml:space="preserve">
+    <value>Palace of the Dead</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.TreasureMapInstance" xml:space="preserve">
+    <value>Treasure Map Instance</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Raids" xml:space="preserve">
+    <value>Raids</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.ChocoboSquare" xml:space="preserve">
+    <value>Chocobo Square</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.ChocoboTutorial" xml:space="preserve">
+    <value>Chocobo Tutorial</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Wedding" xml:space="preserve">
+    <value>Wedding</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.GoldSaucer" xml:space="preserve">
+    <value>Gold Saucer</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.DiademV1" xml:space="preserve">
+    <value>Diadem v1</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.DiademV2" xml:space="preserve">
+    <value>Diadem v2</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PrivateEventArea" xml:space="preserve">
+    <value>Private Event Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Eureka" xml:space="preserve">
+    <value>Eureka</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.TheFeastCrystalTower" xml:space="preserve">
+    <value>The Feast Crystal Tower</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.BeginnerTutorial" xml:space="preserve">
+    <value>Beginner Tutorial</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PvPTheFeast" xml:space="preserve">
+    <value>PvP The Feast</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.MainStoryQuestEventArea" xml:space="preserve">
+    <value>MSQ Event Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.BeforeTrialDung" xml:space="preserve">
+    <value>Pre Trial Dungeon</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.AllianceRaid" xml:space="preserve">
+    <value>Alliance Raid</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.OpenWorldInstanceBattle" xml:space="preserve">
+    <value>Open World Instance Battle</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.Trial" xml:space="preserve">
+    <value>Trial</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.EventTrial" xml:space="preserve">
+    <value>Event Trial</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.TheFeastArea" xml:space="preserve">
+    <value>The Feast Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.RaidPublicArea" xml:space="preserve">
+    <value>Raid Public Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.HousingArea" xml:space="preserve">
+    <value>HousingArea</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.PvP" xml:space="preserve">
+    <value>PvP</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.HousingPrivateArea" xml:space="preserve">
+    <value>Housing Private Area</value>
+  </data>
+  <data name="TerritoryIntendedUseEnum.MainStoryQuestPrivateArea" xml:space="preserve">
+    <value>MSQ Private Area</value>
+  </data>
+  <data name="UtilRegion" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="UtilDataCenter" xml:space="preserve">
+    <value>DataCenter</value>
+  </data>
+  <data name="StClaimNewProfile" xml:space="preserve">
+    <value>Claim Your Lodestone Profile</value>
+  </data>
+  <data name="TitleClaimLodestoneWindow" xml:space="preserve">
+    <value>PlayerScope Lodestone Verification</value>
+  </data>
+  <data name="LsColumnLodestone" xml:space="preserve">
+    <value>Lodestone</value>
+  </data>
+  <data name="LsColumnNameAndHomeWorld" xml:space="preserve">
+    <value>Name and HomeWorld</value>
+  </data>
+  <data name="LsColumnLodestoneId" xml:space="preserve">
+    <value>Lodestone Id</value>
+  </data>
+  <data name="LsColumnVerificationStatus" xml:space="preserve">
+    <value>Verification Status</value>
+  </data>
+  <data name="LsEnterYourLodestoneLink" xml:space="preserve">
+    <value>Enter your Lodestone profile link:</value>
+  </data>
+  <data name="LsLodestoneProfileLink" xml:space="preserve">
+    <value>Lodestone Profile Link</value>
+  </data>
+  <data name="LsNext" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="LsCopyTheCode" xml:space="preserve">
+    <value>Copy the Code</value>
+  </data>
+  <data name="LsCodeCopied" xml:space="preserve">
+    <value>Code copied</value>
+  </data>
+  <data name="LsOpenBiographySettings" xml:space="preserve">
+    <value>Open Biography Settings</value>
+  </data>
+  <data name="LsValidate" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="LsCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LsGoToMyCharactersMenu" xml:space="preserve">
+    <value>Go to 'My Characters' menu</value>
+  </data>
+  <data name="StLodestoneVerifiedAt" xml:space="preserve">
+    <value>Verified At</value>
+  </data>
+  <data name="LsVerifyDifferentProfile" xml:space="preserve">
+    <value>Verify a Different Profile</value>
+  </data>
+  <data name="UtilClickToViewFullImage" xml:space="preserve">
+    <value>Click to view the image in full size</value>
+  </data>
+  <data name="UtilClickToCloseTheImage" xml:space="preserve">
+    <value>Click to close the big image</value>
+  </data>
+  <data name="AvatarOpenOnBrowser" xml:space="preserve">
+    <value>Open on Browser</value>
+  </data>
+  <data name="AvatarResetSize" xml:space="preserve">
+    <value>Reset Size</value>
+  </data>
+  <data name="AvatarResetZoom" xml:space="preserve">
+    <value>Reset Zoom</value>
+  </data>
+  <data name="DtOpenRightArrow" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="MnAreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="MnYes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="MnNo" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="DtLodestoneId" xml:space="preserve">
+    <value>Lodestone Id</value>
+  </data>
+  <data name="MnSaveNote" xml:space="preserve">
+    <value>Save Note</value>
+  </data>
+  <data name="MnAddNote" xml:space="preserve">
+    <value>Add Note</value>
+  </data>
+  <data name="DtCharacterCreationDate" xml:space="preserve">
+    <value>Creation Date</value>
+  </data>
+  <data name="StSettingsHideCharacterAvatars" xml:space="preserve">
+    <value>Hide Character Avatars</value>
   </data>
 </root>

@@ -37,13 +37,14 @@ using Microsoft.VisualBasic;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using PlayerScope.GUI.MainWindowTab;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Dalamud.Interface.Textures.TextureWraps;
 
 namespace PlayerScope.GUI
 {
     public class MainWindow : Window, IDisposable
     {
         private const string WindowId = "###PlayerScopeMain";
-        public MainWindow() : base(WindowId, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+        public MainWindow() : base(WindowId, ImGuiWindowFlags.None)
         {
             if (_instance == null)
             {
@@ -86,7 +87,7 @@ namespace PlayerScope.GUI
 
             FromServerTableSearchPlayersColumn = new string[]
             {
-            Loc.MnName, Loc.MnHomeWorldColumn, Loc.MnAccountId, Loc.MnContentId
+            "Details", "##Avatar",Loc.MnName, Loc.MnHomeWorldColumn, Loc.MnAccountId, Loc.MnContentId
             };
 
             FromServerTableSearchRetainersColumn = new string[]
@@ -101,7 +102,7 @@ namespace PlayerScope.GUI
 
             FavoritedPlayersColumn = new string[]
             {
-            Loc.MnName, Loc.MnContentId, Loc.MnAccountId, Loc.MnRemove
+           Loc.MnName, Loc.MnContentId, Loc.MnAccountId, Loc.MnAddNote, Loc.MnRemove
             };
 
             PlayerAndRetainersWorldStatsColumn = new string[]
@@ -134,7 +135,7 @@ namespace PlayerScope.GUI
 
         private string[] FromServerTableSearchPlayersColumn = new string[]
         {
-            Loc.MnName, Loc.MnHomeWorldColumn, Loc.MnAccountId, Loc.MnContentId
+            "Details", "##Avatar",Loc.MnName, Loc.MnHomeWorldColumn, Loc.MnAccountId, Loc.MnContentId
         };
 
         private string[] FromServerTableSearchRetainersColumn = new string[]
@@ -149,7 +150,7 @@ namespace PlayerScope.GUI
 
         private string[] FavoritedPlayersColumn = new string[]
         {
-            Loc.MnName, Loc.MnContentId, Loc.MnAccountId, Loc.MnRemove
+            Loc.MnName, Loc.MnContentId, Loc.MnAccountId, Loc.MnAddNote, Loc.MnRemove
         };
 
         public enum Tabs
@@ -175,7 +176,7 @@ namespace PlayerScope.GUI
             _TotalRetainers_Value = PersistenceContext._retainerCache.Count;
         }
 
-        unsafe void OpenAdventurePlate(ulong ContentId)
+        unsafe public void OpenAdventurePlate(ulong ContentId)
         {
             try
             {
@@ -186,6 +187,8 @@ namespace PlayerScope.GUI
                 _logger.LogError(ex.Message);
             }
         }
+
+        string MyFavoritesTabTitle = string.Empty;
 
         public override void Draw()
         {
@@ -201,12 +204,18 @@ namespace PlayerScope.GUI
                             DrawSearchPlayersAndRetainers_FromServerTab();
                         }
                     }
-                    string myFavoritesString = !Config.FavoritedPlayer.IsEmpty ? $"{Loc.MnTabMyFavorites} ({Config.FavoritedPlayer.Count})" : Loc.MnTabMyFavorites;
-                    using (var tabItem = ImRaii.TabItem(myFavoritesString))
+                    
+                    using (var tabItem = ImRaii.TabItem(MyFavoritesTabTitle))
                     {
                         if (tabItem)
                         {
                             DrawMyFavoriesTab();
+                        }
+                        else
+                        {
+                            MyFavoritesTabTitle = Config.FavoritedPlayer.Count > 0
+                               ? $"{Loc.MnTabMyFavorites} ({Config.FavoritedPlayer.Count})"
+                               : Loc.MnTabMyFavorites;
                         }
                     }
                     using (var tabItem = ImRaii.TabItem(Loc.MnDatabaseStats))
@@ -651,60 +660,6 @@ namespace PlayerScope.GUI
             return true;
         }
 
-        //public async Task<bool> SyncRetainersWithLocalDb(CancellationTokenSource cts)
-        //{
-        //    _ = Task.Run(async () =>
-        //    {
-        //        IsSyncingRetainers = true;
-        //        _LastCursor = 0;
-
-        //        try
-        //        {
-        //            while (!cts.Token.IsCancellationRequested)
-        //            {
-        //                var query = new RetainerQueryObject() { Cursor = _LastCursor, IsFetching = true };
-        //                var request = await ApiClient.Instance.GetRetainers<RetainerDto>(query);
-
-        //                if (request.Page != null && request.Page.Data != null)
-        //                {
-        //                    foreach (var _data in request.Page.Data)
-        //                    {
-        //                        _retainersFetchedFromServer[_data.LocalContentId] = _data;
-        //                    }
-
-        //                    _LastCursor = request.Page.LastCursor;
-        //                    _SyncMessage = $"{Loc.StFetchingRetainers} ({_retainersFetchedFromServer.Count}/{_client._LastServerStats.ServerStats.TotalRetainerCount - _client._LastServerStats.ServerStats.TotalPrivateRetainerCount})";
-
-        //                    if (request.Page.NextCount > 0)
-        //                    {
-        //                        await Task.Delay(10, cts.Token);
-        //                    }
-        //                    else
-        //                    {
-        //                        _LastCursor = 0;
-        //                        break;
-        //                    }
-
-        //                    await Task.Delay(10, cts.Token);
-        //                }
-        //                else
-        //                {
-        //                    _SyncMessage = cts.Token.IsCancellationRequested ? Loc.StErrorStoppedFetching : Loc.StErrorUnableToFetchRetainers;
-        //                    IsSyncingRetainers = false;
-        //                }
-        //            }
-        //        }
-        //        finally
-        //        {
-        //            IsSyncingRetainers = false;
-        //            IsDbRefreshing = true;
-
-        //            SyncWithLocalDB();
-        //        }
-        //    });
-
-        //    return true;
-        //}
         public async Task<bool> SyncRetainersWithLocalDb(CancellationTokenSource cts)
         {
             _ = Task.Run(async () =>
@@ -1073,19 +1028,6 @@ namespace PlayerScope.GUI
                         WorldSelectorWindow.Instance.ResetSelectedWorlds();
                     }
                 }
-
-                //foreach (var world in selectedWorlds.ToList())
-                //{
-                //    ImGui.SameLine();
-
-                //    ImGui.BulletText($"{world.WorldName} (ID: {world.WorldId})");
-
-                //    ImGui.SameLine();
-                //    if (ImGui.Button($"X###{world.WorldId}"))
-                //    {
-                //        WorldSelectorWindow.Instance.SelectedWorlds.Remove(world);
-                //    }
-                //}
             }
 
             ImGuiHelpers.ScaledDummy(5.0f);
@@ -1110,16 +1052,21 @@ namespace PlayerScope.GUI
                             if (player == null)
                                 continue;
                             ImGui.TableNextRow();
-                            ImGui.TableNextColumn(); 
+                            ImGui.TableNextColumn();
 
+                            // Show Details column
                             using (ImRaii.Disabled(DetailsWindow.Instance._LastMessage == Loc.DtLoading))
-                                if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
+                                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.LongArrowAltRight, $"{Loc.DtOpenRightArrow}##{index}"))
                                 {
                                     DetailsWindow.Instance.IsOpen = true;
                                     DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)localContentId, true);
                                 }
 
-                            ImGui.SameLine();
+                            ImGui.TableNextColumn();
+
+                            AvatarViewerWindow.DrawCharacterAvatar($"{player.Name}##{index}", player.AvatarLink);
+
+                            ImGui.TableNextColumn();
 
                             // PlayerName column
                             if (!string.IsNullOrWhiteSpace(player.Name))
@@ -1202,11 +1149,13 @@ namespace PlayerScope.GUI
                             ImGui.TableNextRow();
                             ImGui.TableNextColumn(); // RetainerName column
 
-                            if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
-                            {
-                                DetailsWindow.Instance.IsOpen = true;
-                                DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)retainer.OwnerLocalContentId, true);
-                            }
+                            using (ImRaii.Disabled(DetailsWindow.Instance._LastMessage == Loc.DtLoading))
+                                if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.LongArrowAltRight, $"{Loc.DtOpenRightArrow}##{index}"))
+                                {
+                                    DetailsWindow.Instance.IsOpen = true;
+                                    DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)localContentId, true);
+                                }
+
                             ImGui.SameLine();
 
                             if (!string.IsNullOrWhiteSpace(retainer.Name))
@@ -1267,11 +1216,12 @@ namespace PlayerScope.GUI
                         ImGui.TableNextRow();
                         ImGui.TableNextColumn(); // PlayerName column
 
-                        if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
+                        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.LongArrowAltRight, $"{Loc.DtOpenRightArrow}##{index}"))
                         {
                             DetailsWindow.Instance.IsOpen = true;
-                            DetailsWindow.Instance.OpenDetailedPlayerWindow(contentId, false);
+                            DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)contentId, true);
                         }
+
                         ImGui.SameLine();
 
                         if (player.Item1.Name != null)
@@ -1604,16 +1554,17 @@ namespace PlayerScope.GUI
                     ImGui.TableNextRow();
                     ImGui.TableNextColumn();
 
-                    if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
+                    if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.LongArrowAltRight, $"{Loc.DtOpenRightArrow}##{index}"))
                     {
                         DetailsWindow.Instance.IsOpen = true;
                         DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)localContentId, true);
                     }
+
                     ImGui.SameLine();
 
                     if (!string.IsNullOrWhiteSpace(player.Name)) // PlayerName column
                     {
-                        Utils.CopyButton(player.Name, $"##{index}");
+                        Utils.CopyButton(player.Name, $"FavCharacterName##{index}");
                         ImGui.Text(player.Name);
                     }
                     else
@@ -1623,19 +1574,78 @@ namespace PlayerScope.GUI
 
                     ImGui.TableNextColumn();  //cId column
 
-                    Utils.CopyButton(localContentId.ToString(), $"##{index}");
+                    Utils.CopyButton(localContentId.ToString(), $"FavCharacterContentId##{index}");
                     ImGui.Text(localContentId.ToString());
 
                     ImGui.TableNextColumn(); //AccId column
 
-                    Utils.CopyButton(player.AccountId.ToString(), $"##{index}");
+                    Utils.CopyButton(player.AccountId.ToString(), $"FavCharacterAccountId##{index}");
                     ImGui.Text(player.AccountId.ToString());
 
-                    ImGui.TableNextColumn(); //Remove column
+                    ImGui.TableNextColumn(); // Add Note column
 
-                    if (ImGui.Button("X" + $"###{index}"))
+                    bool showNoteInput = favoritedCharacterNoteVisibility.ContainsKey(index) && favoritedCharacterNoteVisibility[index];
+
+                    string note = player.Note ?? string.Empty;
+
+                    if (showNoteInput)
                     {
-                        Config.FavoritedPlayer.Remove(localContentId, out _);
+                        ImGui.SetNextItemWidth(80);
+                        if (ImGui.InputText($"##Note{index}", ref note, 100))
+                        {
+                            player.Note = note;
+                            Config.Save();
+                        }
+
+                        ImGui.SameLine();
+                        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.StickyNote, $"{Loc.MnSaveNote}##{index}"))
+                        {
+                            favoritedCharacterNoteVisibility[index] = !showNoteInput;
+                            showNoteInput = favoritedCharacterNoteVisibility[index];
+                        }
+                    }
+                    else
+                    {
+                        ImGui.TextWrapped(note);
+
+                        ImGui.SameLine();
+                        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.StickyNote, $"{Loc.MnAddNote}##{index}"))
+                        {
+                            favoritedCharacterNoteVisibility[index] = !showNoteInput;
+                            showNoteInput = favoritedCharacterNoteVisibility[index];
+                        }
+                    }
+
+                    ImGui.TableNextColumn(); // Remove column
+
+                    if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Trash, $"Remove##{index}"))
+                    {
+                        selectedIndex = index;
+                        playerIdToRemove = localContentId;
+                        showRemoveConfirmation = true;
+                    }
+
+                    if (showRemoveConfirmation && selectedIndex == index)
+                    {
+                        ImGui.SameLine();
+                        ImGui.Text(Loc.MnAreYouSure);
+                        ImGui.SameLine();
+                        if (ImGui.Button(Loc.MnYes))
+                        {
+                            if (playerIdToRemove != -1)
+                            {
+                                Config.FavoritedPlayer.Remove(playerIdToRemove, out _);
+                                Config.Save();
+                            }
+                            showRemoveConfirmation = false;
+                            playerIdToRemove = -1;
+                        }
+
+                        ImGui.SameLine();
+                        if (ImGui.Button(Loc.MnNo))
+                        {
+                            showRemoveConfirmation = false;
+                        }
                     }
 
                     index++;
@@ -1643,6 +1653,11 @@ namespace PlayerScope.GUI
                 ImGui.EndTable();
             }
         }
+
+        Dictionary<int, bool> favoritedCharacterNoteVisibility = new Dictionary<int, bool>();
+        bool showRemoveConfirmation = false;
+        long playerIdToRemove = -1;
+        int selectedIndex = -1;
 
         public static ConcurrentDictionary<ushort, List<ulong>> _TempGetServerRetainersCount = new ConcurrentDictionary<ushort, List<ulong>>();
         public static int LastTotalRetainerCount = 0;

@@ -468,5 +468,40 @@ namespace PlayerScope.API
                 return (null, Message);
             }
         }
+
+        public async Task<(ClaimLodestoneCharacterDto? LodestoneProfile, string Message)> ClaimLodestoneProfile(string lodestoneProfileLink, int state)
+        {
+            string Message = string.Empty;
+            try
+            {
+                var request = new RestRequest($"users/lodestone/claim").AddHeader("api-key", Token).AddHeader("V", Utils.clientVer).AddHeader("L", Config.Language);
+                request.AddQueryParameter("url", lodestoneProfileLink);
+                request.AddQueryParameter("state", state);
+                var response = await _restClient.ExecutePostAsync(request).ConfigureAwait(true);
+
+                if (response.IsSuccessful)
+                {
+                    var _JsonResponse = JsonConvert.DeserializeObject<ClaimLodestoneCharacterDto>(response.Content!);
+                    if (_JsonResponse != null)
+                    {
+                        Message = _JsonResponse.Message;
+                        return (_JsonResponse, Message);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(response.Content))
+                    Message = $"{Loc.ApiError} {response.Content}";
+                else if (response.StatusCode == 0)
+                    Message = $"{Loc.ApiError} {Loc.ApiServiceUnavailable}";
+                else
+                    Message = $"{Loc.ApiError} {response.StatusCode.ToString()}";
+
+                return (null, Message);
+            }
+            catch (Exception ex)
+            {
+                Message = $"{Loc.ApiError} {ex.Message}";
+                return (null, Message);
+            }
+        }
     }
 }

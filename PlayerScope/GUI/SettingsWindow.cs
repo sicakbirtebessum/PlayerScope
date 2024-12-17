@@ -1,58 +1,32 @@
-﻿using Dalamud;
-using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.Network.Structures;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
-using Dalamud.Interface.ImGuiNotification;
-using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
-using Dalamud.Plugin.Services;
-using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using ImGuiNET;
-using Lumina;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 using RestSharp;
 using PlayerScope.API;
 using PlayerScope.API.Models;
-using PlayerScope.API.Query;
-using PlayerScope.Database;
 using PlayerScope.Handlers;
 using PlayerScope.Properties;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
-using static FFXIVClientStructs.FFXIV.Client.Graphics.Scene.CharacterBase.Delegates;
-using static FFXIVClientStructs.FFXIV.Client.UI.AddonJobHudMNK1.ChakraGauge;
-using static FFXIVClientStructs.FFXIV.Component.GUI.AtkUIColorHolder.Delegates;
-using static Lumina.Data.Parsing.Layer.LayerCommon;
 using static PlayerScope.API.Models.User;
 using static PlayerScope.Configuration;
-using static PlayerScope.GUI.MainWindow;
-using static System.Net.Mime.MediaTypeNames;
-using Lumina.Excel.Sheets;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using PlayerScope.GUI.MainWindowTab;
+using PlayerScope.Database;
+using Microsoft.Extensions.Logging;
+using static Lumina.Data.Parsing.Layer.LayerCommon;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace PlayerScope.GUI
 {
@@ -65,7 +39,9 @@ namespace PlayerScope.GUI
             {
                 _instance = this;
             }
-            OnLanguageChange();
+
+            LanguageChanged();
+
             this.SizeConstraints = new WindowSizeConstraints
             {
                 MinimumSize = new Vector2(600, 450),
@@ -88,6 +64,21 @@ namespace PlayerScope.GUI
                 return _instance;
             }
         }
+        public void LanguageChanged()
+        {
+            WindowName = $"{Loc.TitleSettingsMenu}{WindowId}";
+
+            UserLodestoneCharactersColumn = new string[]
+            {
+                Loc.LsColumnLodestone,"##Avatar", Loc.LsColumnNameAndHomeWorld, Loc.LsColumnLodestoneId, Loc.StLodestoneVerifiedAt
+            };
+        }
+
+        private string[] UserLodestoneCharactersColumn = new string[]
+        {
+             Loc.LsColumnLodestone,"##Avatar", Loc.LsColumnNameAndHomeWorld, Loc.LsColumnLodestoneId, Loc.StLodestoneVerifiedAt
+        };
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
@@ -175,6 +166,21 @@ namespace PlayerScope.GUI
                 Config.SearchedNamesCount = LastUserInfo.NetworkStats?.SearchedNamesCount;
                 Config.LastSyncedTime = LastUserInfo.NetworkStats?.LastSyncedTime;
 
+                if (LastUserInfo.LodestoneCharacters != null && LastUserInfo.LodestoneCharacters.Count > 0)
+                {
+                    foreach (var character in LastUserInfo.LodestoneCharacters)
+                    {
+                        _localUserLodestoneCharacters[character.LodestoneId] =
+                            new UserLodestoneCharacterDto
+                            {
+                                LodestoneId = character.LodestoneId,
+                                NameAndWorld = character.NameAndWorld,
+                                AvatarLink = character.AvatarLink,
+                                VerifiedAt = character.VerifiedAt,
+                            };
+                    }
+                }
+
                 if (LastUserInfo.Characters != null && LastUserInfo.Characters.Count > 0)
                 {
                     LastUserCharactersPrivacySettings = LastUserInfo.Characters
@@ -222,6 +228,9 @@ namespace PlayerScope.GUI
         public string LastNetworkMessage = string.Empty;
         public string LastRegistrationWindowMessage = string.Empty;
         public int LastNetworkMessageTime;
+
+        public bool OpenMyCharactersTab = false;
+
         public override void Draw()
         {
             if (!Config.AgreementAccepted)
@@ -232,37 +241,188 @@ namespace PlayerScope.GUI
             {
                 if (tabBar)
                 {
-                    using (var tabItem = ImRaii.TabItem(Loc.StTabUserInfo))
+                    if (OpenMyCharactersTab)
                     {
-                        if (tabItem)
+                        using (ImRaii.Disabled(!Config.LoggedIn))
                         {
-                            DrawUserInfoTab();
+                            string tabTitle = _localUserCharacters.Count > 0
+                            ? $"{Loc.StTabMyCharactersAndPrivacy} ({_localUserCharacters.Count})"
+                            : Loc.StTabMyCharactersAndPrivacy;
+                            using (var tabItem = ImRaii.TabItem(tabTitle))
+                            {
+                                if (tabItem)
+                                {
+                                    DrawMyCharactersAndPrivacyTab();
+                                }
+                            }
                         }
+                        OpenMyCharactersTab = false;
                     }
-                    using (ImRaii.Disabled(!Config.LoggedIn))
+                    else
                     {
-                        string tabTitle = _localUserCharacters.Count > 0
-                        ? $"{Loc.StTabMyCharactersAndPrivacy} ({_localUserCharacters.Count})"
-                        : Loc.StTabMyCharactersAndPrivacy;
-                        using (var tabItem = ImRaii.TabItem(tabTitle))
+                        using (var tabItem = ImRaii.TabItem(Loc.StTabUserInfo))
                         {
                             if (tabItem)
                             {
-                                DrawMyCharactersTab();
+                                DrawUserInfoTab();
                             }
                         }
-                    }
 
-                    using (var tabItem = ImRaii.TabItem(Loc.StOptions))
-                    {
-                        if (tabItem)
+                        using (ImRaii.Disabled(!Config.LoggedIn))
                         {
-                            DrawOptionsTab();
+                            string tabTitle = _localUserCharacters.Count > 0
+                            ? $"{Loc.StTabMyCharactersAndPrivacy} ({_localUserCharacters.Count})"
+                            : Loc.StTabMyCharactersAndPrivacy;
+                            using (var tabItem = ImRaii.TabItem(tabTitle))
+                            {
+                                if (tabItem)
+                                {
+                                    DrawMyCharactersAndPrivacyTab();
+                                }
+                            }
+                        }
+
+                        using (var tabItem = ImRaii.TabItem(Loc.StOptions))
+                        {
+                            if (tabItem)
+                            {
+                                DrawOptionsTab();
+                            }
                         }
                     }
                 }
             }
         }
+
+        private void DrawMyCharactersAndPrivacyTab()
+        {
+            using (var tabBar = ImRaii.TabBar("TabsCharactersAndPrivacy"))
+            {
+                if (tabBar)
+                {
+                    string tabTitle = _localUserCharacters.Count > 0
+                      ? $"{Loc.StTabMyCharacters} ({_localUserCharacters.Count})"
+                      : Loc.StTabMyCharacters;
+                    using (var tabItem = ImRaii.TabItem(tabTitle))
+                    {
+                        if (tabItem)
+                        {
+                            DrawMyCharactersTab();
+                        }
+                    }
+                
+                    using (var tabItem = ImRaii.TabItem(ClaimedLodestoneProfilesTabTitle))
+                    {
+                        if (tabItem)
+                        {
+                            DrawClaimedLodestoneProfilesTab();
+                        }
+                        else
+                        {
+                            ClaimedLodestoneProfilesTabTitle = _localUserLodestoneCharacters.Count > 0
+                               ? $"{Loc.StTabClaimedLodestoneProfiles} ({_localUserLodestoneCharacters.Count})"
+                               : Loc.StTabClaimedLodestoneProfiles;
+                        }
+                    }
+                }
+            }
+        }
+        string ClaimedLodestoneProfilesTabTitle = string.Empty;
+
+        private void DrawClaimedLodestoneProfilesTab()
+        {
+            ImGui.TextWrapped(Loc.StThisTabDisplaysLodestoneProfiles);
+
+            ImGui.NewLine();
+
+            ImGui.TextWrapped(string.Format(Loc.StATotalOfLodestoneProfiles, _localUserLodestoneCharacters.Count));
+            ImGui.SameLine();
+
+            if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.Link, $"{Loc.StClaimNewProfile}"))
+            {
+                ClaimLodestoneWindow.Instance.IsOpen = true;
+            }
+
+            ImGuiHelpers.ScaledDummy(5.0f);
+            ImGui.Separator();
+            ImGuiHelpers.ScaledDummy(5.0f);
+
+            ImGui.BeginGroup();
+
+            if (LastUserInfo != null && LastUserInfo.LodestoneCharacters != null && LastUserInfo.LodestoneCharacters.Count > 0 && !_localUserLodestoneCharacters.IsEmpty)
+            {
+                if (ImGui.BeginTable($"List##LodestoneChars", UserLodestoneCharactersColumn.Length, ImGuiTableFlags.BordersInner | ImGuiTableFlags.ScrollY))
+                {
+                    Utils.SetupTableColumns(UserLodestoneCharactersColumn);
+
+                    var index = 0;
+
+                    foreach (var character in LastUserInfo.LodestoneCharacters)
+                    {
+                        if (!_localUserLodestoneCharacters.TryGetValue(character.LodestoneId, out var _getLocalChara))
+                        {
+                            continue;
+                        }
+
+                        ImGui.TableNextRow();
+                        ImGui.TableNextColumn();
+
+                        // Open Lodestone column
+                        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.ExternalLinkAlt, $"{Loc.StLodestone}##_{index}"))
+                        {
+                            Utils.TryOpenURI(new Uri($"{Utils.lodestoneCharacterUrl}{character.LodestoneId}"));
+                        }
+
+                        ImGui.TableNextColumn();
+
+                        // Avatar column
+                        AvatarViewerWindow.DrawCharacterAvatar(character.NameAndWorld, character.AvatarLink);
+
+                        ImGui.TableNextColumn();
+
+                        // Character Name and World column
+                        if (!string.IsNullOrWhiteSpace(character.NameAndWorld))
+                        {
+                            Utils.CopyButton(character.NameAndWorld, $"##CharName_{index}");
+                            ImGui.Text(character.NameAndWorld);
+                        }
+                        else
+                        {
+                            ImGui.Text("---");
+                        }
+
+                        ImGui.TableNextColumn();
+
+                        // Lodestone Id column
+                        if (!string.IsNullOrWhiteSpace(character.LodestoneId.ToString()))
+                        {
+                            Utils.CopyButton(character.LodestoneId.ToString(), $"##CharLodestoneId_{index}");
+                            ImGui.Text(character.LodestoneId.ToString());
+                        }
+                        else
+                        {
+                            ImGui.Text("---");
+                        }
+
+                        ImGui.TableNextColumn();
+
+                        // Verified At column
+                        if (!string.IsNullOrWhiteSpace(character.VerifiedAt.ToString()))
+                        {
+                            ImGui.Text(Tools.UnixTimeConverter(character.VerifiedAt));
+                        }
+                        else
+                        {
+                            ImGui.Text("---");
+                        }
+
+                        index++;
+                    }
+                }
+                ImGui.EndTable();
+            }
+        }
+
         public static string GetEnumDisplayName(Roles enumValue)
         {
             //var value = enumValue.GetType().GetMember(enumValue.ToString()).First()?.GetCustomAttribute<DisplayAttribute>()?.Name;
@@ -504,21 +664,327 @@ namespace PlayerScope.GUI
         }
         bool isAuthLinkCopied;
 
-        
-
+        bool _hideCharacterAvatars;
         int Option_ObjRefreshInterval;
+        bool _enableDebuging;
+        
         private void DrawOptionsTab()
         {
+            ImGui.Checkbox(Loc.StSettingsHideCharacterAvatars, ref _hideCharacterAvatars);
+            if (Config.bHideCharacterAvatars != _hideCharacterAvatars)
+            {
+                Config.bHideCharacterAvatars = _hideCharacterAvatars;
+                Config.Save();
+            }
+
+            ImGui.Spacing();
+
+            ImGui.Separator();
+
+            ImGui.Spacing();
+
             ImGui.SliderInt("Object Refresh Interval (ms)", ref Option_ObjRefreshInterval, 0_100, 10_000);
             if (Config.ObjectTableRefreshInterval != Option_ObjRefreshInterval)
             {
                 Config.ObjectTableRefreshInterval = Option_ObjRefreshInterval;
                 Config.Save();
             }
+
+            ImGui.Spacing();
+
+            ImGui.Separator();
+
+            ImGui.Spacing();
+
+            ImGui.Checkbox("Enable debugging", ref _enableDebuging);
+            if (_enableDebuging)
+                DrawDebugging();
+        }
+
+        void DrawDebugging()
+        {
+            using (var tabBar = ImRaii.TabBar("Tabs"))
+            {
+                if (tabBar)
+                {
+                    using (var tabItem = ImRaii.TabItem("Upload Players"))
+                    {
+                        if (tabItem)
+                        {
+                            ImGui.Text($"UploadPlayers Count: {PersistenceContext._UploadPlayers.Count}");
+
+                            ImGuiHelpers.ScaledDummy(10.0f);
+
+                            if (ImGui.BeginTable("PTable", 9, ImGuiTableFlags.BordersInner | ImGuiTableFlags.RowBg))
+                            {
+                                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("AccountId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("HomeWorldId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CurrentWorldId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("TerritoryId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("PlayerPos", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("Customization", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CreatedAt", ImGuiTableColumnFlags.WidthFixed);
+
+                                ImGui.TableHeadersRow();
+
+                                foreach (var player in PersistenceContext._UploadPlayers)
+                                {
+                                    ImGui.TableNextRow();
+
+                                    // Name
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.Name}");
+
+                                    // ContentId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.LocalContentId}");
+
+                                    // AccountId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.AccountId}");
+
+                                    // HomeWorldId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.HomeWorldId}");
+
+                                    // CurrentWorldId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.CurrentWorldId}");
+
+                                    // TerritoryId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.TerritoryId}");
+
+                                    // PlayerPos
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.PlayerPos}");
+
+                                    // Customization
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.Customization?.GenderRace}");
+
+                                    // CreatedAt
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{Tools.ToTimeSinceString(player.Value.CreatedAt)}");
+                                }
+                                ImGui.EndTable();
+                            }
+                        }
+                    }
+                    using (var tabItem = ImRaii.TabItem("Sent Players"))
+                    {
+                        if (tabItem)
+                        {
+                            ImGui.Text($"UploadedPlayers Count: {PersistenceContext._UploadedPlayersCache.Count}");
+
+                            ImGuiHelpers.ScaledDummy(10.0f);
+
+                            if (ImGui.BeginTable("PTable1", 9, ImGuiTableFlags.BordersInner | ImGuiTableFlags.RowBg))
+                            {
+                                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("AccountId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("HomeWorldId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CurrentWorldId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("TerritoryId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("PlayerPos", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("Customization", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CreatedAt", ImGuiTableColumnFlags.WidthFixed);
+
+                                ImGui.TableHeadersRow();
+
+                                foreach (var player in PersistenceContext._UploadedPlayersCache)
+                                {
+                                    ImGui.TableNextRow();
+
+                                    // Name
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.Name}");
+
+                                    // ContentId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.LocalContentId}");
+
+                                    // AccountId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.AccountId}");
+
+                                    // HomeWorldId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.HomeWorldId}");
+
+                                    // CurrentWorldId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.CurrentWorldId}");
+
+                                    // TerritoryId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.TerritoryId}");
+
+                                    // PlayerPos
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.PlayerPos}");
+
+                                    // Customization
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{player.Value.Customization?.GenderRace}");
+
+                                    // CreatedAt
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{Tools.ToTimeSinceString(player.Value.CreatedAt)}");
+                                }
+                                ImGui.EndTable();
+                            }
+                        }
+                    }
+                    using (var tabItem = ImRaii.TabItem("Upload Retainers"))
+                    {
+                        if (tabItem)
+                        {
+                            ImGui.Text($"UploadRetainers Count: {PersistenceContext._UploadRetainers.Count}");
+
+                            ImGuiHelpers.ScaledDummy(10.0f);
+
+                            if (ImGui.BeginTable("PTable1", 5, ImGuiTableFlags.BordersInner | ImGuiTableFlags.RowBg))
+                            {
+                                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("HomeWorldId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("OwnerLocalContentId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CreatedAt", ImGuiTableColumnFlags.WidthFixed);
+
+                                ImGui.TableHeadersRow();
+
+                                foreach (var retainer in PersistenceContext._UploadRetainers)
+                                {
+                                    ImGui.TableNextRow();
+
+                                    // Name
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.Name}");
+
+                                    // ContentId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.LocalContentId}");
+
+                                    // HomeWorldId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.WorldId}");
+
+                                    // OwnerLocalContentId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.OwnerLocalContentId}");
+
+                                    // CreatedAt
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{Tools.ToTimeSinceString(retainer.Value.CreatedAt)}");
+                                }
+                                ImGui.EndTable();
+                            }
+                        }
+                    }
+                    using (var tabItem = ImRaii.TabItem("Sent Retainers"))
+                    {
+                        if (tabItem)
+                        {
+                            ImGui.Text($"UploadedRetainers Count: {PersistenceContext._UploadedRetainersCache.Count}");
+
+                            ImGuiHelpers.ScaledDummy(10.0f);
+
+                            if (ImGui.BeginTable("PTable1", 5, ImGuiTableFlags.BordersInner | ImGuiTableFlags.RowBg))
+                            {
+                                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("HomeWorldId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("OwnerLocalContentId", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("CreatedAt", ImGuiTableColumnFlags.WidthFixed);
+
+                                ImGui.TableHeadersRow();
+
+                                foreach (var retainer in PersistenceContext._UploadedRetainersCache)
+                                {
+                                    ImGui.TableNextRow();
+
+                                    // Name
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.Name}");
+
+                                    // ContentId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.LocalContentId}");
+
+                                    // HomeWorldId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.WorldId}");
+
+                                    // OwnerLocalContentId
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{retainer.Value.OwnerLocalContentId}");
+
+                                    // CreatedAt
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{Tools.ToTimeSinceString(retainer.Value.CreatedAt)}");
+                                }
+                                ImGui.EndTable();
+                            }
+                        }
+                    }
+                    using (var tabItem = ImRaii.TabItem("Avatar Cache"))
+                    {
+                        if (tabItem)
+                        {
+                            ImGui.Text($"Image Cache Count: {Plugin.AvatarCacheManager._avatarCache.Count}");
+
+                            if (ImGui.Button("Clear Cache"))
+                            {
+                                AvatarViewerWindow.Instance.IsOpen = false;
+                                Plugin.AvatarCacheManager.ClearAvatarCache();
+                            }
+
+                            ImGuiHelpers.ScaledDummy(10.0f);
+
+                            if (ImGui.BeginTable("ATable1", 5, ImGuiTableFlags.BordersInner | ImGuiTableFlags.RowBg))
+                            {
+                                ImGui.TableSetupColumn("Key", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("Size", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("TextureHandle", ImGuiTableColumnFlags.WidthFixed);
+                                ImGui.TableSetupColumn("Expiration", ImGuiTableColumnFlags.WidthFixed);
+
+                                ImGui.TableHeadersRow();
+
+                                foreach (var cache in Plugin.AvatarCacheManager._avatarCache)
+                                {
+                                    ImGui.TableNextRow();
+
+                                    // Key
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{cache.Key}");
+
+                                    // Size
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{cache.Value.Texture.Size.ToString()}");
+
+                                    // TextureHandle
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{cache.Value.TextureHandle}");
+
+                                    // Expiration
+                                    ImGui.TableNextColumn();
+                                    ImGui.Text($"{cache.Value.Expiration.ToString()}");
+                                }
+                                ImGui.EndTable();
+                            }
+                        }
+                    }
+                }
+            }
         }
         
-        
         private ConcurrentDictionary<long, UserCharacters> _localUserCharacters = new();
+        private ConcurrentDictionary<int, UserLodestoneCharacterDto> _localUserLodestoneCharacters = new();
+        
         public class UserCharacters
         {
             public string? Name { get; set; }
@@ -600,11 +1066,15 @@ namespace PlayerScope.GUI
                     bool _bHideAltCharacters = privacy.HideAltCharacters;
 
                     using (ImRaii.Disabled(DetailsWindow.Instance._LastMessage == Loc.DtLoading))
-                        if (ImGui.Button(Loc.StLoadDetails + $"##{index}"))
+                        if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.LongArrowAltRight, $"{Loc.DtOpenRightArrow}##{index}"))
                         {
                             DetailsWindow.Instance.IsOpen = true;
                             DetailsWindow.Instance.OpenDetailedPlayerWindow((ulong)character.LocalContentId, true);
                         }
+
+                    ImGui.SameLine();
+
+                    AvatarViewerWindow.DrawCharacterAvatar(character.Name, character.AvatarLink);
 
                     ImGui.SameLine();
 
@@ -915,12 +1385,20 @@ namespace PlayerScope.GUI
         private void OnLanguageChange()
         {
             WindowName = $"{Loc.TitleSettingsMenu}{WindowId}";
+
+            this.LanguageChanged();
             DetailsWindow.Instance.LanguageChanged();
             MainWindow.Instance.LanguageChanged();
+
             PlayerDetailed.UpdateFlagMessages();
+            Models.EnumExtensions.RefreshResources();
             if (WorldSelectorWindow.Instance != null)
             {
                 WorldSelectorWindow.Instance.UpdateWindowTitle();
+            }
+            if (ClaimLodestoneWindow.Instance != null)
+            {
+                ClaimLodestoneWindow.Instance.LanguageChanged();
             }
         }
         
@@ -929,12 +1407,16 @@ namespace PlayerScope.GUI
             if (lang == LanguageEnum.en)
             {
                 Loc.Culture = new CultureInfo("en");
+                CultureInfo.CurrentCulture = new CultureInfo("en");
+                CultureInfo.CurrentUICulture = new CultureInfo("en");
                 Config.Language = LanguageEnum.en;
                 Config.Save();
             }
             else if (lang == LanguageEnum.tr)
             {
                 Loc.Culture = new CultureInfo("tr");
+                CultureInfo.CurrentCulture = new CultureInfo("tr");
+                CultureInfo.CurrentUICulture = new CultureInfo("tr");
                 Config.Language = LanguageEnum.tr;
                 Config.Save();
             }
