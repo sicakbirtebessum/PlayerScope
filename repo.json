@@ -4,15 +4,15 @@
     "Author": "SicakBirTebessüm",
     "Punchline": "Track players and retainers. (Crowdsourced)",
     "Description": "Keeps track of players and who a retainer belongs to. Alt characters can also be tracked if they have been seen before.\n--Currently only for whitelisted players.",
-    "AssemblyVersion": "1.0.5.5",
+    "AssemblyVersion": "1.0.5.6",
     "InternalName": "PlayerScope",
     "RepoUrl": "https://github.com/sicakbirtebessum/PlayerScope",
     "IconUrl": "https://raw.githubusercontent.com/sicakbirtebessum/PlayerScope/master/icon.png",
-    "DownloadLinkInstall": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.5/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.5/latest.zip",
+    "DownloadLinkInstall": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.6/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/sicakbirtebessum/PlayerScope/releases/download/1.0.5.6/latest.zip",
     "DalamudApiLevel": 11,
-    "LastUpdate": 1732542976,
-    "Changelog": "- World filter\n- Many UI improvements\n- See github for more changelogs",
+    "LastUpdate": 1734478026,
+    "Changelog": "- Avatars\n- Lodestone integrations\n- See github for more changelogs",
     "Tags": [ "player", "search", "retainer", "track", "account" ]
   }
 ]
