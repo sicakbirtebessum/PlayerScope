@@ -9,6 +9,7 @@ using System;
 using System.Numerics;
 using Dalamud.Interface.Utility.Raii;
 using System.Text.RegularExpressions;
+using Dalamud.Interface.Utility;
 
 namespace PlayerScope.GUI
 {
@@ -86,7 +87,7 @@ namespace PlayerScope.GUI
             var avatarHandle = Plugin.AvatarCacheManager.GetAvatarHandle(Utils.GetAvatarUrl(avatarLink, false));
             if (avatarHandle != 0)
             {
-                ImGui.Image(avatarHandle, new Vector2(22, 22));
+                ImGui.Image(avatarHandle, new Vector2(22 * ImGuiHelpers.GlobalScale, 22 * ImGuiHelpers.GlobalScale));
 
                 if (ImGui.IsItemHovered())
                 {
@@ -100,7 +101,7 @@ namespace PlayerScope.GUI
                         : Loc.UtilClickToViewFullImage;
 
                     ImGui.Text(fullSizeDescription);
-                    ImGui.Image(avatarHandle, new Vector2(256, 256));
+                    ImGui.Image(avatarHandle, new Vector2(256 * ImGuiHelpers.GlobalScale, 256 * ImGuiHelpers.GlobalScale));
 
                     if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                     {
@@ -131,9 +132,10 @@ namespace PlayerScope.GUI
                 return;
             }
 
+            var scaledMinimumWindowSize = minimumWindowSize * ImGuiHelpers.GlobalScale;
             var currentWindowSize = ImGui.GetWindowSize();
 
-            using (ImRaii.Disabled(currentWindowSize == minimumWindowSize))
+            using (ImRaii.Disabled(currentWindowSize.X <= scaledMinimumWindowSize.X && currentWindowSize.Y <= scaledMinimumWindowSize.Y))
                 if (ImGuiComponents.IconButtonWithText(FontAwesomeIcon.VectorSquare, Loc.AvatarResetSize))
                 {
                     zoomFactor = 1.0f;

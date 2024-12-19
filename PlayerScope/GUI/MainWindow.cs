@@ -820,13 +820,13 @@ namespace PlayerScope.GUI
 
             ImGui.Text(Loc.MnSource);
             ImGui.SameLine();
-            ImGui.SetNextItemWidth(90);
+            ImGui.SetNextItemWidth(90 * ImGuiHelpers.GlobalScale);
             ImGui.Combo("##db1", ref selectedComboItem_ServerOrLocalDb, selectedComboItems0, 2);
             ImGui.SameLine();
-            ImGui.SetNextItemWidth(90);
+            ImGui.SetNextItemWidth(90 * ImGuiHelpers.GlobalScale);
             ImGui.Combo("##serverDB1", ref selectedComboItem_PlayerOrRetainer, selectedComboItems1, 2);
             ImGui.SameLine();
-            ImGui.SetNextItemWidth(100);
+            ImGui.SetNextItemWidth(100 * ImGuiHelpers.GlobalScale);
 
             if (selectedComboItem_PlayerOrRetainer == 0)
                 selectedComboItems2 = [Loc.MnByName, Loc.MnById];
@@ -849,10 +849,10 @@ namespace PlayerScope.GUI
             ImGui.SameLine();
             ImGui.Text("->");
             ImGui.SameLine();
-            ImGui.SetNextItemWidth(150);
+            ImGui.SetNextItemWidth(150 * ImGuiHelpers.GlobalScale);
             ImGui.InputTextWithHint("##searchC", string.Format(Loc.MnTextInputEnterHere, SearchByPlayerOrRetainer, SearchByNameorId), ref _searchContent, 32, ImGuiInputTextFlags.AutoSelectAll);
 
-            ImGui.SetNextItemWidth(140);
+            ImGui.SetNextItemWidth(140 * ImGuiHelpers.GlobalScale);
             ImGui.SameLine();
 
             if (selectedComboItem_ServerOrLocalDb == 0)

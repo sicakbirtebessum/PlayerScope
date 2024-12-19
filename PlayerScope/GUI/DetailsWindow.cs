@@ -621,10 +621,9 @@ namespace PlayerScope.GUI
                 {
                     ImGui.Text(Loc.DtNameHistory);
 
-                    var tableHeight = _LastPlayerDetailedInfo.Player.PlayerNameHistories.Count * ImGui.GetTextLineHeightWithSpacing() + 36;
-                    ImGui.BeginChild("NameHistoryChild", new Vector2(ImGui.GetContentRegionAvail().X / 2, tableHeight), true);
+                    var tableHeight = _LastPlayerDetailedInfo.Player.PlayerNameHistories.Count * ImGui.GetTextLineHeightWithSpacing();
 
-                    if (ImGui.BeginTable("_CharacterNames", DetailedPlayerNamesTableColumn.Length, ImGuiTableFlags.BordersInner))
+                    if (ImGui.BeginTable("_CharacterNames", DetailedPlayerNamesTableColumn.Length, ImGuiTableFlags.BordersInner, new Vector2(ImGui.GetContentRegionAvail().X / 2, tableHeight)))
                     {
                         Utils.SetupTableColumns(DetailedPlayerNamesTableColumn);
 
@@ -647,10 +646,9 @@ namespace PlayerScope.GUI
                         }
                         ImGui.EndTable();
                     }
-                    ImGui.EndChild();
                 }
-
                 ImGui.EndGroup();
+
                 ImGui.SameLine();
 
                 ImGui.BeginGroup();
@@ -659,10 +657,9 @@ namespace PlayerScope.GUI
                 {
                     ImGui.Text(Loc.DtHomeworldHistory);
 
-                    var tableHeight = _LastPlayerDetailedInfo.Player.PlayerWorldHistories.Count * ImGui.GetTextLineHeightWithSpacing() + 36;
-                    ImGui.BeginChild("WorldHistoryChild", new Vector2(ImGui.GetContentRegionAvail().X, tableHeight), true);
+                    var tableHeight = _LastPlayerDetailedInfo.Player.PlayerWorldHistories.Count * ImGui.GetTextLineHeightWithSpacing();
 
-                    if (ImGui.BeginTable("_CharacterWorlds", DetailedPlayerWorldsTableColumn.Length, ImGuiTableFlags.BordersInner))
+                    if (ImGui.BeginTable("_CharacterWorlds", DetailedPlayerWorldsTableColumn.Length, ImGuiTableFlags.BordersInner, new Vector2(ImGui.GetContentRegionAvail().X, tableHeight)))
                     {
                         Utils.SetupTableColumns(DetailedPlayerWorldsTableColumn);
 
@@ -684,96 +681,9 @@ namespace PlayerScope.GUI
                         }
                         ImGui.EndTable();
                     }
-                    ImGui.EndChild();
                 }
-
                 ImGui.EndGroup();
             }
-
-            //if (_LastPlayerDetailedInfo.Player.PlayerNameHistories.Count > 0)
-            //{
-            //    ImGuiHelpers.ScaledDummy(5.0f);
-            //    ImGui.Separator();
-            //    ImGuiHelpers.ScaledDummy(5.0f);
-
-            //    ImGui.BeginGroup();
-
-            //    ImGui.Text(Loc.DtNameHistory); ImGui.SameLine();
-
-            //    if (ImGui.BeginTable($"_Names", DetailedPlayerNamesTableColumn.Length, ImGuiTableFlags.BordersInner))
-            //    {
-            //        Utils.SetupTableColumns(DetailedPlayerNamesTableColumn);
-
-            //        var index = 0;
-
-            //        foreach (var name in _LastPlayerDetailedInfo.Player.PlayerNameHistories)
-            //        {
-            //            ImGui.TableNextRow();
-            //            ImGui.TableNextColumn();
-
-            //            //PlayerName
-            //            Utils.CopyButton(name.Name, $"##NameHistory{index}");
-            //            ImGui.Text(name.Name); 
-
-            //            ImGui.TableNextColumn();
-
-            //            //Added At column
-            //            var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(name.CreatedAt)} ({Tools.ToTimeSinceString((int)name.CreatedAt)})" : Tools.ToTimeSinceString((int)name.CreatedAt);
-            //            if (Utils.ExternalDbTimestamps.Contains(name.CreatedAt))
-            //                Utils.WarningIconWithTooltip(Loc.DtDatabaseRecordAddedTimeUnavailable);
-
-            //            ImGui.Text(AddedAtDate); 
-
-            //            index++;
-            //        }
-            //        ImGui.EndTable();
-            //    }
-
-            //    ImGui.EndGroup();
-            //}
-
-            //ImGui.SameLine();
-
-            //if (_LastPlayerDetailedInfo.Player.PlayerWorldHistories.Count > 0)
-            //{
-            //    ImGuiHelpers.ScaledDummy(5.0f);
-            //    ImGui.Separator();
-            //    ImGuiHelpers.ScaledDummy(5.0f);
-
-            //    ImGui.BeginGroup();
-
-            //    ImGui.Text(Loc.DtHomeworldHistory); ImGui.SameLine();
-
-            //    if (ImGui.BeginTable($"_Worlds", DetailedPlayerWorldsTableColumn.Length, ImGuiTableFlags.BordersInner))
-            //    {
-            //        Utils.SetupTableColumns(DetailedPlayerWorldsTableColumn);
-
-            //        var index = 0;
-
-            //        foreach (var world in _LastPlayerDetailedInfo.Player.PlayerWorldHistories)
-            //        {
-            //            ImGui.TableNextRow();
-            //            ImGui.TableNextColumn();
-
-            //            //World Name
-            //            Utils.DisplayWorldInfo((uint?)world.WorldId);
-
-            //            ImGui.TableNextColumn();
-
-            //            //Added At column
-            //            var AddedAtDate = Config.bShowDetailedDate ? $"{Tools.UnixTimeConverter(world.CreatedAt)} ({Tools.ToTimeSinceString((int)world.CreatedAt)})" : Tools.ToTimeSinceString((int)world.CreatedAt);
-            //            if (Utils.ExternalDbTimestamps.Contains(world.CreatedAt))
-            //                Utils.WarningIconWithTooltip(Loc.DtDatabaseRecordAddedTimeUnavailable);
-
-            //            ImGui.Text(AddedAtDate); 
-
-            //            index++;
-            //        }
-            //        ImGui.EndTable();
-            //    }
-
-            //    ImGui.EndGroup();
-            //}
 
             ImGuiHelpers.ScaledDummy(2.0f);
             ImGui.Separator();
